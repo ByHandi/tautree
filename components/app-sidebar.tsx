@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { signOutAction } from "@/app/(dashboard)/actions";
 import Icon from "@/components/ui/icon";
 import {
   Sidebar,
@@ -17,6 +18,13 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
+
+type SidebarUser = {
+  username: string | null;
+  name: string | null;
+  email: string | null;
+  image: string | null;
+};
 
 const navItems = [
   {
@@ -41,8 +49,9 @@ const navItems = [
   },
 ] as const;
 
-function AppSidebar() {
+function AppSidebar({ user }: { user: SidebarUser }) {
   const pathname = usePathname();
+  const publicHref = user.username ? `/${user.username}` : "/";
 
   return (
     <Sidebar collapsible="icon">
@@ -89,11 +98,41 @@ function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip="View public page">
-              <Link href="/">
+              <Link href={publicHref} target="_blank" rel="noreferrer">
                 <Icon name="external-link" />
                 <span>View public page</span>
               </Link>
             </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <div className="flex items-center gap-2 overflow-hidden px-2 py-1.5">
+              <span className="flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted text-xs font-medium">
+                {user.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={user.image} alt="" className="size-full object-cover" />
+                ) : (
+                  (user.name ?? user.email ?? "?").charAt(0).toUpperCase()
+                )}
+              </span>
+              <span className="flex min-w-0 flex-col overflow-hidden leading-tight whitespace-nowrap group-data-[collapsible=icon]:hidden">
+                <span className="truncate text-sm font-medium">
+                  {user.name ?? user.username}
+                </span>
+                <span className="truncate text-xs text-sidebar-foreground/70">
+                  @{user.username}
+                </span>
+              </span>
+            </div>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <form action={signOutAction}>
+              <SidebarMenuButton type="submit" tooltip="Keluar">
+                <Icon name="log-out" />
+                <span>Keluar</span>
+              </SidebarMenuButton>
+            </form>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

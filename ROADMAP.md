@@ -11,7 +11,7 @@ Linktree-style SaaS: tiap user punya satu halaman publik (`tautree.com/username`
 | Theme/Toast | next-themes + sonner | ✅ ada |
 | Database | PostgreSQL (Neon / Supabase free tier) | ⬜ belum |
 | ORM | Prisma | ⬜ belum |
-| Auth | Auth.js (NextAuth v5) | ⬜ belum |
+| Auth | Auth.js (NextAuth v5) | ✅ ada |
 | Deploy | Vercel | ⬜ belum |
 
 **Keputusan:** Monolith Next.js (FE + API jadi satu). **Tanpa** NestJS & **tanpa** Payload — overkill untuk CRUD user-generated. Bisa diekstrak ke service terpisah nanti kalau backend tumbuh kompleks.
@@ -47,13 +47,15 @@ Click  → id, linkId, createdAt, (opsional: referrer, country)   # analytics, f
 
 **Catatan Prisma 7:** generator baru `prisma-client` (output TS ke `lib/generated/prisma`, di-gitignore), config di `prisma.config.ts` (bukan `url` di schema), dan **wajib driver adapter** `@prisma/adapter-pg` (`new PrismaClient({ adapter })`). Script: `db:migrate`, `db:seed`, `db:studio`, `db:reset`.
 
-## Fase 2 — Auth & Onboarding
+## Fase 2 — Auth & Onboarding ✅
 > User bisa daftar, login, dan klaim username.
 
-- [ ] Setup Auth.js (Google + email/magic link)
-- [ ] Adapter Prisma untuk Auth.js
-- [ ] Middleware proteksi route `/dashboard`
-- [ ] Flow onboarding: pilih `username` unik (cek ketersediaan real-time)
+- [x] Setup Auth.js (Google + email/magic link via Nodemailer)
+- [x] Adapter Prisma untuk Auth.js (model `Account`/`Session`/`VerificationToken`)
+- [x] Middleware proteksi route `/dashboard`
+- [x] Flow onboarding: pilih `username` unik (cek ketersediaan real-time)
+
+**Catatan Auth.js v5:** pakai **JWT session** (bukan database session) — magic link tetap jalan (token verifikasi disimpan di DB), tapi middleware bisa otorisasi di Edge tanpa query DB. Split config: `auth.config.ts` (edge-safe, Google) + `auth.ts` (adapter + Nodemailer). Gate username (`→ /onboarding`) dilakukan di **dashboard layout** (server, DB-truthful) karena JWT-nya bisa basi. Provider email kondisional: aktif hanya kalau `EMAIL_SERVER` diisi. Env baru: `AUTH_SECRET`, `AUTH_GOOGLE_ID/SECRET`, `EMAIL_SERVER`, `EMAIL_FROM`.
 
 ## Fase 3 — Dashboard (CRUD Link)
 > Inti produk: user kelola link-nya sendiri.
