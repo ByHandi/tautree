@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import Icon from "@/components/ui/icon";
 import {
@@ -20,43 +21,41 @@ import {
 const navItems = [
   {
     title: "Dashboard",
-    href: "/",
+    href: "/dashboard",
     icon: "layout-dashboard",
-    isActive: true,
   },
   {
-    title: "Components",
-    href: "/",
-    icon: "blocks",
-    isActive: false,
+    title: "Links",
+    href: "/dashboard/links",
+    icon: "link",
   },
   {
-    title: "Forms",
-    href: "/",
-    icon: "file-input",
-    isActive: false,
+    title: "Appearance",
+    href: "/dashboard/appearance",
+    icon: "palette",
   },
   {
     title: "Settings",
-    href: "/",
+    href: "/dashboard/settings",
     icon: "settings",
-    isActive: false,
   },
 ] as const;
 
 function AppSidebar() {
+  const pathname = usePathname();
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="flex gap-2">
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
-              <Icon name="box" className="size-4" />
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-sidebar-primary text-base text-sidebar-primary-foreground">
+              🌳
             </span>
 
             <span className="flex min-w-0 flex-col overflow-hidden leading-none whitespace-nowrap transition-[width,opacity] group-data-[collapsible=icon]:opacity-0">
-              <span className="font-medium">Next shadcn</span>
-              <span className="text-xs text-sidebar-foreground/70">Boilerplate</span>
+              <span className="font-medium">Tautree</span>
+              <span className="text-xs text-sidebar-foreground/70">Dashboard</span>
             </span>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -69,7 +68,11 @@ function AppSidebar() {
             <SidebarMenu>
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={Boolean(item.isActive)} tooltip={item.title}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === item.href}
+                    tooltip={item.title}
+                  >
                     <Link href={item.href}>
                       <Icon name={item.icon} />
                       <span>{item.title}</span>
@@ -85,10 +88,10 @@ function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Repository">
+            <SidebarMenuButton asChild tooltip="View public page">
               <Link href="/">
-                <Icon name="folder-git-2" />
-                <span>Repository</span>
+                <Icon name="external-link" />
+                <span>View public page</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
