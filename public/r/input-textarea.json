@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "input-textarea",
+  "title": "Input Textarea",
+  "description": "Input Textarea component.",
+  "registryDependencies": [
+    "field",
+    "textarea"
+  ],
+  "files": [
+    {
+      "path": "components/ui/input-textarea.tsx",
+      "content": "import { useId } from \"react\";\n\nimport { Field, FieldDescription, FieldError, FieldLabel } from \"@/components/ui/field\";\nimport { Textarea } from \"@/components/ui/textarea\";\nimport { cn } from \"@/lib/utils\";\n\ninterface InputTextareaProps extends React.ComponentProps<\"textarea\"> {\n  label?: React.ReactNode;\n  description?: React.ReactNode;\n  errorMessage?: React.ReactNode;\n  classNames?: {\n    base?: string;\n    label?: string;\n    textarea?: string;\n    description?: string;\n    error?: string;\n  };\n}\n\nfunction InputTextarea(props: InputTextareaProps) {\n  const { required, label, description, errorMessage, className, classNames, ...rest } = props;\n\n  const generatedId = useId();\n  const textareaId = rest.id || generatedId;\n  const descriptionId = description ? `${textareaId}-description` : undefined;\n  const errorId = errorMessage ? `${textareaId}-error` : undefined;\n  const describedBy = [rest[\"aria-describedby\"], descriptionId, errorId].filter(Boolean).join(\" \");\n  const ariaInvalid = rest[\"aria-invalid\"] ?? Boolean(errorMessage);\n\n  return (\n    <Field className={cn(\"gap-1\", [className, classNames?.base])}>\n      {label && (\n        <FieldLabel htmlFor={textareaId} isRequired={required} className={classNames?.label}>\n          {label}\n        </FieldLabel>\n      )}\n\n      <Textarea\n        {...rest}\n        id={textareaId}\n        required={required}\n        aria-invalid={ariaInvalid}\n        aria-describedby={describedBy || undefined}\n        className={classNames?.textarea}\n      />\n\n      {description && (\n        <FieldDescription id={descriptionId} className={classNames?.description}>\n          {description}\n        </FieldDescription>\n      )}\n\n      {errorMessage && (\n        <FieldError id={errorId} className={cn(\"text-xs\", classNames?.error)}>\n          {errorMessage}\n        </FieldError>\n      )}\n    </Field>\n  );\n}\n\nexport default InputTextarea;\nexport { InputTextarea };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

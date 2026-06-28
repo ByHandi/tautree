@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "spinner",
+  "title": "Spinner",
+  "description": "Spinner component.",
+  "registryDependencies": [
+    "icon"
+  ],
+  "files": [
+    {
+      "path": "components/ui/spinner.tsx",
+      "content": "import Icon from \"./icon\";\n\nimport { cn } from \"@/lib/utils\";\n\ntype SpinnerProps = Omit<React.ComponentProps<typeof Icon>, \"name\">;\n\nfunction Spinner({ className, size = 18, ...props }: SpinnerProps) {\n  return (\n    <Icon\n      name=\"loader-2\"\n      role=\"status\"\n      aria-label=\"Loading\"\n      className={cn(\"animate-spin\", className)}\n      size={size}\n      {...props}\n    />\n  );\n}\n\nexport { Spinner };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

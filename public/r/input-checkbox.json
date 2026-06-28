@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "input-checkbox",
+  "title": "Input Checkbox",
+  "description": "Input Checkbox component.",
+  "registryDependencies": [
+    "checkbox",
+    "field"
+  ],
+  "files": [
+    {
+      "path": "components/ui/input-checkbox.tsx",
+      "content": "\"use client\";\n\nimport { useId } from \"react\";\n\nimport { Checkbox } from \"@/components/ui/checkbox\";\nimport {\n  Field,\n  FieldContent,\n  FieldDescription,\n  FieldError,\n  FieldLabel,\n} from \"@/components/ui/field\";\nimport { cn } from \"@/lib/utils\";\n\ninterface InputCheckboxProps extends React.ComponentProps<typeof Checkbox> {\n  label?: React.ReactNode;\n  description?: React.ReactNode;\n  errorMessage?: React.ReactNode;\n  classNames?: {\n    base?: string;\n    checkbox?: string;\n    label?: string;\n    description?: string;\n    error?: string;\n  };\n}\n\nfunction InputCheckbox(props: InputCheckboxProps) {\n  const { label, description, errorMessage, className, classNames, required, ...rest } = props;\n\n  const generatedId = useId();\n  const checkboxId = rest.id || generatedId;\n  const descriptionId = description ? `${checkboxId}-description` : undefined;\n  const errorId = errorMessage ? `${checkboxId}-error` : undefined;\n  const describedBy = [rest[\"aria-describedby\"], descriptionId, errorId].filter(Boolean).join(\" \");\n  const ariaInvalid = rest[\"aria-invalid\"] ?? Boolean(errorMessage);\n\n  return (\n    <Field\n      data-disabled={rest.disabled || undefined}\n      data-invalid={Boolean(errorMessage) || undefined}\n      orientation=\"horizontal\"\n      className={cn(\"gap-2\", [className, classNames?.base])}\n    >\n      <Checkbox\n        {...rest}\n        id={checkboxId}\n        required={required}\n        aria-invalid={ariaInvalid}\n        aria-describedby={describedBy || undefined}\n        className={classNames?.checkbox}\n      />\n\n      <FieldContent>\n        {label && (\n          <FieldLabel htmlFor={checkboxId} isRequired={required} className={classNames?.label}>\n            {label}\n          </FieldLabel>\n        )}\n\n        {description && (\n          <FieldDescription id={descriptionId} className={classNames?.description}>\n            {description}\n          </FieldDescription>\n        )}\n\n        {errorMessage && (\n          <FieldError id={errorId} className={cn(\"text-xs\", classNames?.error)}>\n            {errorMessage}\n          </FieldError>\n        )}\n      </FieldContent>\n    </Field>\n  );\n}\n\nexport default InputCheckbox;\nexport { InputCheckbox };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}
