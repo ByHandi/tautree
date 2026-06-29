@@ -80,7 +80,7 @@ Click  → id, linkId, createdAt   # analytics ✅ (tabel click_events; counter 
 
 - [x] Tema/warna kustom per halaman — 6 preset (`/dashboard/appearance`); custom color belum
 - [x] Analytics dasar (total klik, klik per link, grafik harian 30 hari — model `Click`)
-- [ ] Rate limiting & validasi URL
+- [x] Rate limiting & validasi URL — validasi URL (`lib/links.ts`) + limiter in-memory (`lib/rate-limit.ts`) di `/api/username/check` & redirect klik
 - [ ] Deploy ke Vercel + domain
 - [ ] (Opsional) Panel admin buat moderasi user
 

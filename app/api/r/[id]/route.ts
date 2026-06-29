@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import { db } from "@/lib/db";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 /**
  * Click-tracking redirect. Public link buttons point here (`/api/r/<id>`); we
@@ -19,15 +20,20 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     return NextResponse.redirect(new URL("/", _req.url));
   }
 
-  // Best-effort: never block the redirect on a failed write. Bump the
-  // denormalized counter and log a click event for time-series analytics.
-  try {
-    await db.$transaction([
-      db.link.update({ where: { id }, data: { clicks: { increment: 1 } } }),
-      db.click.create({ data: { linkId: id } }),
-    ]);
-  } catch {
-    // ignore — the user still gets sent to their destination.
+  // Throttle counting per (IP, link) so rapid repeat hits don't inflate stats.
+  // The redirect itself is never blocked — we just skip the write when over.
+  const allow = rateLimit(`click:${clientIp(_req)}:${id}`, { limit: 5, windowMs: 60_000 });
+  if (allow.success) {
+    // Best-effort: never block the redirect on a failed write. Bump the
+    // denormalized counter and log a click event for time-series analytics.
+    try {
+      await db.$transaction([
+        db.link.update({ where: { id }, data: { clicks: { increment: 1 } } }),
+        db.click.create({ data: { linkId: id } }),
+      ]);
+    } catch {
+      // ignore — the user still gets sent to their destination.
+    }
   }
 
   return NextResponse.redirect(link.url);

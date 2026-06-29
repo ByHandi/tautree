@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { rateLimit } from "@/lib/rate-limit";
 import { normalizeUsername, validateUsername } from "@/lib/username";
 
 /** GET /api/username/check?u=foo -> { available, reason? } */
@@ -9,6 +10,15 @@ export async function GET(req: Request) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ available: false, reason: "Unauthorized" }, { status: 401 });
+  }
+
+  // The typeahead is debounced client-side; this guards against scripted abuse.
+  const limit = rateLimit(`username-check:${session.user.id}`, { limit: 30, windowMs: 10_000 });
+  if (!limit.success) {
+    return NextResponse.json(
+      { available: false, reason: "Terlalu banyak permintaan. Coba sebentar lagi." },
+      { status: 429, headers: { "Retry-After": "10" } },
+    );
   }
 
   const raw = new URL(req.url).searchParams.get("u") ?? "";
