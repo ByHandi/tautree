@@ -1,11 +1,11 @@
+import type { Metadata } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
 
 import "./globals.css";
 
-import AppSidebar from "@/components/app-sidebar";
 import Providers from "@/components/providers";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { APP_URL } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -14,6 +14,12 @@ const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 });
+
+export const metadata: Metadata = {
+  metadataBase: new URL(APP_URL),
+  title: "Tautree — One link for everything",
+  description: "Create one page for all your links. Share it anywhere.",
+};
 
 export default function RootLayout({
   children,
@@ -28,19 +34,7 @@ export default function RootLayout({
     >
       <body>
         <Providers>
-          <TooltipProvider>
-            <SidebarProvider>
-              <AppSidebar />
-              <SidebarInset>
-                <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                  <SidebarTrigger />
-                  <div className="h-4 w-px bg-border" />
-                  <span className="text-sm font-medium">Components</span>
-                </header>
-                {children}
-              </SidebarInset>
-            </SidebarProvider>
-          </TooltipProvider>
+          <TooltipProvider>{children}</TooltipProvider>
         </Providers>
       </body>
     </html>

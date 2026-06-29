@@ -1,0 +1,105 @@
+// Tautree schema — learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(uuid(7))
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified")
+  username      String?   @unique
+  name          String?
+  bio           String?
+  image         String?
+  avatarUrl     String?   @map("avatar_url")
+  theme         String    @default("default")
+  links         Link[]
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+// --- Auth.js (NextAuth v5) models ---
+// Field names like refresh_token / providerAccountId are required verbatim by
+// the Auth.js Prisma adapter; only DB column/table names are mapped to snake_case.
+
+model Account {
+  id                String  @id @default(uuid(7))
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @map("refresh_token")
+  access_token      String? @map("access_token")
+  expires_at        Int?    @map("expires_at")
+  token_type        String? @map("token_type")
+  scope             String?
+  id_token          String? @map("id_token")
+  session_state     String? @map("session_state")
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(uuid(7))
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model Link {
+  id        String   @id @default(uuid(7))
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  url       String
+  order     Int      @default(0)
+  isActive  Boolean  @default(true) @map("is_active")
+  clicks    Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  clickEvents Click[]
+
+  @@index([userId])
+  @@map("links")
+}
+
+// Per-click event log for time-series analytics. The denormalized `Link.clicks`
+// counter stays the source of truth for quick per-link totals; these rows power
+// the over-time chart.
+model Click {
+  id        String   @id @default(uuid(7))
+  linkId    String   @map("link_id")
+  link      Link     @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([linkId])
+  @@index([createdAt])
+  @@map("click_events")
+}

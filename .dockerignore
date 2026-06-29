@@ -1,0 +1,33 @@
+# dependencies & build artifacts (rebuilt inside the image)
+node_modules
+.next
+out
+build
+coverage
+*.tsbuildinfo
+
+# generated Prisma client — regenerated during the build
+lib/generated
+
+# env & secrets (provide at runtime, never bake into the image)
+.env
+.env.*
+!.env.example
+
+# vcs & tooling
+.git
+.gitignore
+.github
+.vscode
+.idea
+
+# docker / docs / misc
+Dockerfile
+.dockerignore
+docker-compose*.yml
+README.md
+ROADMAP.md
+AGENTS.md
+LICENSE.md
+*.log
+.DS_Store
