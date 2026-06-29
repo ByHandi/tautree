@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { Logo } from "@/components/logo";
 import Icon from "@/components/ui/icon";
 import { db } from "@/lib/db";
 import { getTheme } from "@/lib/themes";
@@ -114,8 +115,13 @@ export default async function PublicProfilePage({ params }: Params) {
       )}
 
       <footer className="mt-auto pt-8">
-        <Link href="/" className="text-xs transition-opacity hover:opacity-80" style={{ color: theme.muted }}>
-          🌳 Dibuat dengan Tautree
+        <Link
+          href="/"
+          className="flex items-center gap-1.5 text-xs transition-opacity hover:opacity-80"
+          style={{ color: theme.muted }}
+        >
+          <Logo className="size-3.5" />
+          Dibuat dengan Tautree
         </Link>
       </footer>
     </main>

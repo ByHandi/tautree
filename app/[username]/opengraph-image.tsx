@@ -25,7 +25,7 @@ export default async function OpengraphImage({
   const displayName = user?.name ?? (user ? `@${user.username}` : "Tautree");
   const handle = user ? `tautree.com/${user.username}` : "tautree.com";
   const bio = user?.bio ?? "Semua link kamu dalam satu halaman.";
-  const initial = (user?.name ?? user?.username ?? "🌳").charAt(0).toUpperCase();
+  const initial = (user?.name ?? user?.username ?? "T").charAt(0).toUpperCase();
 
   return new ImageResponse(
     (
@@ -41,8 +41,16 @@ export default async function OpengraphImage({
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "20px", fontSize: 32 }}>
-          <span>🌳</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "16px", fontSize: 32 }}>
+          <svg width="40" height="40" viewBox="0 0 32 32" fill="none">
+            <path d="M16 27.5V6.5" stroke="#34e0a1" strokeWidth="2.4" strokeLinecap="round" />
+            <path d="M16 17C13 16 9.5 15 6.5 9.5" stroke="#34e0a1" strokeWidth="2.4" strokeLinecap="round" />
+            <path d="M16 17C19 16 22.5 15 25.5 9.5" stroke="#34e0a1" strokeWidth="2.4" strokeLinecap="round" />
+            <circle cx="16" cy="28" r="2.6" fill="#34e0a1" />
+            <circle cx="16" cy="6" r="2.6" fill="#34e0a1" />
+            <circle cx="6" cy="9" r="2.6" fill="#34e0a1" />
+            <circle cx="26" cy="9" r="2.6" fill="#34e0a1" />
+          </svg>
           <span style={{ color: "#94a3b8" }}>Tautree</span>
         </div>
 

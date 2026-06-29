@@ -9,6 +9,7 @@ import {
   UserRoundIcon,
 } from "lucide-react";
 
+import { Logo } from "@/components/logo";
 import { buttonVariants } from "@/components/ui/button";
 import { THEMES } from "@/lib/themes";
 import { cn } from "@/lib/utils";
@@ -86,8 +87,8 @@ export default function Home() {
       <header className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-3">
           <span className="flex items-center gap-2 font-semibold">
-            <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-sm text-primary-foreground">
-              🌳
+            <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <Logo className="size-4" />
             </span>
             Tautree
           </span>
@@ -107,7 +108,8 @@ export default function Home() {
         <section className="mx-auto grid w-full max-w-5xl items-center gap-12 px-6 py-16 md:grid-cols-2 md:py-24">
           <div className="flex flex-col items-start gap-6 text-left">
             <span className="inline-flex items-center gap-2 rounded-full border bg-muted/50 px-3 py-1 text-xs font-medium text-muted-foreground">
-              🌳 Satu link untuk semua isi kamu
+              <Logo className="size-3.5 text-primary" />
+              Satu link untuk semua isi kamu
             </span>
             <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
               Semua link kamu, dalam satu halaman
@@ -192,7 +194,10 @@ export default function Home() {
 
       <footer className="border-t">
         <div className="mx-auto flex w-full max-w-5xl flex-col items-center justify-between gap-2 px-6 py-6 text-sm text-muted-foreground sm:flex-row">
-          <span className="flex items-center gap-2">🌳 Tautree</span>
+          <span className="flex items-center gap-2">
+            <Logo className="size-4 text-primary" />
+            Tautree
+          </span>
           <span>Dibuat dengan Next.js</span>
         </div>
       </footer>

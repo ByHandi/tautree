@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { signOutAction } from "@/app/(dashboard)/actions";
+import { Logo } from "@/components/logo";
 import Icon from "@/components/ui/icon";
 import {
   Sidebar,
@@ -65,8 +66,8 @@ const { setOpenMobile} =  useSidebar()
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="flex gap-2">
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-sidebar-primary text-base text-sidebar-primary-foreground">
-              🌳
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
+              <Logo className="size-5" />
             </span>
 
             <span className="flex min-w-0 flex-col overflow-hidden leading-none whitespace-nowrap transition-[width,opacity] group-data-[collapsible=icon]:opacity-0">
