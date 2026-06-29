@@ -87,28 +87,29 @@ export async function deleteLink(id: string): Promise<void> {
   revalidate();
 }
 
-/** Swap a link's order with its neighbour in the given direction. */
-export async function moveLink(id: string, direction: "up" | "down"): Promise<void> {
+/**
+ * Persist a full reordering. `orderedIds` is the new top-to-bottom order; we
+ * write each link's `order` to its index. Scoped to the owner's links — ids
+ * that aren't theirs are ignored by the `userId` filter.
+ */
+export async function reorderLinks(orderedIds: string[]): Promise<void> {
   const userId = await requireUserId();
 
-  const links = await db.link.findMany({
+  const owned = await db.link.findMany({
     where: { userId },
-    orderBy: { order: "asc" },
-    select: { id: true, order: true },
+    select: { id: true },
   });
+  const ownedIds = new Set(owned.map((l) => l.id));
 
-  const index = links.findIndex((l) => l.id === id);
-  if (index === -1) return;
-  const swapIndex = direction === "up" ? index - 1 : index + 1;
-  if (swapIndex < 0 || swapIndex >= links.length) return;
+  // Only reorder ids we actually own, preserving the requested sequence.
+  const ids = orderedIds.filter((id) => ownedIds.has(id));
+  if (ids.length === 0) return;
 
-  const current = links[index];
-  const neighbour = links[swapIndex];
-
-  await db.$transaction([
-    db.link.update({ where: { id: current.id }, data: { order: neighbour.order } }),
-    db.link.update({ where: { id: neighbour.id }, data: { order: current.order } }),
-  ]);
+  await db.$transaction(
+    ids.map((id, index) =>
+      db.link.update({ where: { id }, data: { order: index } }),
+    ),
+  );
 
   revalidate();
 }

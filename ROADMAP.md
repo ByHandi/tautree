@@ -62,7 +62,7 @@ Click  → id, linkId, createdAt, (opsional: referrer, country)   # analytics, f
 
 - [x] Halaman `/dashboard` — list link milik user
 - [x] Tambah / edit / hapus link (pakai komponen `Input*` yang udah ada)
-- [ ] Reorder link via drag-and-drop (`dnd-kit`) — sementara pakai tombol naik/turun (`moveLink`)
+- [x] Reorder link via drag-and-drop (`dnd-kit`)
 - [x] Toggle aktif/nonaktif per link
 - [x] Edit profil: nama, bio, avatar (`/dashboard/settings`, avatar via URL)
 

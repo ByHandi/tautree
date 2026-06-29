@@ -1,10 +1,27 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { toast } from "sonner";
 
-import { deleteLink, moveLink, toggleLink } from "./actions";
+import { deleteLink, reorderLinks, toggleLink } from "./actions";
 import { LinkFormDialog } from "./link-form-dialog";
 
 import { Button } from "@/components/ui/button";
@@ -19,6 +36,7 @@ import {
 import Icon from "@/components/ui/icon";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
 
 export type LinkItem = {
   id: string;
@@ -28,21 +46,108 @@ export type LinkItem = {
   clicks: number;
 };
 
+function SortableLinkRow({
+  link,
+  isPending,
+  onToggle,
+  onEdit,
+  onDelete,
+}: {
+  link: LinkItem;
+  isPending: boolean;
+  onToggle: (link: LinkItem, next: boolean) => void;
+  onEdit: (link: LinkItem) => void;
+  onDelete: (link: LinkItem) => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: link.id,
+  });
+
+  return (
+    <li
+      ref={setNodeRef}
+      style={{ transform: CSS.Transform.toString(transform), transition }}
+      className={cn(
+        "flex items-center gap-2 rounded-lg border bg-card p-3",
+        isDragging && "z-10 shadow-md",
+      )}
+    >
+      <button
+        type="button"
+        className="-ml-1 cursor-grab touch-none rounded-md p-1 text-muted-foreground hover:bg-muted active:cursor-grabbing"
+        aria-label="Geser untuk mengurutkan"
+        {...attributes}
+        {...listeners}
+      >
+        <Icon name="grip-vertical" className="size-4" />
+      </button>
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <span className="truncate font-medium">{link.title}</span>
+        <span className="truncate text-sm text-muted-foreground">{link.url}</span>
+      </div>
+
+      <span className="hidden items-center gap-1 px-1 text-xs text-muted-foreground sm:flex">
+        <Icon name="mouse-pointer-click" className="size-3.5" />
+        {link.clicks}
+      </span>
+
+      <Switch
+        checked={link.isActive}
+        onCheckedChange={(v) => onToggle(link, v)}
+        disabled={isPending}
+        aria-label={link.isActive ? "Nonaktifkan link" : "Aktifkan link"}
+      />
+
+      <Button variant="ghost" size="icon-sm" onClick={() => onEdit(link)} aria-label="Edit link">
+        <Icon name="pencil" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        onClick={() => onDelete(link)}
+        aria-label="Hapus link"
+      >
+        <Icon name="trash-2" />
+      </Button>
+    </li>
+  );
+}
+
 export function LinksManager({ links }: { links: LinkItem[] }) {
   // `undefined` = form closed, `null` = create mode, object = edit mode.
   const [editing, setEditing] = useState<LinkItem | null | undefined>(undefined);
   const [deleting, setDeleting] = useState<LinkItem | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  function handleToggle(link: LinkItem, next: boolean) {
+  // Local copy so drag reordering is optimistic; re-sync when the server sends
+  // a fresh list (add/edit/delete/reorder all revalidate this page).
+  const [items, setItems] = useState(links);
+  useEffect(() => setItems(links), [links]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = items.findIndex((l) => l.id === active.id);
+    const newIndex = items.findIndex((l) => l.id === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    const next = arrayMove(items, oldIndex, newIndex);
+    setItems(next); // optimistic
     startTransition(async () => {
-      await toggleLink(link.id, next);
+      await reorderLinks(next.map((l) => l.id));
     });
   }
 
-  function handleMove(link: LinkItem, direction: "up" | "down") {
+  function handleToggle(link: LinkItem, next: boolean) {
     startTransition(async () => {
-      await moveLink(link.id, direction);
+      await toggleLink(link.id, next);
     });
   }
 
@@ -60,7 +165,7 @@ export function LinksManager({ links }: { links: LinkItem[] }) {
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          {links.length === 0 ? "Belum ada link." : `${links.length} link`}
+          {items.length === 0 ? "Belum ada link." : `${items.length} link`}
         </p>
         <Button onClick={() => setEditing(null)}>
           <Icon name="plus" />
@@ -68,7 +173,7 @@ export function LinksManager({ links }: { links: LinkItem[] }) {
         </Button>
       </div>
 
-      {links.length === 0 ? (
+      {items.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed p-12 text-center">
           <span className="flex size-12 items-center justify-center rounded-full bg-muted">
             <Icon name="link" className="size-5 text-muted-foreground" />
@@ -85,66 +190,26 @@ export function LinksManager({ links }: { links: LinkItem[] }) {
           </Button>
         </div>
       ) : (
-        <ul className="flex flex-col gap-2">
-          {links.map((link, i) => (
-            <li key={link.id} className="flex items-center gap-2 rounded-lg border bg-card p-3">
-              <div className="flex flex-col">
-                <Button
-                  variant="ghost"
-                  size="icon-xs"
-                  disabled={i === 0 || isPending}
-                  onClick={() => handleMove(link, "up")}
-                  aria-label="Naikkan urutan"
-                >
-                  <Icon name="chevron-up" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon-xs"
-                  disabled={i === links.length - 1 || isPending}
-                  onClick={() => handleMove(link, "down")}
-                  aria-label="Turunkan urutan"
-                >
-                  <Icon name="chevron-down" />
-                </Button>
-              </div>
-
-              <div className="flex min-w-0 flex-1 flex-col">
-                <span className="truncate font-medium">{link.title}</span>
-                <span className="truncate text-sm text-muted-foreground">{link.url}</span>
-              </div>
-
-              <span className="hidden items-center gap-1 px-1 text-xs text-muted-foreground sm:flex">
-                <Icon name="mouse-pointer-click" className="size-3.5" />
-                {link.clicks}
-              </span>
-
-              <Switch
-                checked={link.isActive}
-                onCheckedChange={(v) => handleToggle(link, v)}
-                disabled={isPending}
-                aria-label={link.isActive ? "Nonaktifkan link" : "Aktifkan link"}
-              />
-
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={() => setEditing(link)}
-                aria-label="Edit link"
-              >
-                <Icon name="pencil" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={() => setDeleting(link)}
-                aria-label="Hapus link"
-              >
-                <Icon name="trash-2" />
-              </Button>
-            </li>
-          ))}
-        </ul>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext items={items.map((l) => l.id)} strategy={verticalListSortingStrategy}>
+            <ul className="flex flex-col gap-2">
+              {items.map((link) => (
+                <SortableLinkRow
+                  key={link.id}
+                  link={link}
+                  isPending={isPending}
+                  onToggle={handleToggle}
+                  onEdit={setEditing}
+                  onDelete={setDeleting}
+                />
+              ))}
+            </ul>
+          </SortableContext>
+        </DndContext>
       )}
 
       {editing !== undefined && (
