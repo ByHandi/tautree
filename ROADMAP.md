@@ -60,20 +60,20 @@ Click  → id, linkId, createdAt, (opsional: referrer, country)   # analytics, f
 ## Fase 3 — Dashboard (CRUD Link)
 > Inti produk: user kelola link-nya sendiri.
 
-- [ ] Halaman `/dashboard` — list link milik user
-- [ ] Tambah / edit / hapus link (pakai komponen `Input*` yang udah ada)
-- [ ] Reorder link via drag-and-drop (`dnd-kit`)
-- [ ] Toggle aktif/nonaktif per link
-- [ ] Edit profil: nama, bio, avatar
+- [x] Halaman `/dashboard` — list link milik user
+- [x] Tambah / edit / hapus link (pakai komponen `Input*` yang udah ada)
+- [ ] Reorder link via drag-and-drop (`dnd-kit`) — sementara pakai tombol naik/turun (`moveLink`)
+- [x] Toggle aktif/nonaktif per link
+- [x] Edit profil: nama, bio, avatar (`/dashboard/settings`, avatar via URL)
 
 ## Fase 4 — Halaman Publik
 > Yang dilihat dunia.
 
-- [ ] Route `/[username]` — render profil + tombol link (mobile-first)
-- [ ] Hanya tampilkan link `isActive`, urut sesuai `order`
-- [ ] Track klik (increment `clicks` / insert `Click`)
-- [ ] State `404` untuk username tak ada
-- [ ] OG image & metadata SEO per halaman
+- [x] Route `/[username]` — render profil + tombol link (mobile-first)
+- [x] Hanya tampilkan link `isActive`, urut sesuai `order`
+- [x] Track klik (increment `clicks` via `/api/r/[id]`)
+- [x] State `404` untuk username tak ada (`app/[username]/not-found.tsx`)
+- [ ] OG image & metadata SEO per halaman — metadata teks ✅, OG image dinamis belum
 
 ## Fase 5 — Polish SaaS
 > Bikin layak jadi produk.
