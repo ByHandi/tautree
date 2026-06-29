@@ -84,6 +84,22 @@ model Link {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  clickEvents Click[]
+
   @@index([userId])
   @@map("links")
+}
+
+// Per-click event log for time-series analytics. The denormalized `Link.clicks`
+// counter stays the source of truth for quick per-link totals; these rows power
+// the over-time chart.
+model Click {
+  id        String   @id @default(uuid(7))
+  linkId    String   @map("link_id")
+  link      Link     @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([linkId])
+  @@index([createdAt])
+  @@map("click_events")
 }

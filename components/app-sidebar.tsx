@@ -17,6 +17,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 type SidebarUser = {
@@ -38,6 +39,11 @@ const navItems = [
     icon: "link",
   },
   {
+    title: "Analytics",
+    href: "/dashboard/analytics",
+    icon: "chart-no-axes-column",
+  },
+  {
     title: "Appearance",
     href: "/dashboard/appearance",
     icon: "palette",
@@ -50,6 +56,7 @@ const navItems = [
 ] as const;
 
 function AppSidebar({ user }: { user: SidebarUser }) {
+const { setOpenMobile} =  useSidebar()
   const pathname = usePathname();
   const publicHref = user.username ? `/${user.username}` : "/";
 
@@ -76,7 +83,7 @@ function AppSidebar({ user }: { user: SidebarUser }) {
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.title} onClick={() => setOpenMobile(false)}>
                   <SidebarMenuButton
                     asChild
                     isActive={pathname === item.href}

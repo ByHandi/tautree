@@ -19,9 +19,13 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     return NextResponse.redirect(new URL("/", _req.url));
   }
 
-  // Best-effort: never block the redirect on a failed counter write.
+  // Best-effort: never block the redirect on a failed write. Bump the
+  // denormalized counter and log a click event for time-series analytics.
   try {
-    await db.link.update({ where: { id }, data: { clicks: { increment: 1 } } });
+    await db.$transaction([
+      db.link.update({ where: { id }, data: { clicks: { increment: 1 } } }),
+      db.click.create({ data: { linkId: id } }),
+    ]);
   } catch {
     // ignore — the user still gets sent to their destination.
   }

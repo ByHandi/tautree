@@ -21,7 +21,7 @@ Linktree-style SaaS: tiap user punya satu halaman publik (`tautree.com/username`
 ```
 User   → id, email, username (unik → slug URL), name, bio, avatarUrl, theme, createdAt
 Link   → id, userId, title, url, order, isActive, clicks, createdAt
-Click  → id, linkId, createdAt, (opsional: referrer, country)   # analytics, fase lanjut
+Click  → id, linkId, createdAt   # analytics ✅ (tabel click_events; counter links.clicks tetap dipertahankan)
 ```
 
 **Konvensi DB:** PK pakai `@default(uuid(7))` (time-sortable, index locality bagus). Field/model di Prisma camelCase, tapi kolom & tabel di DB **snake_case** + pluralized (`users`, `links`) via `@map()` / `@@map()`.
@@ -79,7 +79,7 @@ Click  → id, linkId, createdAt, (opsional: referrer, country)   # analytics, f
 > Bikin layak jadi produk.
 
 - [x] Tema/warna kustom per halaman — 6 preset (`/dashboard/appearance`); custom color belum
-- [ ] Analytics dasar (total klik, klik per link, grafik)
+- [x] Analytics dasar (total klik, klik per link, grafik harian 30 hari — model `Click`)
 - [ ] Rate limiting & validasi URL
 - [ ] Deploy ke Vercel + domain
 - [ ] (Opsional) Panel admin buat moderasi user
