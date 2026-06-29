@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import Icon from "@/components/ui/icon";
 import { db } from "@/lib/db";
+import { getTheme } from "@/lib/themes";
 import { normalizeUsername, validateUsername } from "@/lib/username";
 
 type Params = { params: Promise<{ username: string }> };
@@ -20,6 +21,7 @@ async function getProfile(rawUsername: string) {
       bio: true,
       image: true,
       avatarUrl: true,
+      theme: true,
       links: {
         where: { isActive: true },
         orderBy: { order: "asc" },
@@ -42,7 +44,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     title,
     description,
     openGraph: { title, description, type: "profile" },
-    twitter: { card: "summary", title, description },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
@@ -54,11 +56,18 @@ export default async function PublicProfilePage({ params }: Params) {
   const displayName = user.name ?? `@${user.username}`;
   const initial = (user.name ?? user.username ?? "?").charAt(0).toUpperCase();
   const avatar = user.avatarUrl ?? user.image;
+  const theme = getTheme(user.theme);
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col items-center gap-6 px-5 py-16">
+    <main
+      className="mx-auto flex min-h-dvh w-full max-w-lg flex-col items-center gap-6 px-5 py-16"
+      style={{ background: theme.page, color: theme.text }}
+    >
       <header className="flex flex-col items-center gap-3 text-center">
-        <span className="flex size-24 items-center justify-center overflow-hidden rounded-full bg-muted text-2xl font-semibold">
+        <span
+          className="flex size-24 items-center justify-center overflow-hidden rounded-full text-2xl font-semibold"
+          style={{ background: theme.card, color: theme.cardText }}
+        >
           {avatar ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={avatar} alt={displayName} className="size-full object-cover" />
@@ -69,7 +78,11 @@ export default async function PublicProfilePage({ params }: Params) {
 
         <div className="flex flex-col gap-1">
           <h1 className="text-xl font-semibold tracking-tight">{displayName}</h1>
-          {user.bio && <p className="text-pretty text-sm text-muted-foreground">{user.bio}</p>}
+          {user.bio && (
+            <p className="text-pretty text-sm" style={{ color: theme.muted }}>
+              {user.bio}
+            </p>
+          )}
         </div>
       </header>
 
@@ -79,25 +92,29 @@ export default async function PublicProfilePage({ params }: Params) {
             <a
               key={link.id}
               href={`/api/r/${link.id}`}
-              className="group flex items-center gap-3 rounded-xl border bg-card px-5 py-4 font-medium shadow-xs transition-all hover:-translate-y-0.5 hover:shadow-md"
+              className="group flex items-center gap-3 rounded-xl border px-5 py-4 font-medium shadow-xs transition-all hover:-translate-y-0.5 hover:shadow-md"
+              style={{
+                background: theme.card,
+                color: theme.cardText,
+                borderColor: theme.cardBorder,
+              }}
             >
               <span className="min-w-0 flex-1 truncate text-center">{link.title}</span>
               <Icon
                 name="arrow-up-right"
-                className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                className="size-4 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
               />
             </a>
           ))}
         </nav>
       ) : (
-        <p className="text-sm text-muted-foreground">Belum ada link.</p>
+        <p className="text-sm" style={{ color: theme.muted }}>
+          Belum ada link.
+        </p>
       )}
 
       <footer className="mt-auto pt-8">
-        <Link
-          href="/"
-          className="text-xs text-muted-foreground transition-colors hover:text-foreground"
-        >
+        <Link href="/" className="text-xs transition-opacity hover:opacity-80" style={{ color: theme.muted }}>
           🌳 Dibuat dengan Tautree
         </Link>
       </footer>

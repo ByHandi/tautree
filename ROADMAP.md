@@ -73,12 +73,12 @@ Click  → id, linkId, createdAt, (opsional: referrer, country)   # analytics, f
 - [x] Hanya tampilkan link `isActive`, urut sesuai `order`
 - [x] Track klik (increment `clicks` via `/api/r/[id]`)
 - [x] State `404` untuk username tak ada (`app/[username]/not-found.tsx`)
-- [ ] OG image & metadata SEO per halaman — metadata teks ✅, OG image dinamis belum
+- [x] OG image & metadata SEO per halaman (`opengraph-image.tsx` dinamis)
 
 ## Fase 5 — Polish SaaS
 > Bikin layak jadi produk.
 
-- [ ] Tema/warna kustom per halaman (preset + custom)
+- [x] Tema/warna kustom per halaman — 6 preset (`/dashboard/appearance`); custom color belum
 - [ ] Analytics dasar (total klik, klik per link, grafik)
 - [ ] Rate limiting & validasi URL
 - [ ] Deploy ke Vercel + domain
