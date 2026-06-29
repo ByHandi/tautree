@@ -13,6 +13,10 @@ import Google from "next-auth/providers/google";
  */
 export default {
   providers: [Google],
+  // Self-hosted behind a reverse proxy: trust the forwarded host header so
+  // Auth.js doesn't reject requests with UntrustedHost. Can also be enabled via
+  // the AUTH_TRUST_HOST env var.
+  trustHost: true,
   session: { strategy: "jwt" },
   pages: {
     signIn: "/login",
