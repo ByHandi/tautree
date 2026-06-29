@@ -11,6 +11,7 @@ import {
 
 import { Logo } from "@/components/logo";
 import { buttonVariants } from "@/components/ui/button";
+import { APP_DOMAIN } from "@/lib/site";
 import { THEMES } from "@/lib/themes";
 import { cn } from "@/lib/utils";
 
@@ -38,7 +39,7 @@ const features = [
 ];
 
 const steps = [
-  { n: "1", title: "Klaim username", desc: "Daftar gratis dan ambil tautree.com/kamu." },
+  { n: "1", title: "Klaim username", desc: `Daftar gratis dan ambil ${APP_DOMAIN}/kamu.` },
   { n: "2", title: "Tambahkan link", desc: "Masukkan semua link penting kamu ke dashboard." },
   { n: "3", title: "Bagikan", desc: "Sebar satu link itu ke bio sosmed mana pun." },
 ];

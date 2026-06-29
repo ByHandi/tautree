@@ -5,6 +5,7 @@ import "./globals.css";
 
 import Providers from "@/components/providers";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { APP_URL } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -15,6 +16,7 @@ const fontMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(APP_URL),
   title: "Tautree — One link for everything",
   description: "Buat satu halaman untuk semua link kamu. Bagikan di mana saja.",
 };

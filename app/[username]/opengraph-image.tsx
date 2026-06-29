@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
 import { db } from "@/lib/db";
+import { APP_DOMAIN } from "@/lib/site";
 import { normalizeUsername, validateUsername } from "@/lib/username";
 
 export const alt = "Profil Tautree";
@@ -23,7 +24,7 @@ export default async function OpengraphImage({
     : null;
 
   const displayName = user?.name ?? (user ? `@${user.username}` : "Tautree");
-  const handle = user ? `tautree.com/${user.username}` : "tautree.com";
+  const handle = user ? `${APP_DOMAIN}/${user.username}` : APP_DOMAIN;
   const bio = user?.bio ?? "Semua link kamu dalam satu halaman.";
   const initial = (user?.name ?? user?.username ?? "T").charAt(0).toUpperCase();
 

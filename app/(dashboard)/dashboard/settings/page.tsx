@@ -5,6 +5,7 @@ import { SettingsForm } from "./settings-form";
 
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { APP_DOMAIN } from "@/lib/site";
 
 export default async function SettingsPage() {
   const session = await auth();
@@ -29,7 +30,7 @@ export default async function SettingsPage() {
               rel="noreferrer"
               className="font-medium text-foreground underline underline-offset-4"
             >
-              tautree.com/{user.username}
+              {APP_DOMAIN}/{user.username}
             </Link>
           ) : (
             "halaman publik kamu"

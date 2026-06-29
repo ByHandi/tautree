@@ -9,6 +9,7 @@ import { claimUsername } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+import { APP_DOMAIN } from "@/lib/site";
 import { USERNAME_MAX, normalizeUsername, validateUsername } from "@/lib/username";
 import { cn } from "@/lib/utils";
 
@@ -65,7 +66,7 @@ export function OnboardingForm({ suggestion }: { suggestion: string }) {
   return (
     <form action={formAction} className="flex flex-col gap-2">
       <div className="flex items-center rounded-md border border-input bg-transparent pl-2.5 focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50">
-        <span className="text-sm text-muted-foreground select-none">tautree.com/</span>
+        <span className="text-sm text-muted-foreground select-none">{APP_DOMAIN}/</span>
         <Input
           name="username"
           value={username}

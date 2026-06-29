@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { buttonVariants } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
 import { db } from "@/lib/db";
+import { APP_DOMAIN } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export default async function DashboardPage() {
@@ -44,7 +45,7 @@ export default async function DashboardPage() {
             rel="noreferrer"
             className="font-medium text-foreground underline underline-offset-4"
           >
-            tautree.com/{user?.username}
+            {APP_DOMAIN}/{user?.username}
           </Link>
         </p>
       </div>
