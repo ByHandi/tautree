@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 import { signOutAction } from "@/app/(dashboard)/actions";
 import { Logo } from "@/components/logo";
+import { SidebarThemeToggle } from "@/components/theme-toggle";
 import Icon from "@/components/ui/icon";
 import {
   Sidebar,
@@ -132,6 +133,10 @@ const { setOpenMobile} =  useSidebar()
                 </span>
               </span>
             </div>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarThemeToggle />
           </SidebarMenuItem>
 
           <SidebarMenuItem>

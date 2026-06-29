@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { Logo } from "@/components/logo";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { APP_DOMAIN } from "@/lib/site";
 import { THEMES } from "@/lib/themes";
@@ -93,7 +94,8 @@ export default function Home() {
             </span>
             Tautree
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
+            <ThemeToggle className="size-9" />
             <Link href="/login" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>
               Masuk
             </Link>
