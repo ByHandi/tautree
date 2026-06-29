@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = {
-  title: "Masuk — Tautree",
+  title: "Sign in — Tautree",
 };
 
 export default async function LoginPage({

@@ -19,35 +19,35 @@ import { cn } from "@/lib/utils";
 const features = [
   {
     icon: GripVerticalIcon,
-    title: "Kelola link dengan mudah",
-    desc: "Tambah, edit, aktif/nonaktifkan, dan susun ulang link cukup dengan drag-and-drop.",
+    title: "Manage links with ease",
+    desc: "Add, edit, enable/disable, and reorder links with simple drag-and-drop.",
   },
   {
     icon: PaletteIcon,
-    title: "Tema sesuai gaya kamu",
-    desc: "Enam tema siap pakai — dari terang minimalis sampai gradient sunset & ocean.",
+    title: "Themes to match your vibe",
+    desc: "Six ready-made themes — from clean minimal light to sunset & ocean gradients.",
   },
   {
     icon: ChartNoAxesColumnIcon,
-    title: "Analytics bawaan",
-    desc: "Pantau total klik, tren 30 hari, dan link mana yang paling banyak diklik.",
+    title: "Built-in analytics",
+    desc: "Track total clicks, 30-day trends, and which links get tapped the most.",
   },
   {
     icon: UserRoundIcon,
-    title: "Profil yang kamu banget",
-    desc: "Atur nama, bio, dan foto. Halaman publikmu langsung tampil rapi dan personal.",
+    title: "A profile that's really you",
+    desc: "Set your name, bio, and photo. Your public page looks clean and personal right away.",
   },
 ];
 
 const steps = [
-  { n: "1", title: "Klaim username", desc: `Daftar gratis dan ambil ${APP_DOMAIN}/kamu.` },
-  { n: "2", title: "Tambahkan link", desc: "Masukkan semua link penting kamu ke dashboard." },
-  { n: "3", title: "Bagikan", desc: "Sebar satu link itu ke bio sosmed mana pun." },
+  { n: "1", title: "Claim your username", desc: `Sign up for free and grab ${APP_DOMAIN}/you.` },
+  { n: "2", title: "Add your links", desc: "Drop all your important links into the dashboard." },
+  { n: "3", title: "Share", desc: "Put that one link in any social bio." },
 ];
 
 function HeroPreview() {
   const theme = THEMES.sunset;
-  const items = ["Instagram", "YouTube", "Toko Online"];
+  const items = ["Instagram", "YouTube", "Online Store"];
 
   return (
     <div
@@ -62,9 +62,9 @@ function HeroPreview() {
         T
       </span>
       <div className="flex flex-col items-center gap-0.5 text-center">
-        <span className="text-sm font-semibold">@kamu</span>
+        <span className="text-sm font-semibold">@you</span>
         <span className="text-xs" style={{ color: theme.muted }}>
-          Semua link aku ada di sini ✨
+          All my links live here ✨
         </span>
       </div>
       <div className="flex w-full flex-col gap-2">
@@ -97,10 +97,10 @@ export default function Home() {
           <div className="flex items-center gap-1.5">
             <ThemeToggle className="size-9" />
             <Link href="/login" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>
-              Masuk
+              Sign in
             </Link>
             <Link href="/dashboard" className={cn(buttonVariants({ size: "sm" }))}>
-              Mulai gratis
+              Get started
             </Link>
           </div>
         </div>
@@ -112,22 +112,22 @@ export default function Home() {
           <div className="flex flex-col items-start gap-6 text-left">
             <span className="inline-flex items-center gap-2 rounded-full border bg-muted/50 px-3 py-1 text-xs font-medium text-muted-foreground">
               <Logo className="size-3.5 text-primary" />
-              Satu link untuk semua isi kamu
+              One link for everything you make
             </span>
             <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
-              Semua link kamu, dalam satu halaman
+              All your links, on one page
             </h1>
             <p className="text-pretty text-muted-foreground">
-              Tautree bantu kamu kumpulin sosmed, karya, dan toko jadi satu halaman cantik yang
-              gampang dibagikan — lengkap dengan tema dan analytics.
+              Tautree helps you bring your socials, work, and store together into one beautiful page
+              that’s easy to share — complete with themes and analytics.
             </p>
             <div className="flex flex-wrap items-center gap-3">
               <Link href="/dashboard" className={cn(buttonVariants({ size: "lg" }))}>
-                Buat halaman kamu
+                Create your page
                 <ArrowRightIcon />
               </Link>
               <Link href="/login" className={cn(buttonVariants({ size: "lg", variant: "outline" }))}>
-                Masuk
+                Sign in
               </Link>
             </div>
           </div>
@@ -141,9 +141,9 @@ export default function Home() {
         <section className="border-t bg-muted/30">
           <div className="mx-auto w-full max-w-5xl px-6 py-16 md:py-20">
             <div className="mx-auto flex max-w-xl flex-col items-center gap-3 text-center">
-              <h2 className="text-3xl font-semibold tracking-tight">Semua yang kamu butuhin</h2>
+              <h2 className="text-3xl font-semibold tracking-tight">Everything you need</h2>
               <p className="text-pretty text-muted-foreground">
-                Dibuat ringkas tapi lengkap — biar kamu fokus berbagi, bukan ngurusin teknis.
+                Lean but complete — so you can focus on sharing, not fiddling with the tech.
               </p>
             </div>
             <div className="mt-10 grid gap-4 sm:grid-cols-2">
@@ -165,7 +165,7 @@ export default function Home() {
         {/* How it works */}
         <section className="mx-auto w-full max-w-5xl px-6 py-16 md:py-20">
           <div className="mx-auto flex max-w-xl flex-col items-center gap-3 text-center">
-            <h2 className="text-3xl font-semibold tracking-tight">Mulai dalam 3 langkah</h2>
+            <h2 className="text-3xl font-semibold tracking-tight">Get started in 3 steps</h2>
           </div>
           <div className="mt-10 grid gap-6 sm:grid-cols-3">
             {steps.map((s) => (
@@ -184,11 +184,11 @@ export default function Home() {
         <section className="border-t">
           <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-6 px-6 py-16 text-center md:py-20">
             <h2 className="text-balance text-3xl font-semibold tracking-tight">
-              Siap punya halaman link kamu sendiri?
+              Ready to own your own link page?
             </h2>
-            <p className="text-pretty text-muted-foreground">Gratis, cepat, dan tanpa ribet.</p>
+            <p className="text-pretty text-muted-foreground">Free, fast, and hassle-free.</p>
             <Link href="/dashboard" className={cn(buttonVariants({ size: "lg" }))}>
-              Mulai sekarang
+              Get started
               <ArrowRightIcon />
             </Link>
           </div>
@@ -201,7 +201,7 @@ export default function Home() {
             <Logo className="size-4 text-primary" />
             Tautree
           </span>
-          <span>Dibuat dengan Next.js</span>
+          <span>Made with Next.js</span>
         </div>
       </footer>
     </div>

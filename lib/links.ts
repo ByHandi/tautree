@@ -8,9 +8,9 @@ export type UrlCheck = { ok: true; url: string } | { ok: false; reason: string }
 /** Validate a link title (raw user input). */
 export function validateTitle(raw: string): TitleCheck {
   const title = raw.trim();
-  if (title.length === 0) return { ok: false, reason: "Judul wajib diisi." };
+  if (title.length === 0) return { ok: false, reason: "Title is required." };
   if (title.length > TITLE_MAX) {
-    return { ok: false, reason: `Maksimal ${TITLE_MAX} karakter.` };
+    return { ok: false, reason: `Must be at most ${TITLE_MAX} characters.` };
   }
   return { ok: true };
 }
@@ -21,21 +21,21 @@ export function validateTitle(raw: string): TitleCheck {
  */
 export function normalizeUrl(raw: string): UrlCheck {
   let value = raw.trim();
-  if (value.length === 0) return { ok: false, reason: "URL wajib diisi." };
+  if (value.length === 0) return { ok: false, reason: "URL is required." };
   if (!/^https?:\/\//i.test(value)) value = `https://${value}`;
 
   let parsed: URL;
   try {
     parsed = new URL(value);
   } catch {
-    return { ok: false, reason: "URL tidak valid." };
+    return { ok: false, reason: "Invalid URL." };
   }
 
   if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-    return { ok: false, reason: "Hanya URL http/https yang didukung." };
+    return { ok: false, reason: "Only http/https URLs are supported." };
   }
   if (!parsed.hostname.includes(".")) {
-    return { ok: false, reason: "URL tidak valid." };
+    return { ok: false, reason: "Invalid URL." };
   }
 
   return { ok: true, url: parsed.toString() };

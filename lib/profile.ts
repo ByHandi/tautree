@@ -12,7 +12,7 @@ export function validateName(raw: string): NameCheck {
   const name = raw.trim();
   if (name.length === 0) return { ok: true, name: null };
   if (name.length > NAME_MAX) {
-    return { ok: false, reason: `Maksimal ${NAME_MAX} karakter.` };
+    return { ok: false, reason: `Must be at most ${NAME_MAX} characters.` };
   }
   return { ok: true, name };
 }
@@ -22,7 +22,7 @@ export function validateBio(raw: string): BioCheck {
   const bio = raw.trim();
   if (bio.length === 0) return { ok: true, bio: null };
   if (bio.length > BIO_MAX) {
-    return { ok: false, reason: `Maksimal ${BIO_MAX} karakter.` };
+    return { ok: false, reason: `Must be at most ${BIO_MAX} characters.` };
   }
   return { ok: true, bio };
 }
@@ -40,14 +40,14 @@ export function validateAvatarUrl(raw: string): AvatarCheck {
   try {
     parsed = new URL(value);
   } catch {
-    return { ok: false, reason: "URL gambar tidak valid." };
+    return { ok: false, reason: "Invalid image URL." };
   }
 
   if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-    return { ok: false, reason: "Hanya URL http/https yang didukung." };
+    return { ok: false, reason: "Only http/https URLs are supported." };
   }
   if (!parsed.hostname.includes(".")) {
-    return { ok: false, reason: "URL gambar tidak valid." };
+    return { ok: false, reason: "Invalid image URL." };
   }
 
   return { ok: true, url: parsed.toString() };

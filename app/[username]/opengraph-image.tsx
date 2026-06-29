@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { APP_DOMAIN } from "@/lib/site";
 import { normalizeUsername, validateUsername } from "@/lib/username";
 
-export const alt = "Profil Tautree";
+export const alt = "Tautree profile";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -25,7 +25,7 @@ export default async function OpengraphImage({
 
   const displayName = user?.name ?? (user ? `@${user.username}` : "Tautree");
   const handle = user ? `${APP_DOMAIN}/${user.username}` : APP_DOMAIN;
-  const bio = user?.bio ?? "Semua link kamu dalam satu halaman.";
+  const bio = user?.bio ?? "All your links on one page.";
   const initial = (user?.name ?? user?.username ?? "T").charAt(0).toUpperCase();
 
   return new ImageResponse(

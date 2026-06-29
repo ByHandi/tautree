@@ -40,7 +40,7 @@ export function LinkFormDialog({
 
   useEffect(() => {
     if (state?.ok) {
-      toast.success(isEdit ? "Link diperbarui." : "Link ditambahkan.");
+      toast.success(isEdit ? "Link updated." : "Link added.");
       onClose();
     }
   }, [state, isEdit, onClose]);
@@ -49,11 +49,11 @@ export function LinkFormDialog({
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{isEdit ? "Edit link" : "Tambah link"}</DialogTitle>
+          <DialogTitle>{isEdit ? "Edit link" : "Add link"}</DialogTitle>
           <DialogDescription>
             {isEdit
-              ? "Perbarui judul atau URL link kamu."
-              : "Tambahkan link baru ke halaman publik kamu."}
+              ? "Update your link's title or URL."
+              : "Add a new link to your public page."}
           </DialogDescription>
         </DialogHeader>
 
@@ -62,7 +62,7 @@ export function LinkFormDialog({
 
           <InputText
             name="title"
-            label="Judul"
+            label="Title"
             placeholder="Instagram"
             defaultValue={link?.title ?? ""}
             required
@@ -86,11 +86,11 @@ export function LinkFormDialog({
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose} disabled={isPending}>
-              Batal
+              Cancel
             </Button>
             <Button type="submit" disabled={isPending}>
               {isPending && <Spinner />}
-              {isEdit ? "Simpan" : "Tambah"}
+              {isEdit ? "Save" : "Add"}
             </Button>
           </DialogFooter>
         </form>

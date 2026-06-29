@@ -26,19 +26,19 @@ export default async function DashboardPage() {
   const publicHref = user?.username ? `/${user.username}` : "/";
 
   const stats = [
-    { label: "Total link", value: totalLinks, icon: "link" as const },
-    { label: "Link aktif", value: activeLinks, icon: "eye" as const },
-    { label: "Total klik", value: totalClicks, icon: "mouse-pointer-click" as const },
+    { label: "Total links", value: totalLinks, icon: "link" as const },
+    { label: "Active links", value: activeLinks, icon: "eye" as const },
+    { label: "Total clicks", value: totalClicks, icon: "mouse-pointer-click" as const },
   ];
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-6">
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold tracking-tight">
-          Halo{user?.name ? `, ${user.name}` : ""} 👋
+          Hi{user?.name ? `, ${user.name}` : ""} 👋
         </h1>
         <p className="text-sm text-muted-foreground">
-          Halaman publik kamu:{" "}
+          Your public page:{" "}
           <Link
             href={publicHref}
             target="_blank"
@@ -64,15 +64,15 @@ export default async function DashboardPage() {
 
       <div className="flex flex-col gap-3 rounded-lg border border-dashed p-6">
         <div className="flex flex-col gap-1">
-          <p className="font-medium">Kelola link kamu</p>
+          <p className="font-medium">Manage your links</p>
           <p className="text-sm text-muted-foreground">
-            Tambah, urutkan, dan atur link yang tampil di halaman publik.
+            Add, reorder, and organize the links shown on your public page.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Link href="/dashboard/links" className={cn(buttonVariants())}>
             <Icon name="link" />
-            Kelola link
+            Manage links
           </Link>
           <Link
             href={publicHref}
@@ -81,7 +81,7 @@ export default async function DashboardPage() {
             className={cn(buttonVariants({ variant: "outline" }))}
           >
             <Icon name="external-link" />
-            Lihat halaman publik
+            View public page
           </Link>
         </div>
       </div>

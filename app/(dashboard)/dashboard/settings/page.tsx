@@ -20,9 +20,9 @@ export default async function SettingsPage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 p-6">
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">Profil</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Profile</h1>
         <p className="text-sm text-muted-foreground">
-          Atur tampilan profil publik kamu di{" "}
+          Set up how your public profile looks at{" "}
           {user.username ? (
             <Link
               href={`/${user.username}`}
@@ -33,7 +33,7 @@ export default async function SettingsPage() {
               {APP_DOMAIN}/{user.username}
             </Link>
           ) : (
-            "halaman publik kamu"
+            "your public page"
           )}
           .
         </p>

@@ -36,7 +36,7 @@ export const THEMES: Record<ThemeId, Theme> = {
   },
   dark: {
     id: "dark",
-    label: "Gelap",
+    label: "Dark",
     page: "#0b1120",
     text: "#f8fafc",
     muted: "#94a3b8",

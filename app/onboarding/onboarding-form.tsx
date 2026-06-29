@@ -48,7 +48,7 @@ export function OnboardingForm({ suggestion }: { suggestion: string }) {
         setCheck(
           data.available
             ? { status: "available" }
-            : { status: "taken", reason: data.reason ?? "Tidak tersedia." },
+            : { status: "taken", reason: data.reason ?? "Not available." },
         );
       } catch (err) {
         if ((err as Error).name !== "AbortError") setCheck({ status: "idle" });
@@ -94,16 +94,16 @@ export function OnboardingForm({ suggestion }: { suggestion: string }) {
           (check.status === "idle" || check.status === "checking") && "text-muted-foreground",
         )}
       >
-        {check.status === "available" && "Username tersedia 🎉"}
+        {check.status === "available" && "Username available 🎉"}
         {check.status === "taken" && check.reason}
-        {check.status === "checking" && "Mengecek ketersediaan…"}
+        {check.status === "checking" && "Checking availability…"}
       </p>
 
       {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
 
       <Button type="submit" className="w-full" disabled={!canSubmit}>
         {isPending && <Spinner />}
-        Lanjut
+        Continue
       </Button>
     </form>
   );

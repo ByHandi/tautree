@@ -7,7 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Cek email kamu — Tautree",
+  title: "Check your email — Tautree",
 };
 
 export default function CheckEmailPage() {
@@ -17,14 +17,14 @@ export default function CheckEmailPage() {
         <MailCheckIcon className="size-6" />
       </span>
       <div className="flex flex-col gap-1">
-        <h1 className="text-xl font-semibold tracking-tight">Cek email kamu</h1>
+        <h1 className="text-xl font-semibold tracking-tight">Check your email</h1>
         <p className="text-sm text-muted-foreground">
-          Kami sudah mengirim tautan masuk. Buka email dan klik tautannya untuk
-          melanjutkan.
+          We’ve sent you a sign-in link. Open your email and click the link to
+          continue.
         </p>
       </div>
       <Link href="/login" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>
-        Kembali ke halaman masuk
+        Back to sign in
       </Link>
     </div>
   );

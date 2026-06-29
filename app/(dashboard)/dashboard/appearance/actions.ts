@@ -17,7 +17,7 @@ export async function updateTheme(
   if (!session?.user?.id) redirect("/login");
 
   const theme = String(formData.get("theme") ?? "");
-  if (!isThemeId(theme)) return { error: "Tema tidak valid." };
+  if (!isThemeId(theme)) return { error: "Invalid theme." };
 
   let username: string | null;
   try {
@@ -28,7 +28,7 @@ export async function updateTheme(
     });
     username = updated.username;
   } catch {
-    return { error: "Gagal menyimpan. Coba lagi." };
+    return { error: "Couldn't save. Please try again." };
   }
 
   revalidatePath("/dashboard/appearance");

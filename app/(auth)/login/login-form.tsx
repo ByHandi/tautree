@@ -39,7 +39,7 @@ function GoogleButton() {
   return (
     <Button type="submit" variant="outline" className="w-full" disabled={pending}>
       {pending ? <Spinner /> : <GoogleIcon />}
-      Lanjut dengan Google
+      Continue with Google
     </Button>
   );
 }
@@ -50,15 +50,15 @@ export function LoginForm({ error }: { error?: boolean }) {
   return (
     <div className="flex w-full flex-col gap-5">
       <div className="flex flex-col gap-1 text-center">
-        <h1 className="text-xl font-semibold tracking-tight">Masuk ke Tautree</h1>
+        <h1 className="text-xl font-semibold tracking-tight">Sign in to Tautree</h1>
         <p className="text-sm text-muted-foreground">
-          Pakai Google atau kirim tautan masuk ke email kamu.
+          Use Google or send a sign-in link to your email.
         </p>
       </div>
 
       {error && (
         <p className="rounded-md bg-destructive/10 px-3 py-2 text-center text-sm text-destructive">
-          Terjadi kesalahan saat masuk. Coba lagi.
+          Something went wrong signing in. Please try again.
         </p>
       )}
 
@@ -68,7 +68,7 @@ export function LoginForm({ error }: { error?: boolean }) {
 
       <div className="flex items-center gap-3 text-xs text-muted-foreground">
         <span className="h-px flex-1 bg-border" />
-        atau
+        or
         <span className="h-px flex-1 bg-border" />
       </div>
 
@@ -76,7 +76,7 @@ export function LoginForm({ error }: { error?: boolean }) {
         <Input
           type="email"
           name="email"
-          placeholder="kamu@email.com"
+          placeholder="you@email.com"
           autoComplete="email"
           required
           disabled={isPending}
@@ -84,7 +84,7 @@ export function LoginForm({ error }: { error?: boolean }) {
         {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
         <Button type="submit" className="w-full" disabled={isPending}>
           {isPending ? <Spinner /> : <MailIcon />}
-          Kirim tautan masuk
+          Send sign-in link
         </Button>
       </form>
     </div>

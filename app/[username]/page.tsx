@@ -35,11 +35,11 @@ async function getProfile(rawUsername: string) {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { username } = await params;
   const user = await getProfile(username);
-  if (!user) return { title: "Tidak ditemukan — Tautree" };
+  if (!user) return { title: "Not found — Tautree" };
 
   const name = user.name ?? `@${user.username}`;
   const title = `${name} — Tautree`;
-  const description = user.bio ?? `Semua link ${name} dalam satu halaman.`;
+  const description = user.bio ?? `All of ${name}'s links on one page.`;
 
   return {
     title,
@@ -110,7 +110,7 @@ export default async function PublicProfilePage({ params }: Params) {
         </nav>
       ) : (
         <p className="text-sm" style={{ color: theme.muted }}>
-          Belum ada link.
+          No links yet.
         </p>
       )}
 
@@ -121,7 +121,7 @@ export default async function PublicProfilePage({ params }: Params) {
           style={{ color: theme.muted }}
         >
           <Logo className="size-3.5" />
-          Dibuat dengan Tautree
+          Made with Tautree
         </Link>
       </footer>
     </main>

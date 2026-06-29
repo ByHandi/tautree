@@ -16,7 +16,7 @@ export async function GET(req: Request) {
   const limit = rateLimit(`username-check:${session.user.id}`, { limit: 30, windowMs: 10_000 });
   if (!limit.success) {
     return NextResponse.json(
-      { available: false, reason: "Terlalu banyak permintaan. Coba sebentar lagi." },
+      { available: false, reason: "Too many requests. Please try again shortly." },
       { status: 429, headers: { "Retry-After": "10" } },
     );
   }
@@ -38,6 +38,6 @@ export async function GET(req: Request) {
   const available = !existing || existing.id === session.user.id;
   return NextResponse.json({
     available,
-    reason: available ? undefined : "Username sudah dipakai.",
+    reason: available ? undefined : "This username is already taken.",
   });
 }

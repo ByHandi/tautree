@@ -20,7 +20,7 @@ export function AppearanceForm({ current }: { current: ThemeId }) {
   );
 
   useEffect(() => {
-    if (state?.ok) toast.success("Tema disimpan.");
+    if (state?.ok) toast.success("Theme saved.");
   }, [state]);
 
   return (
@@ -73,7 +73,7 @@ export function AppearanceForm({ current }: { current: ThemeId }) {
       <div className="flex justify-end">
         <Button type="submit" disabled={isPending || selected === current}>
           {isPending && <Spinner />}
-          Simpan
+          Save
         </Button>
       </div>
     </form>

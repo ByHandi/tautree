@@ -44,7 +44,7 @@ export async function createLink(
       data: { userId, title: String(formData.get("title")).trim(), url: url.url, order },
     });
   } catch {
-    return { error: "Gagal menyimpan. Coba lagi." };
+    return { error: "Couldn't save. Please try again." };
   }
 
   revalidate();
@@ -57,7 +57,7 @@ export async function updateLink(
 ): Promise<LinkFormState> {
   const userId = await requireUserId();
   const id = String(formData.get("id") ?? "");
-  if (!id) return { error: "Link tidak ditemukan." };
+  if (!id) return { error: "Link not found." };
 
   const title = validateTitle(String(formData.get("title") ?? ""));
   if (!title.ok) return { error: title.reason };
@@ -69,7 +69,7 @@ export async function updateLink(
     where: { id, userId },
     data: { title: String(formData.get("title")).trim(), url: url.url },
   });
-  if (res.count === 0) return { error: "Link tidak ditemukan." };
+  if (res.count === 0) return { error: "Link not found." };
 
   revalidate();
   return { ok: true };

@@ -25,13 +25,13 @@ export async function claimUsername(
     select: { id: true },
   });
   if (existing && existing.id !== session.user.id) {
-    return { error: "Username sudah dipakai." };
+    return { error: "Username already taken." };
   }
 
   try {
     await db.user.update({ where: { id: session.user.id }, data: { username } });
   } catch {
-    return { error: "Gagal menyimpan. Coba lagi." };
+    return { error: "Couldn't save. Please try again." };
   }
 
   // Refresh the JWT so session.user.username reflects the claim immediately.

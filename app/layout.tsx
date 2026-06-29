@@ -18,7 +18,7 @@ const fontMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: "Tautree — One link for everything",
-  description: "Buat satu halaman untuk semua link kamu. Bagikan di mana saja.",
+  description: "Create one page for all your links. Share it anywhere.",
 };
 
 export default function RootLayout({

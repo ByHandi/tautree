@@ -31,10 +31,10 @@ export function SettingsForm({ username, name, bio, avatarUrl }: Props) {
   const [avatarValue, setAvatarValue] = useState(avatarUrl ?? "");
 
   useEffect(() => {
-    if (state?.ok) toast.success("Profil disimpan.");
+    if (state?.ok) toast.success("Profile saved.");
   }, [state]);
 
-  const displayName = nameValue.trim() || (username ? `@${username}` : "Kamu");
+  const displayName = nameValue.trim() || (username ? `@${username}` : "You");
   const initial = (nameValue.trim() || username || "?").charAt(0).toUpperCase();
 
   return (
@@ -64,8 +64,8 @@ export function SettingsForm({ username, name, bio, avatarUrl }: Props) {
 
       <InputText
         name="name"
-        label="Nama"
-        placeholder="Nama tampilan kamu"
+        label="Name"
+        placeholder="Your display name"
         value={nameValue}
         onChange={(e) => setNameValue(e.target.value)}
         maxLength={NAME_MAX}
@@ -74,9 +74,9 @@ export function SettingsForm({ username, name, bio, avatarUrl }: Props) {
 
       <InputText
         name="avatarUrl"
-        label="Avatar (URL gambar)"
-        placeholder="https://contoh.com/foto.jpg"
-        description="Tempel URL gambar. Kosongkan untuk pakai inisial nama."
+        label="Avatar (image URL)"
+        placeholder="https://example.com/photo.jpg"
+        description="Paste an image URL. Leave empty to use your name's initial."
         value={avatarValue}
         onChange={(e) => setAvatarValue(e.target.value)}
         inputMode="url"
@@ -88,8 +88,8 @@ export function SettingsForm({ username, name, bio, avatarUrl }: Props) {
       <InputTextarea
         name="bio"
         label="Bio"
-        placeholder="Ceritain sedikit tentang kamu…"
-        description={`${bioValue.length}/${BIO_MAX} karakter`}
+        placeholder="Tell us a little about yourself…"
+        description={`${bioValue.length}/${BIO_MAX} characters`}
         value={bioValue}
         onChange={(e) => setBioValue(e.target.value)}
         maxLength={BIO_MAX}
@@ -101,7 +101,7 @@ export function SettingsForm({ username, name, bio, avatarUrl }: Props) {
       <div className="flex justify-end">
         <Button type="submit" disabled={isPending}>
           {isPending && <Spinner />}
-          Simpan
+          Save
         </Button>
       </div>
     </form>

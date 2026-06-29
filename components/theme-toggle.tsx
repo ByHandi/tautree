@@ -16,7 +16,7 @@ function useThemeToggle() {
 
   const isDark = resolvedTheme === "dark";
   const toggle = () => setTheme(isDark ? "light" : "dark");
-  const label = isDark ? "Mode terang" : "Mode gelap";
+  const label = isDark ? "Light mode" : "Dark mode";
 
   return { mounted, isDark, toggle, label };
 }

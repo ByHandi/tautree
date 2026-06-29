@@ -141,9 +141,9 @@ const { setOpenMobile} =  useSidebar()
 
           <SidebarMenuItem>
             <form action={signOutAction}>
-              <SidebarMenuButton type="submit" tooltip="Keluar">
+              <SidebarMenuButton type="submit" tooltip="Sign out">
                 <Icon name="log-out" />
-                <span>Keluar</span>
+                <span>Sign out</span>
               </SidebarMenuButton>
             </form>
           </SidebarMenuItem>

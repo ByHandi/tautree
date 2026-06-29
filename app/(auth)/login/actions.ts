@@ -16,7 +16,7 @@ export async function signInWithEmail(_prev: EmailState, formData: FormData): Pr
   const email = String(formData.get("email") ?? "").trim();
 
   if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-    return { error: "Masukkan alamat email yang valid." };
+    return { error: "Enter a valid email address." };
   }
 
   try {
@@ -24,7 +24,7 @@ export async function signInWithEmail(_prev: EmailState, formData: FormData): Pr
   } catch (error) {
     // A successful signIn throws NEXT_REDIRECT — let it propagate.
     if (error instanceof AuthError) {
-      return { error: "Gagal mengirim email. Coba lagi." };
+      return { error: "Couldn't send email. Please try again." };
     }
     throw error;
   }

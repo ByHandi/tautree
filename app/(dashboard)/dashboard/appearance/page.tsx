@@ -21,9 +21,9 @@ export default async function AppearancePage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 p-6">
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">Tampilan</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Appearance</h1>
         <p className="text-sm text-muted-foreground">
-          Pilih tema warna untuk halaman publik kamu.
+          Pick a color theme for your public page.
         </p>
       </div>
 

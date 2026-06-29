@@ -39,19 +39,19 @@ export function validateUsername(raw: string): UsernameCheck {
   const username = raw.trim().toLowerCase();
 
   if (username.length < USERNAME_MIN) {
-    return { ok: false, reason: `Minimal ${USERNAME_MIN} karakter.` };
+    return { ok: false, reason: `Must be at least ${USERNAME_MIN} characters.` };
   }
   if (username.length > USERNAME_MAX) {
-    return { ok: false, reason: `Maksimal ${USERNAME_MAX} karakter.` };
+    return { ok: false, reason: `Must be at most ${USERNAME_MAX} characters.` };
   }
   if (!USERNAME_RE.test(username)) {
     return {
       ok: false,
-      reason: "Hanya huruf kecil, angka, dan underscore (_).",
+      reason: "Only lowercase letters, numbers, and underscores (_).",
     };
   }
   if (RESERVED.has(username)) {
-    return { ok: false, reason: "Username ini tidak tersedia." };
+    return { ok: false, reason: "This username isn't available." };
   }
   return { ok: true };
 }

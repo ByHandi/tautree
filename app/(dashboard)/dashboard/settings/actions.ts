@@ -34,7 +34,7 @@ export async function updateProfile(
     });
     username = updated.username;
   } catch {
-    return { error: "Gagal menyimpan. Coba lagi." };
+    return { error: "Couldn't save. Please try again." };
   }
 
   revalidatePath("/dashboard");

@@ -9,7 +9,7 @@ import { db } from "@/lib/db";
 import { USERNAME_MAX } from "@/lib/username";
 
 export const metadata: Metadata = {
-  title: "Pilih username — Tautree",
+  title: "Choose username — Tautree",
 };
 
 export default async function OnboardingPage() {
@@ -35,9 +35,9 @@ export default async function OnboardingPage() {
           <span className="mx-auto mb-2 flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
             <Logo className="size-5" />
           </span>
-          <h1 className="text-xl font-semibold tracking-tight">Pilih username kamu</h1>
+          <h1 className="text-xl font-semibold tracking-tight">Choose your username</h1>
           <p className="text-sm text-muted-foreground">
-            Ini jadi alamat halaman publik kamu. Bisa diganti nanti.
+            This becomes your public page address. You can change it later.
           </p>
         </div>
         <OnboardingForm suggestion={base} />

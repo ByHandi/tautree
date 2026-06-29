@@ -50,9 +50,9 @@ export default async function AnalyticsPage() {
   const maxLinkClicks = Math.max(1, ...links.map((l) => l.clicks));
 
   const stats = [
-    { label: "Total klik", value: totalClicks, icon: "mouse-pointer-click" as const },
-    { label: "Klik 30 hari", value: windowClicks, icon: "trending-up" as const },
-    { label: "Total link", value: links.length, icon: "link" as const },
+    { label: "Total clicks", value: totalClicks, icon: "mouse-pointer-click" as const },
+    { label: "Clicks (30 days)", value: windowClicks, icon: "trending-up" as const },
+    { label: "Total links", value: links.length, icon: "link" as const },
   ];
 
   return (
@@ -60,7 +60,7 @@ export default async function AnalyticsPage() {
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold tracking-tight">Analytics</h1>
         <p className="text-sm text-muted-foreground">
-          Lihat performa link kamu dalam 30 hari terakhir.
+          See how your links have performed over the last 30 days.
         </p>
       </div>
 
@@ -77,10 +77,10 @@ export default async function AnalyticsPage() {
       </div>
 
       <section className="flex flex-col gap-4 rounded-lg border bg-card p-5">
-        <h2 className="text-sm font-medium">Klik per hari</h2>
+        <h2 className="text-sm font-medium">Clicks per day</h2>
         {windowClicks === 0 ? (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            Belum ada klik dalam 30 hari terakhir.
+            No clicks in the last 30 days yet.
           </p>
         ) : (
           <div className="flex h-40 items-end gap-1">
@@ -88,7 +88,7 @@ export default async function AnalyticsPage() {
               <div
                 key={s.date.toISOString()}
                 className="group flex flex-1 flex-col items-center justify-end"
-                title={`${s.date.toLocaleDateString("id-ID", { day: "numeric", month: "short" })}: ${s.count} klik`}
+                title={`${s.date.toLocaleDateString("en-US", { day: "numeric", month: "short" })}: ${s.count} clicks`}
               >
                 <div
                   className="w-full rounded-sm bg-primary/80 transition-colors group-hover:bg-primary"
@@ -101,9 +101,9 @@ export default async function AnalyticsPage() {
       </section>
 
       <section className="flex flex-col gap-3 rounded-lg border bg-card p-5">
-        <h2 className="text-sm font-medium">Klik per link</h2>
+        <h2 className="text-sm font-medium">Clicks per link</h2>
         {links.length === 0 ? (
-          <p className="py-4 text-center text-sm text-muted-foreground">Belum ada link.</p>
+          <p className="py-4 text-center text-sm text-muted-foreground">No links yet.</p>
         ) : (
           <ul className="flex flex-col gap-3">
             {links.map((link) => (
@@ -111,7 +111,7 @@ export default async function AnalyticsPage() {
                 <div className="flex items-center justify-between gap-3 text-sm">
                   <span className={cn("truncate", !link.isActive && "text-muted-foreground")}>
                     {link.title}
-                    {!link.isActive && " (nonaktif)"}
+                    {!link.isActive && " (inactive)"}
                   </span>
                   <span className="shrink-0 font-medium tabular-nums">{link.clicks}</span>
                 </div>

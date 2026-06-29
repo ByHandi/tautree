@@ -75,7 +75,7 @@ function SortableLinkRow({
       <button
         type="button"
         className="-ml-1 cursor-grab touch-none rounded-md p-1 text-muted-foreground hover:bg-muted active:cursor-grabbing"
-        aria-label="Geser untuk mengurutkan"
+        aria-label="Drag to reorder"
         {...attributes}
         {...listeners}
       >
@@ -96,7 +96,7 @@ function SortableLinkRow({
         checked={link.isActive}
         onCheckedChange={(v) => onToggle(link, v)}
         disabled={isPending}
-        aria-label={link.isActive ? "Nonaktifkan link" : "Aktifkan link"}
+        aria-label={link.isActive ? "Deactivate link" : "Activate link"}
       />
 
       <Button variant="ghost" size="icon-sm" onClick={() => onEdit(link)} aria-label="Edit link">
@@ -106,7 +106,7 @@ function SortableLinkRow({
         variant="ghost"
         size="icon-sm"
         onClick={() => onDelete(link)}
-        aria-label="Hapus link"
+        aria-label="Delete link"
       >
         <Icon name="trash-2" />
       </Button>
@@ -156,7 +156,7 @@ export function LinksManager({ links }: { links: LinkItem[] }) {
     const id = deleting.id;
     startTransition(async () => {
       await deleteLink(id);
-      toast.success("Link dihapus.");
+      toast.success("Link deleted.");
       setDeleting(null);
     });
   }
@@ -165,11 +165,11 @@ export function LinksManager({ links }: { links: LinkItem[] }) {
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          {items.length === 0 ? "Belum ada link." : `${items.length} link`}
+          {items.length === 0 ? "No links yet." : `${items.length} links`}
         </p>
         <Button onClick={() => setEditing(null)}>
           <Icon name="plus" />
-          Tambah link
+          Add link
         </Button>
       </div>
 
@@ -179,14 +179,14 @@ export function LinksManager({ links }: { links: LinkItem[] }) {
             <Icon name="link" className="size-5 text-muted-foreground" />
           </span>
           <div className="flex flex-col gap-1">
-            <p className="font-medium">Belum ada link</p>
+            <p className="font-medium">No links yet</p>
             <p className="text-sm text-muted-foreground">
-              Tambah link pertama kamu untuk mulai membangun halaman publik.
+              Add your first link to start building your public page.
             </p>
           </div>
           <Button onClick={() => setEditing(null)} variant="outline">
             <Icon name="plus" />
-            Tambah link
+            Add link
           </Button>
         </div>
       ) : (
@@ -223,18 +223,18 @@ export function LinksManager({ links }: { links: LinkItem[] }) {
       <Dialog open={deleting !== null} onOpenChange={(open) => !open && setDeleting(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Hapus link?</DialogTitle>
+            <DialogTitle>Delete link?</DialogTitle>
             <DialogDescription>
-              Link “{deleting?.title}” akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.
+              The link “{deleting?.title}” will be permanently deleted. This action can’t be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleting(null)} disabled={isPending}>
-              Batal
+              Cancel
             </Button>
             <Button variant="destructive" onClick={handleDelete} disabled={isPending}>
               {isPending && <Spinner />}
-              Hapus
+              Delete
             </Button>
           </DialogFooter>
         </DialogContent>
