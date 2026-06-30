@@ -8,10 +8,7 @@ import { normalizeUsername, validateUsername } from "@/lib/username";
 
 export type ClaimState = { error?: string } | undefined;
 
-export async function claimUsername(
-  _prev: ClaimState,
-  formData: FormData,
-): Promise<ClaimState> {
+export async function claimUsername(_prev: ClaimState, formData: FormData): Promise<ClaimState> {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 

@@ -23,6 +23,7 @@ interface DateRangePickerProps {
   disabled?: boolean;
   numberOfMonths?: number;
   dateFormat?: string;
+  popoverAlign?: "start" | "end" | "center";
   className?: string;
   classNames?: {
     base?: string;
@@ -65,6 +66,7 @@ function DateRangePicker(props: DateRangePickerProps) {
     disabled,
     numberOfMonths = 2,
     dateFormat = "LLL dd, y",
+    popoverAlign = "start",
     className,
     classNames,
   } = props;
@@ -121,7 +123,7 @@ function DateRangePicker(props: DateRangePickerProps) {
           </Button>
         </PopoverTrigger>
 
-        <PopoverContent align="start" className={cn("w-auto p-0", classNames?.content)}>
+        <PopoverContent align={popoverAlign} className={cn("w-auto p-0", classNames?.content)}>
           <Calendar
             mode="range"
             numberOfMonths={numberOfMonths}

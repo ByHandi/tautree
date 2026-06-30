@@ -1,5 +1,6 @@
-import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
+
+import NextAuth from "next-auth";
 
 import authConfig from "@/auth.config";
 
@@ -12,11 +13,13 @@ export default auth((req) => {
 
   const path = nextUrl.pathname;
   const isOnDashboard = path.startsWith("/dashboard");
+  const isOnAdmin = path.startsWith("/admin");
   const isOnLogin = path === "/login" || path.startsWith("/login/");
 
-  // Gate the app behind auth. The username -> /onboarding check lives in the
-  // dashboard layout (server, DB-truthful) since the JWT can't see the DB here.
-  if (isOnDashboard && !isLoggedIn) {
+  // Gate the app behind auth. The username -> /onboarding check (dashboard) and
+  // the ADMIN role check (admin) both live in their layouts (server,
+  // DB-truthful) since the JWT can't see the DB here.
+  if ((isOnDashboard || isOnAdmin) && !isLoggedIn) {
     const url = new URL("/login", nextUrl);
     url.searchParams.set("callbackUrl", path);
     return NextResponse.redirect(url);
@@ -31,5 +34,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login", "/login/:path*"],
+  matcher: ["/dashboard/:path*", "/admin/:path*", "/login", "/login/:path*"],
 };

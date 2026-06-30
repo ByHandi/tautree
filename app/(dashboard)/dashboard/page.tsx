@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import QRCode from "qrcode";
+
 import { auth } from "@/auth";
+import { QrCard } from "@/components/qr-card";
 import { buttonVariants } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
 import { db } from "@/lib/db";
-import { APP_DOMAIN } from "@/lib/site";
+import { APP_DOMAIN, APP_URL } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export default async function DashboardPage() {
@@ -24,6 +27,19 @@ export default async function DashboardPage() {
 
   const totalClicks = sum._sum.clicks ?? 0;
   const publicHref = user?.username ? `/${user.username}` : "/";
+
+  // QR for the public page — handy for print/offline sharing. Generated as a
+  // PNG data URI (qrcode is pure-JS, safe in the standalone server bundle).
+  const profileUrl = `${APP_URL}/${user?.username ?? ""}`;
+  const qrDataUri = user?.username
+    ? await QRCode.toDataURL(profileUrl, {
+        width: 512,
+        margin: 1,
+        // High EC so the centered logo punch-out stays scannable.
+        errorCorrectionLevel: "H",
+        color: { dark: "#0f172a", light: "#ffffff" },
+      })
+    : null;
 
   const stats = [
     { label: "Total links", value: totalLinks, icon: "link" as const },
@@ -85,6 +101,10 @@ export default async function DashboardPage() {
           </Link>
         </div>
       </div>
+
+      {qrDataUri && (
+        <QrCard dataUri={qrDataUri} url={profileUrl} filename={`tautree-${user?.username}.png`} />
+      )}
     </div>
   );
 }

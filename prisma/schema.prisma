@@ -9,6 +9,20 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
+// LINK   = a normal clickable button.
+// HEADER = a non-clickable section label used to group links (no URL).
+// EMBED  = a YouTube/Spotify URL rendered inline as an iframe.
+enum LinkType {
+  LINK
+  HEADER
+  EMBED
+}
+
 model User {
   id            String    @id @default(uuid(7))
   email         String    @unique
@@ -19,7 +33,16 @@ model User {
   image         String?
   avatarUrl     String?   @map("avatar_url")
   theme         String    @default("default")
+  customTheme   Json?     @map("custom_theme")
+  // Public-page link button styling (orthogonal to the color theme).
+  buttonShape   String    @default("rounded") @map("button_shape")
+  buttonFill    String    @default("solid") @map("button_fill")
+  font          String    @default("sans")
+  role          Role      @default(USER)
+  suspended     Boolean   @default(false)
   links         Link[]
+  socials       SocialLink[]
+  views         ProfileView[]
   accounts      Account[]
   sessions      Session[]
   createdAt     DateTime  @default(now()) @map("created_at")
@@ -76,18 +99,60 @@ model Link {
   id        String   @id @default(uuid(7))
   userId    String   @map("user_id")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      LinkType @default(LINK)
   title     String
-  url       String
-  order     Int      @default(0)
-  isActive  Boolean  @default(true) @map("is_active")
-  clicks    Int      @default(0)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  // Null for HEADER rows (section labels have no destination).
+  url       String?
+  // Optional custom icon for a LINK, stored as a small image data URI
+  // (resized client-side, size-capped server-side). Null = use the auto
+  // social icon. See `parseThumbnail`.
+  thumbnail String?
+  // Pins a LINK to the top of the public page as a larger hero card.
+  featured  Boolean   @default(false)
+  order     Int       @default(0)
+  isActive  Boolean   @default(true) @map("is_active")
+  clicks    Int       @default(0)
+  // Optional scheduling window. Null = no bound: a null `startsAt` means live
+  // immediately, a null `endsAt` means live forever. See `isLinkLive`.
+  startsAt  DateTime? @map("starts_at")
+  endsAt    DateTime? @map("ends_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
 
   clickEvents Click[]
 
   @@index([userId])
   @@map("links")
+}
+
+// Compact social icons shown in the public profile header (separate from the
+// link buttons). The platform/icon is derived from the URL at render time.
+model SocialLink {
+  id        String   @id @default(uuid(7))
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  url       String
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@map("social_links")
+}
+
+// Privacy-friendly profile page view log. Captures only a coarse device class
+// and the registrable referrer host (or null = direct) — no IP, no full
+// user-agent, no cookies. Powers the traffic-source and device breakdowns.
+model ProfileView {
+  id        String   @id @default(uuid(7))
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device    String
+  referrer  String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("profile_views")
 }
 
 // Per-click event log for time-series analytics. The denormalized `Link.clicks`

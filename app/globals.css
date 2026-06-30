@@ -56,63 +56,67 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.849 0.1816 161.89);
   --primary-foreground: oklch(0.145 0 0);
-  --secondary: oklch(0.96 0.025 225);
-  --secondary-foreground: oklch(0.2 0.04 255);
-  --muted: oklch(0.965 0.018 230);
-  --muted-foreground: oklch(0.48 0.04 250);
-  --accent: oklch(0.94 0.05 210);
-  --accent-foreground: oklch(0.2 0.045 255);
+  /* Supporting tokens tinted toward the primary's green hue (~162) at low
+     chroma so the chrome reads as a cohesive green-gray, not blue. */
+  --secondary: oklch(0.96 0.022 162);
+  --secondary-foreground: oklch(0.25 0.035 165);
+  --muted: oklch(0.965 0.016 162);
+  --muted-foreground: oklch(0.5 0.035 165);
+  --accent: oklch(0.93 0.05 165);
+  --accent-foreground: oklch(0.25 0.045 165);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.88 0.025 235);
-  --input: oklch(0.88 0.025 235);
+  --border: oklch(0.89 0.022 165);
+  --input: oklch(0.89 0.022 165);
   --ring: oklch(0.849 0.1816 161.89);
+  /* Sequential mint → teal → cyan ramp, anchored on the primary. */
   --chart-1: oklch(0.849 0.1816 161.89);
-  --chart-2: oklch(0.68 0.18 255);
-  --chart-3: oklch(0.72 0.13 245);
-  --chart-4: oklch(0.78 0.14 185);
-  --chart-5: oklch(0.62 0.18 285);
+  --chart-2: oklch(0.74 0.14 175);
+  --chart-3: oklch(0.68 0.12 190);
+  --chart-4: oklch(0.62 0.11 205);
+  --chart-5: oklch(0.56 0.1 220);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0.01 230);
+  --sidebar: oklch(0.985 0.01 162);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.849 0.1816 161.89);
   --sidebar-primary-foreground: oklch(0.145 0 0);
-  --sidebar-accent: oklch(0.94 0.05 210);
-  --sidebar-accent-foreground: oklch(0.2 0.045 255);
-  --sidebar-border: oklch(0.88 0.025 235);
+  --sidebar-accent: oklch(0.93 0.05 165);
+  --sidebar-accent-foreground: oklch(0.25 0.045 165);
+  --sidebar-border: oklch(0.89 0.022 165);
   --sidebar-ring: oklch(0.849 0.1816 161.89);
 }
 
 .dark {
   --background: oklch(0.2046 0 0);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.24 0.055 260);
+  --card: oklch(0.24 0.03 165);
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.24 0.055 260);
+  --popover: oklch(0.24 0.03 165);
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.849 0.1816 161.89);
   --primary-foreground: oklch(0.145 0 0);
-  --secondary: oklch(0.28 0.055 255);
-  --secondary-foreground: oklch(0.96 0.015 230);
-  --muted: oklch(0.28 0.045 255);
-  --muted-foreground: oklch(0.74 0.04 235);
-  --accent: oklch(0.3 0.07 230);
-  --accent-foreground: oklch(0.96 0.015 230);
+  /* Same green-hued (~165) low-chroma tint as light mode, for the dark chrome. */
+  --secondary: oklch(0.28 0.03 165);
+  --secondary-foreground: oklch(0.96 0.013 162);
+  --muted: oklch(0.28 0.028 165);
+  --muted-foreground: oklch(0.74 0.032 165);
+  --accent: oklch(0.32 0.05 165);
+  --accent-foreground: oklch(0.96 0.013 162);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.42 0.055 255 / 45%);
-  --input: oklch(0.42 0.055 255 / 55%);
+  --border: oklch(0.45 0.03 165 / 45%);
+  --input: oklch(0.45 0.03 165 / 55%);
   --ring: oklch(0.849 0.1816 161.89);
   --chart-1: oklch(0.849 0.1816 161.89);
-  --chart-2: oklch(0.68 0.18 255);
-  --chart-3: oklch(0.78 0.14 185);
-  --chart-4: oklch(0.72 0.16 300);
-  --chart-5: oklch(0.82 0.13 120);
-  --sidebar: oklch(0.19 0.055 260);
+  --chart-2: oklch(0.76 0.14 175);
+  --chart-3: oklch(0.7 0.12 190);
+  --chart-4: oklch(0.64 0.11 205);
+  --chart-5: oklch(0.58 0.1 220);
+  --sidebar: oklch(0.19 0.03 165);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.849 0.1816 161.89);
   --sidebar-primary-foreground: oklch(0.145 0 0);
-  --sidebar-accent: oklch(0.3 0.07 230);
-  --sidebar-accent-foreground: oklch(0.96 0.015 230);
-  --sidebar-border: oklch(0.42 0.055 255 / 45%);
+  --sidebar-accent: oklch(0.32 0.05 165);
+  --sidebar-accent-foreground: oklch(0.96 0.013 162);
+  --sidebar-border: oklch(0.45 0.03 165 / 45%);
   --sidebar-ring: oklch(0.849 0.1816 161.89);
 }
 

@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 
 import { MailCheckIcon } from "lucide-react";
+import type { Metadata } from "next";
 
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -19,8 +19,7 @@ export default function CheckEmailPage() {
       <div className="flex flex-col gap-1">
         <h1 className="text-xl font-semibold tracking-tight">Check your email</h1>
         <p className="text-sm text-muted-foreground">
-          We’ve sent you a sign-in link. Open your email and click the link to
-          continue.
+          We’ve sent you a sign-in link. Open your email and click the link to continue.
         </p>
       </div>
       <Link href="/login" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>

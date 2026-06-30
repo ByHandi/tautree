@@ -1,12 +1,23 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import type { Metadata } from "next";
+
 import { Logo } from "@/components/logo";
+import { ShareButton } from "@/components/share-button";
+import { SocialIcon } from "@/components/social-icon";
 import Icon from "@/components/ui/icon";
+import { ViewTracker } from "@/components/view-tracker";
+import { linkButtonAppearance, parseButtonFill, parseButtonShape } from "@/lib/button-style";
 import { db } from "@/lib/db";
+import { getEmbed } from "@/lib/embed";
+import { fontStack, parseFont } from "@/lib/fonts";
+import { liveScheduleWhere } from "@/lib/links";
+import { isProfilePublic } from "@/lib/profile";
+import { APP_URL } from "@/lib/site";
 import { getTheme } from "@/lib/themes";
 import { normalizeUsername, validateUsername } from "@/lib/username";
+import { cn } from "@/lib/utils";
 
 type Params = { params: Promise<{ username: string }> };
 
@@ -14,22 +25,36 @@ async function getProfile(rawUsername: string) {
   const username = normalizeUsername(decodeURIComponent(rawUsername));
   if (!validateUsername(username).ok) return null;
 
-  return db.user.findUnique({
+  const user = await db.user.findUnique({
     where: { username },
     select: {
+      id: true,
       name: true,
       username: true,
       bio: true,
       image: true,
       avatarUrl: true,
       theme: true,
+      customTheme: true,
+      buttonShape: true,
+      buttonFill: true,
+      font: true,
+      suspended: true,
+      socials: { orderBy: { order: "asc" }, select: { id: true, url: true } },
       links: {
-        where: { isActive: true },
+        // Only links that are active AND inside their scheduling window. Mirrors
+        // `isLinkLive`; suspended-owner gating is handled by `isProfilePublic`.
+        where: { isActive: true, ...liveScheduleWhere(new Date()) },
         orderBy: { order: "asc" },
-        select: { id: true, title: true },
+        select: { id: true, type: true, title: true, url: true, thumbnail: true, featured: true },
+        // (url is the source for embeds; getEmbed runs at render time below)
       },
     },
   });
+
+  // A suspended account is invisible to the public — treat it as not found.
+  if (user && !isProfilePublic(user)) return null;
+  return user;
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
@@ -57,13 +82,122 @@ export default async function PublicProfilePage({ params }: Params) {
   const displayName = user.name ?? `@${user.username}`;
   const initial = (user.name ?? user.username ?? "?").charAt(0).toUpperCase();
   const avatar = user.avatarUrl ?? user.image;
-  const theme = getTheme(user.theme);
+  const theme = getTheme(user.theme, user.customTheme);
+  const btn = linkButtonAppearance(
+    theme,
+    parseButtonShape(user.buttonShape),
+    parseButtonFill(user.buttonFill),
+  );
+  const links = user.links;
+  // Featured links are pinned to the top as larger hero cards; everything else
+  // keeps its order (and grouping headers) below.
+  const heroes = links.filter((l) => l.featured && l.type === "LINK");
+  const rest = links.filter((l) => !(l.featured && l.type === "LINK"));
+
+  function renderItem(link: (typeof links)[number], hero = false) {
+    if (link.type === "HEADER") {
+      return (
+        <h2
+          key={link.id}
+          className="px-1 pt-4 text-center text-xs font-semibold uppercase tracking-widest first:pt-0"
+          style={{ color: theme.muted }}
+        >
+          {link.title}
+        </h2>
+      );
+    }
+
+    const embed = link.type === "EMBED" ? getEmbed(link.url ?? "") : null;
+    if (embed?.provider === "youtube") {
+      return (
+        <div
+          key={link.id}
+          className="aspect-video w-full overflow-hidden border shadow-xs"
+          style={{ borderColor: theme.cardBorder, borderRadius: btn.borderRadius }}
+        >
+          <iframe
+            src={embed.src}
+            title={link.title}
+            className="size-full"
+            loading="lazy"
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+      );
+    }
+    if (embed?.provider === "spotify") {
+      return (
+        <iframe
+          key={link.id}
+          src={embed.src}
+          title={link.title}
+          height={embed.height}
+          className="w-full"
+          style={{ borderRadius: btn.borderRadius }}
+          loading="lazy"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        />
+      );
+    }
+
+    // LINK (and any embed that failed to resolve) → a clickable button. Heroes
+    // (featured) get extra padding and a larger label/icon.
+    return (
+      <a
+        key={link.id}
+        href={`/api/r/${link.id}`}
+        className={cn(
+          "group flex items-center gap-3 font-medium transition-all hover:-translate-y-0.5",
+          hero ? "px-6 py-5 text-lg" : "px-5 py-4",
+          btn.shadow && "shadow-xs hover:shadow-md",
+        )}
+        style={{
+          background: btn.background,
+          color: btn.color,
+          borderColor: btn.borderColor,
+          borderWidth: btn.borderWidth,
+          borderStyle: "solid",
+          borderRadius: btn.borderRadius,
+        }}
+      >
+        {link.thumbnail ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={link.thumbnail}
+            alt=""
+            className={cn("shrink-0 rounded-md object-cover", hero ? "size-8" : "size-6")}
+          />
+        ) : (
+          <SocialIcon url={link.url ?? ""} className={cn("shrink-0", hero ? "size-6" : "size-5")} />
+        )}
+        <span className="min-w-0 flex-1 truncate text-center">{link.title}</span>
+        <Icon
+          name="arrow-up-right"
+          className={cn(
+            "shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5",
+            hero ? "size-5" : "size-4",
+          )}
+        />
+      </a>
+    );
+  }
 
   return (
     <main
-      className="mx-auto flex min-h-dvh w-full max-w-lg flex-col items-center gap-6 px-5 py-16"
-      style={{ background: theme.page, color: theme.text }}
+      className="relative mx-auto flex min-h-dvh w-full max-w-lg flex-col items-center gap-6 px-5 py-16"
+      style={{
+        background: theme.page,
+        color: theme.text,
+        fontFamily: fontStack(parseFont(user.font)),
+      }}
     >
+      <ViewTracker userId={user.id} />
+      <ShareButton
+        url={`${APP_URL}/${user.username}`}
+        username={user.username ?? ""}
+        color={theme.text}
+      />
       <header className="flex flex-col items-center gap-3 text-center">
         <span
           className="flex size-24 items-center justify-center overflow-hidden rounded-full text-2xl font-semibold"
@@ -85,33 +219,37 @@ export default async function PublicProfilePage({ params }: Params) {
             </p>
           )}
         </div>
+
+        {user.socials.length > 0 && (
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-1">
+            {user.socials.map((s) => (
+              <a
+                key={s.id}
+                href={s.url}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="transition-opacity hover:opacity-70"
+                style={{ color: theme.text }}
+              >
+                <SocialIcon url={s.url} className="size-5" />
+              </a>
+            ))}
+          </div>
+        )}
       </header>
 
-      {user.links.length > 0 ? (
-        <nav className="flex w-full flex-col gap-3">
-          {user.links.map((link) => (
-            <a
-              key={link.id}
-              href={`/api/r/${link.id}`}
-              className="group flex items-center gap-3 rounded-xl border px-5 py-4 font-medium shadow-xs transition-all hover:-translate-y-0.5 hover:shadow-md"
-              style={{
-                background: theme.card,
-                color: theme.cardText,
-                borderColor: theme.cardBorder,
-              }}
-            >
-              <span className="min-w-0 flex-1 truncate text-center">{link.title}</span>
-              <Icon
-                name="arrow-up-right"
-                className="size-4 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-              />
-            </a>
-          ))}
-        </nav>
+      {heroes.length > 0 && (
+        <div className="flex w-full flex-col gap-3">{heroes.map((l) => renderItem(l, true))}</div>
+      )}
+
+      {rest.length > 0 ? (
+        <nav className="flex w-full flex-col gap-3">{rest.map((l) => renderItem(l))}</nav>
       ) : (
-        <p className="text-sm" style={{ color: theme.muted }}>
-          No links yet.
-        </p>
+        heroes.length === 0 && (
+          <p className="text-sm" style={{ color: theme.muted }}>
+            No links yet.
+          </p>
+        )
       )}
 
       <footer className="mt-auto pt-8">

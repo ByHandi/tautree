@@ -57,8 +57,8 @@ const navItems = [
   },
 ] as const;
 
-function AppSidebar({ user }: { user: SidebarUser }) {
-const { setOpenMobile} =  useSidebar()
+function AppSidebar({ user, isAdmin = false }: { user: SidebarUser; isAdmin?: boolean }) {
+  const { setOpenMobile } = useSidebar();
   const pathname = usePathname();
   const publicHref = user.username ? `/${user.username}` : "/";
 
@@ -86,11 +86,7 @@ const { setOpenMobile} =  useSidebar()
             <SidebarMenu>
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.title} onClick={() => setOpenMobile(false)}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.href}
-                    tooltip={item.title}
-                  >
+                  <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.title}>
                     <Link href={item.href}>
                       <Icon name={item.icon} />
                       <span>{item.title}</span>
@@ -101,6 +97,28 @@ const { setOpenMobile} =  useSidebar()
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {isAdmin && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Admin</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem onClick={() => setOpenMobile(false)}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname.startsWith("/admin")}
+                    tooltip="Moderation"
+                  >
+                    <Link href="/admin">
+                      <Icon name="shield" />
+                      <span>Moderation</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
 
       <SidebarFooter>
@@ -125,9 +143,7 @@ const { setOpenMobile} =  useSidebar()
                 )}
               </span>
               <span className="flex min-w-0 flex-col overflow-hidden leading-tight whitespace-nowrap group-data-[collapsible=icon]:hidden">
-                <span className="truncate text-sm font-medium">
-                  {user.name ?? user.username}
-                </span>
+                <span className="truncate text-sm font-medium">{user.name ?? user.username}</span>
                 <span className="truncate text-xs text-sidebar-foreground/70">
                   @{user.username}
                 </span>
@@ -141,7 +157,11 @@ const { setOpenMobile} =  useSidebar()
 
           <SidebarMenuItem>
             <form action={signOutAction}>
-              <SidebarMenuButton type="submit" tooltip="Sign out">
+              <SidebarMenuButton
+                type="submit"
+                tooltip="Sign out"
+                className="text-destructive hover:text-destructive hover:bg-destructive/20"
+              >
                 <Icon name="log-out" />
                 <span>Sign out</span>
               </SidebarMenuButton>

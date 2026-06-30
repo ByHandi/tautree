@@ -1,9 +1,8 @@
 "use client";
 
+import { MailIcon } from "lucide-react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-
-import { MailIcon } from "lucide-react";
 
 import { signInWithEmail, signInWithGoogle } from "./actions";
 

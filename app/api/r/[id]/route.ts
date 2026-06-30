@@ -1,6 +1,7 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
+import { isLinkLive } from "@/lib/links";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 /**
@@ -13,10 +14,19 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 
   const link = await db.link.findUnique({
     where: { id },
-    select: { url: true, isActive: true },
+    select: {
+      url: true,
+      isActive: true,
+      startsAt: true,
+      endsAt: true,
+      user: { select: { suspended: true } },
+    },
   });
 
-  if (!link || !link.isActive) {
+  // Skip missing links, header rows (no destination), and anything not publicly
+  // live (inactive, outside its schedule, or owned by a suspended account —
+  // those must go dark everywhere, not just on the 404'd public page).
+  if (!link || !link.url || !isLinkLive(link, link.user)) {
     return NextResponse.redirect(new URL("/", _req.url));
   }
 

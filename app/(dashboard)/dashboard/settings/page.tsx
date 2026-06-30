@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { SettingsForm } from "./settings-form";
+import { SocialLinksManager } from "./social-links-manager";
 
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
@@ -13,7 +14,13 @@ export default async function SettingsPage() {
 
   const user = await db.user.findUnique({
     where: { id: session.user.id },
-    select: { username: true, name: true, bio: true, avatarUrl: true },
+    select: {
+      username: true,
+      name: true,
+      bio: true,
+      avatarUrl: true,
+      socials: { orderBy: { order: "asc" }, select: { id: true, url: true } },
+    },
   });
   if (!user) redirect("/login");
 
@@ -45,6 +52,8 @@ export default async function SettingsPage() {
         bio={user.bio}
         avatarUrl={user.avatarUrl}
       />
+
+      <SocialLinksManager socials={user.socials} />
     </div>
   );
 }
