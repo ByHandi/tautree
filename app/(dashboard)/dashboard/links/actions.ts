@@ -20,10 +20,7 @@ function revalidate() {
   revalidatePath("/dashboard");
 }
 
-export async function createLink(
-  _prev: LinkFormState,
-  formData: FormData,
-): Promise<LinkFormState> {
+export async function createLink(_prev: LinkFormState, formData: FormData): Promise<LinkFormState> {
   const userId = await requireUserId();
 
   const title = validateTitle(String(formData.get("title") ?? ""));
@@ -51,10 +48,7 @@ export async function createLink(
   return { ok: true };
 }
 
-export async function updateLink(
-  _prev: LinkFormState,
-  formData: FormData,
-): Promise<LinkFormState> {
+export async function updateLink(_prev: LinkFormState, formData: FormData): Promise<LinkFormState> {
   const userId = await requireUserId();
   const id = String(formData.get("id") ?? "");
   if (!id) return { error: "Link not found." };
@@ -106,9 +100,7 @@ export async function reorderLinks(orderedIds: string[]): Promise<void> {
   if (ids.length === 0) return;
 
   await db.$transaction(
-    ids.map((id, index) =>
-      db.link.update({ where: { id }, data: { order: index } }),
-    ),
+    ids.map((id, index) => db.link.update({ where: { id }, data: { order: index } })),
   );
 
   revalidate();

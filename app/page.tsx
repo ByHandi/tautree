@@ -126,7 +126,10 @@ export default function Home() {
                 Create your page
                 <ArrowRightIcon />
               </Link>
-              <Link href="/login" className={cn(buttonVariants({ size: "lg", variant: "outline" }))}>
+              <Link
+                href="/login"
+                className={cn(buttonVariants({ size: "lg", variant: "outline" }))}
+              >
                 Sign in
               </Link>
             </div>

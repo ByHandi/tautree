@@ -1,10 +1,9 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
-
 import { toast } from "sonner";
 
-import { updateProfile, type ProfileFormState } from "./actions";
+import { type ProfileFormState, updateProfile } from "./actions";
 
 import { Button } from "@/components/ui/button";
 import InputText from "@/components/ui/input-text";

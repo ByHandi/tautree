@@ -1,10 +1,9 @@
 "use client";
 
 import { useActionState, useEffect } from "react";
-
 import { toast } from "sonner";
 
-import { createLink, updateLink, type LinkFormState } from "./actions";
+import { type LinkFormState, createLink, updateLink } from "./actions";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -51,9 +50,7 @@ export function LinkFormDialog({
         <DialogHeader>
           <DialogTitle>{isEdit ? "Edit link" : "Add link"}</DialogTitle>
           <DialogDescription>
-            {isEdit
-              ? "Update your link's title or URL."
-              : "Add a new link to your public page."}
+            {isEdit ? "Update your link's title or URL." : "Add a new link to your public page."}
           </DialogDescription>
         </DialogHeader>
 

@@ -9,9 +9,9 @@ import { Prisma } from "@/lib/generated/prisma/client";
 import {
   CUSTOM_PALETTE_FIELDS,
   CUSTOM_THEME_ID,
+  type CustomPalette,
   isThemeId,
   parseCustomPalette,
-  type CustomPalette,
 } from "@/lib/themes";
 
 export type ThemeFormState = { error?: string; ok?: boolean } | undefined;

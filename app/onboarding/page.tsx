@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+import type { Metadata } from "next";
 
 import { OnboardingForm } from "./onboarding-form";
 
-import { Logo } from "@/components/logo";
 import { auth } from "@/auth";
+import { Logo } from "@/components/logo";
 import { db } from "@/lib/db";
 import { USERNAME_MAX } from "@/lib/username";
 

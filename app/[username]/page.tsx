@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
+import type { Metadata } from "next";
 
 import { Logo } from "@/components/logo";
 import Icon from "@/components/ui/icon";
@@ -14,7 +15,7 @@ async function getProfile(rawUsername: string) {
   const username = normalizeUsername(decodeURIComponent(rawUsername));
   if (!validateUsername(username).ok) return null;
 
-  return db.user.findUnique({
+  const user = await db.user.findUnique({
     where: { username },
     select: {
       name: true,
@@ -24,6 +25,7 @@ async function getProfile(rawUsername: string) {
       avatarUrl: true,
       theme: true,
       customTheme: true,
+      suspended: true,
       links: {
         where: { isActive: true },
         orderBy: { order: "asc" },
@@ -31,6 +33,10 @@ async function getProfile(rawUsername: string) {
       },
     },
   });
+
+  // A suspended account is invisible to the public — treat it as not found.
+  if (user?.suspended) return null;
+  return user;
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {

@@ -92,7 +92,10 @@ export default async function AnalyticsPage() {
               >
                 <div
                   className="w-full rounded-sm bg-primary/80 transition-colors group-hover:bg-primary"
-                  style={{ height: `${(s.count / maxCount) * 100}%`, minHeight: s.count > 0 ? 2 : 0 }}
+                  style={{
+                    height: `${(s.count / maxCount) * 100}%`,
+                    minHeight: s.count > 0 ? 2 : 0,
+                  }}
                 />
               </div>
             ))}

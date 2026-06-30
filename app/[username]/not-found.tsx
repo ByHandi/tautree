@@ -14,8 +14,7 @@ export default function ProfileNotFound() {
       <div className="flex max-w-sm flex-col gap-2">
         <h1 className="text-2xl font-semibold tracking-tight">Page not found</h1>
         <p className="text-balance text-sm text-muted-foreground">
-          This username isn’t taken yet, or the page no longer exists. Want it for
-          yourself?
+          This username isn’t taken yet, or the page no longer exists. Want it for yourself?
         </p>
       </div>
 

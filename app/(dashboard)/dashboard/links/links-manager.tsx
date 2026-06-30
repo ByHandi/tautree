@@ -1,15 +1,13 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
-
 import {
   DndContext,
+  type DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   closestCenter,
   useSensor,
   useSensors,
-  type DragEndEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -19,6 +17,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { deleteLink, reorderLinks, toggleLink } from "./actions";
@@ -190,11 +189,7 @@ export function LinksManager({ links }: { links: LinkItem[] }) {
           </Button>
         </div>
       ) : (
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={items.map((l) => l.id)} strategy={verticalListSortingStrategy}>
             <ul className="flex flex-col gap-2">
               {items.map((link) => (

@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 
+import { auth } from "@/auth";
 import AppSidebar from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { auth } from "@/auth";
 import { db } from "@/lib/db";
 
 export default async function DashboardLayout({
@@ -15,7 +15,14 @@ export default async function DashboardLayout({
 
   const user = await db.user.findUnique({
     where: { id: session.user.id },
-    select: { username: true, name: true, email: true, image: true, avatarUrl: true },
+    select: {
+      username: true,
+      name: true,
+      email: true,
+      image: true,
+      avatarUrl: true,
+      role: true,
+    },
   });
   if (!user) redirect("/login");
   // DB-truthful username gate (the edge middleware can't read the DB).
@@ -30,6 +37,7 @@ export default async function DashboardLayout({
           email: user.email,
           image: user.avatarUrl ?? user.image,
         }}
+        isAdmin={user.role === "ADMIN"}
       />
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">

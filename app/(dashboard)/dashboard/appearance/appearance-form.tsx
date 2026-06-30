@@ -1,21 +1,20 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
-
 import { CheckIcon, PaletteIcon } from "lucide-react";
+import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { updateTheme, type ThemeFormState } from "./actions";
+import { type ThemeFormState, updateTheme } from "./actions";
 
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import {
   CUSTOM_PALETTE_FIELDS,
   CUSTOM_THEME_ID,
-  customTheme,
-  THEME_LIST,
   type CustomPalette,
+  THEME_LIST,
   type ThemeId,
+  customTheme,
 } from "@/lib/themes";
 import { cn } from "@/lib/utils";
 
@@ -132,9 +131,7 @@ export function AppearanceForm({
                   type="color"
                   name={key}
                   value={palette[key]}
-                  onChange={(e) =>
-                    setPalette((p) => ({ ...p, [key]: e.target.value }))
-                  }
+                  onChange={(e) => setPalette((p) => ({ ...p, [key]: e.target.value }))}
                   className="size-8 cursor-pointer rounded-md border bg-transparent p-0.5"
                   aria-label={label}
                 />

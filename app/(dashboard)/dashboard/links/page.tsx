@@ -20,8 +20,8 @@ export default async function LinksPage() {
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold tracking-tight">Links</h1>
         <p className="text-sm text-muted-foreground">
-          Manage the links shown on your public page. Drag to reorder, toggle them on/off, or
-          edit them anytime.
+          Manage the links shown on your public page. Drag to reorder, toggle them on/off, or edit
+          them anytime.
         </p>
       </div>
 

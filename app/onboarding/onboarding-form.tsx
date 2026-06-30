@@ -1,8 +1,7 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
-
 import { CheckIcon, XIcon } from "lucide-react";
+import { useActionState, useEffect, useRef, useState } from "react";
 
 import { claimUsername } from "./actions";
 

@@ -75,7 +75,7 @@ Click  → id, linkId, createdAt   # analytics ✅ (tabel click_events; counter 
 - [x] State `404` untuk username tak ada (`app/[username]/not-found.tsx`)
 - [x] OG image & metadata SEO per halaman (`opengraph-image.tsx` dinamis)
 
-## Fase 5 — Polish SaaS
+## Fase 5 — Polish SaaS ✅
 > Bikin layak jadi produk.
 
 - [x] Tema/warna kustom per halaman — 6 preset + **custom color** (color picker, palette tersimpan di kolom `custom_theme` Json, validasi hex-only) (`/dashboard/appearance`)
@@ -83,7 +83,7 @@ Click  → id, linkId, createdAt   # analytics ✅ (tabel click_events; counter 
 - [x] Rate limiting & validasi URL — validasi URL (`lib/links.ts`) + limiter in-memory (`lib/rate-limit.ts`) di `/api/username/check` & redirect klik
 - [x] Deploy ke Coolify (self-hosted Docker) + domain
 - [x] Custom color per halaman (color picker, 6 field palette, validasi hex)
-- [ ] (Opsional) Panel admin buat moderasi user
+- [x] Panel admin buat moderasi user (`/admin`) — role `ADMIN` di DB, list+cari user, suspend profil, hapus link, hapus user
 
 ---
 

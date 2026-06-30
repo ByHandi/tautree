@@ -14,12 +14,7 @@ export function Logo({ className }: { className?: string }) {
       aria-label="Tautree"
     >
       {/* trunk + center branch */}
-      <path
-        d="M16 27.5V6.5"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
+      <path d="M16 27.5V6.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
       {/* left branch */}
       <path
         d="M16 17C13 16 9.5 15 6.5 9.5"
