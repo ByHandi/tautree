@@ -54,7 +54,7 @@ Click  → id, linkId, createdAt   # time-series analytics
 
 - [x] Analytics lanjut: referrer + device (geo ditunda — perlu geo-IP) — model `ProfileView` (device + referrer host, tanpa IP/UA/cookie), `<ViewTracker>` client beacon kirim `document.referrer` ke `/api/v/[id]`, helper `lib/analytics.ts` (`classifyDevice`/`isBot`/`referrerLabel`) + unit test, dashboard nampilin Views/Top sources/Devices
 - [x] Export analytics ke CSV — route `GET /dashboard/analytics/export` (auth, ikut `?from&to` + `resolveRange`), CSV harian (date/views/clicks) via `toCsv` (escape RFC-4180), tombol download di dashboard, unit test
-- [ ] QR code per halaman profil (buat cetak/offline)
+- [x] QR code per halaman profil — generate PNG data URI server-side (`qrcode`, pure-JS, EC level H) untuk URL publik; `<QrCard>` nampilin QR + brand logo di tengah + URL caption, tombol Download PNG composite QR+logo+URL ke canvas client-side (logo & URL ikut ke file)
 - [x] Range tanggal custom di dashboard analytics — `resolveRange` (default 30 hari, cap 366, validasi + clamp) + `<AnalyticsRangePicker>` (date-range-picker → URL `?from&to`), semua query (clicks/views/devices/sources) ikut window, series harian dinamis, unit test
 
 ## Fase 9 — Monetisasi 💳 (opsional)

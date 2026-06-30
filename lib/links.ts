@@ -130,9 +130,7 @@ export const THUMBNAIL_MAX_CHARS = 40_000;
 // safe to render in an <img> on the public page.
 const THUMBNAIL_DATA_URI = /^data:image\/(?:png|jpe?g|webp);base64,[A-Za-z0-9+/]+={0,2}$/;
 
-export type ThumbnailCheck =
-  | { ok: true; thumbnail: string | null }
-  | { ok: false; reason: string };
+export type ThumbnailCheck = { ok: true; thumbnail: string | null } | { ok: false; reason: string };
 
 /** Validate an optional thumbnail data URI from the form. Empty → null. */
 export function parseThumbnail(raw: string): ThumbnailCheck {

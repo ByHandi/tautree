@@ -4,12 +4,12 @@ import {
   CUSTOM_THEME_ID,
   DEFAULT_CUSTOM_PALETTE,
   DEFAULT_THEME,
+  THEMES,
   getTheme,
   isHexColor,
   isPresetThemeId,
   isThemeId,
   parseCustomPalette,
-  THEMES,
 } from "./themes";
 
 describe("isHexColor", () => {

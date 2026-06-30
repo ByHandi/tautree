@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   BIO_MAX,
-  isProfilePublic,
   NAME_MAX,
+  isProfilePublic,
   validateAvatarUrl,
   validateBio,
   validateName,

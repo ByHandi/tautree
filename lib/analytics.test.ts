@@ -75,7 +75,12 @@ describe("resolveRange", () => {
 
 describe("toCsv", () => {
   it("joins rows with CRLF and cells with commas", () => {
-    expect(toCsv([["date", "views"], ["2026-06-01", 3]])).toBe("date,views\r\n2026-06-01,3");
+    expect(
+      toCsv([
+        ["date", "views"],
+        ["2026-06-01", 3],
+      ]),
+    ).toBe("date,views\r\n2026-06-01,3");
   });
 
   it("quotes cells containing commas, quotes, or newlines", () => {

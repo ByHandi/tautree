@@ -5,8 +5,8 @@ import type { Metadata } from "next";
 
 import { Logo } from "@/components/logo";
 import { SocialIcon } from "@/components/social-icon";
-import { ViewTracker } from "@/components/view-tracker";
 import Icon from "@/components/ui/icon";
+import { ViewTracker } from "@/components/view-tracker";
 import { db } from "@/lib/db";
 import { getEmbed } from "@/lib/embed";
 import { liveScheduleWhere } from "@/lib/links";
@@ -136,11 +136,7 @@ export default async function PublicProfilePage({ params }: Params) {
       >
         {link.thumbnail ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={link.thumbnail}
-            alt=""
-            className="size-6 shrink-0 rounded-md object-cover"
-          />
+          <img src={link.thumbnail} alt="" className="size-6 shrink-0 rounded-md object-cover" />
         ) : (
           <SocialIcon url={link.url ?? ""} className="size-5 shrink-0" />
         )}

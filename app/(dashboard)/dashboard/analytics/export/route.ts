@@ -16,7 +16,10 @@ export async function GET(req: NextRequest) {
   const userId = session.user.id;
 
   const sp = req.nextUrl.searchParams;
-  const { since, until, days } = resolveRange(sp.get("from") ?? undefined, sp.get("to") ?? undefined);
+  const { since, until, days } = resolveRange(
+    sp.get("from") ?? undefined,
+    sp.get("to") ?? undefined,
+  );
 
   const [clickRows, viewRows] = await Promise.all([
     db.$queryRaw<DayCount[]>`

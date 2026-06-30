@@ -18,7 +18,9 @@ describe("getEmbed — YouTube", () => {
   });
 
   it("parses shorts and live URLs", () => {
-    expect(getEmbed("https://youtube.com/shorts/abc123XYZ_")).toMatchObject({ provider: "youtube" });
+    expect(getEmbed("https://youtube.com/shorts/abc123XYZ_")).toMatchObject({
+      provider: "youtube",
+    });
     expect(getEmbed("https://www.youtube.com/live/abc123XYZ_")).toMatchObject({
       provider: "youtube",
     });
@@ -46,10 +48,12 @@ describe("getEmbed — Spotify", () => {
   });
 
   it("ignores a leading locale segment", () => {
-    expect(getEmbed("https://open.spotify.com/intl-id/track/4cOdK2wGLETKBW3PvgPWqT")).toMatchObject({
-      provider: "spotify",
-      src: "https://open.spotify.com/embed/track/4cOdK2wGLETKBW3PvgPWqT",
-    });
+    expect(getEmbed("https://open.spotify.com/intl-id/track/4cOdK2wGLETKBW3PvgPWqT")).toMatchObject(
+      {
+        provider: "spotify",
+        src: "https://open.spotify.com/embed/track/4cOdK2wGLETKBW3PvgPWqT",
+      },
+    );
   });
 
   it("rejects an unknown resource type", () => {

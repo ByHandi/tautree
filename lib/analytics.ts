@@ -105,10 +105,7 @@ export function isBot(ua: string | null | undefined): boolean {
  * Our own domain (`selfHost`) counts as direct so internal navigation doesn't
  * pollute the traffic-source breakdown.
  */
-export function referrerLabel(
-  raw: string | null | undefined,
-  selfHost: string,
-): string | null {
+export function referrerLabel(raw: string | null | undefined, selfHost: string): string | null {
   if (!raw) return null;
   let host: string;
   try {

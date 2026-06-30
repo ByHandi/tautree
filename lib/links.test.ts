@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  THUMBNAIL_MAX_CHARS,
+  TITLE_MAX,
   isLinkLive,
   normalizeUrl,
   parseLinkKind,
   parseSchedule,
   parseThumbnail,
-  THUMBNAIL_MAX_CHARS,
-  TITLE_MAX,
   validateTitle,
 } from "./links";
 
@@ -30,12 +30,15 @@ describe("isLinkLive", () => {
     const later = new Date("2026-06-30T13:00:00Z");
 
     it("is live with no bounds", () => {
-      expect(isLinkLive({ isActive: true, startsAt: null, endsAt: null }, { suspended: false }, now))
-        .toBe(true);
+      expect(
+        isLinkLive({ isActive: true, startsAt: null, endsAt: null }, { suspended: false }, now),
+      ).toBe(true);
     });
 
     it("is dark before startsAt and live at/after it", () => {
-      expect(isLinkLive({ isActive: true, startsAt: later }, { suspended: false }, now)).toBe(false);
+      expect(isLinkLive({ isActive: true, startsAt: later }, { suspended: false }, now)).toBe(
+        false,
+      );
       expect(isLinkLive({ isActive: true, startsAt: now }, { suspended: false }, now)).toBe(true);
       expect(isLinkLive({ isActive: true, startsAt: earlier }, { suspended: false }, now)).toBe(
         true,
@@ -44,7 +47,9 @@ describe("isLinkLive", () => {
 
     it("is dark at/after endsAt and live before it", () => {
       expect(isLinkLive({ isActive: true, endsAt: now }, { suspended: false }, now)).toBe(false);
-      expect(isLinkLive({ isActive: true, endsAt: earlier }, { suspended: false }, now)).toBe(false);
+      expect(isLinkLive({ isActive: true, endsAt: earlier }, { suspended: false }, now)).toBe(
+        false,
+      );
       expect(isLinkLive({ isActive: true, endsAt: later }, { suspended: false }, now)).toBe(true);
     });
 

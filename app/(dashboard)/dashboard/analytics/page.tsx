@@ -1,5 +1,6 @@
-import { format } from "date-fns";
 import { redirect } from "next/navigation";
+
+import { format } from "date-fns";
 
 import { auth } from "@/auth";
 import { AnalyticsRangePicker } from "@/components/analytics-range-picker";
@@ -55,8 +56,7 @@ export default async function AnalyticsPage({
   const maxLinkClicks = Math.max(1, ...links.map((l) => l.clicks));
 
   // Device split — always show all three buckets, ordered consistently.
-  const deviceCount = (d: string) =>
-    deviceRows.find((r) => r.device === d)?._count._all ?? 0;
+  const deviceCount = (d: string) => deviceRows.find((r) => r.device === d)?._count._all ?? 0;
   const devices = (
     [
       { key: "mobile", label: "Mobile", icon: "smartphone" as const },

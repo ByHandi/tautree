@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { normalizeUsername, USERNAME_MAX, USERNAME_MIN, validateUsername } from "./username";
+import { USERNAME_MAX, USERNAME_MIN, normalizeUsername, validateUsername } from "./username";
 
 describe("validateUsername", () => {
   it("accepts valid lowercase usernames", () => {
