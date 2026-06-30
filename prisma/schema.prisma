@@ -105,6 +105,8 @@ model Link {
   // (resized client-side, size-capped server-side). Null = use the auto
   // social icon. See `parseThumbnail`.
   thumbnail String?
+  // Pins a LINK to the top of the public page as a larger hero card.
+  featured  Boolean   @default(false)
   order     Int       @default(0)
   isActive  Boolean   @default(true) @map("is_active")
   clicks    Int       @default(0)

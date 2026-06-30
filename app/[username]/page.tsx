@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
 import { Logo } from "@/components/logo";
+import { ShareButton } from "@/components/share-button";
 import { SocialIcon } from "@/components/social-icon";
 import Icon from "@/components/ui/icon";
 import { ViewTracker } from "@/components/view-tracker";
@@ -12,6 +13,7 @@ import { db } from "@/lib/db";
 import { getEmbed } from "@/lib/embed";
 import { liveScheduleWhere } from "@/lib/links";
 import { isProfilePublic } from "@/lib/profile";
+import { APP_URL } from "@/lib/site";
 import { getTheme } from "@/lib/themes";
 import { normalizeUsername, validateUsername } from "@/lib/username";
 import { cn } from "@/lib/utils";
@@ -41,7 +43,7 @@ async function getProfile(rawUsername: string) {
         // `isLinkLive`; suspended-owner gating is handled by `isProfilePublic`.
         where: { isActive: true, ...liveScheduleWhere(new Date()) },
         orderBy: { order: "asc" },
-        select: { id: true, type: true, title: true, url: true, thumbnail: true },
+        select: { id: true, type: true, title: true, url: true, thumbnail: true, featured: true },
         // (url is the source for embeds; getEmbed runs at render time below)
       },
     },
@@ -84,8 +86,12 @@ export default async function PublicProfilePage({ params }: Params) {
     parseButtonFill(user.buttonFill),
   );
   const links = user.links;
+  // Featured links are pinned to the top as larger hero cards; everything else
+  // keeps its order (and grouping headers) below.
+  const heroes = links.filter((l) => l.featured && l.type === "LINK");
+  const rest = links.filter((l) => !(l.featured && l.type === "LINK"));
 
-  function renderItem(link: (typeof links)[number]) {
+  function renderItem(link: (typeof links)[number], hero = false) {
     if (link.type === "HEADER") {
       return (
         <h2
@@ -132,13 +138,15 @@ export default async function PublicProfilePage({ params }: Params) {
       );
     }
 
-    // LINK (and any embed that failed to resolve) → a clickable button.
+    // LINK (and any embed that failed to resolve) → a clickable button. Heroes
+    // (featured) get extra padding and a larger label/icon.
     return (
       <a
         key={link.id}
         href={`/api/r/${link.id}`}
         className={cn(
-          "group flex items-center gap-3 px-5 py-4 font-medium transition-all hover:-translate-y-0.5",
+          "group flex items-center gap-3 font-medium transition-all hover:-translate-y-0.5",
+          hero ? "px-6 py-5 text-lg" : "px-5 py-4",
           btn.shadow && "shadow-xs hover:shadow-md",
         )}
         style={{
@@ -152,14 +160,21 @@ export default async function PublicProfilePage({ params }: Params) {
       >
         {link.thumbnail ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={link.thumbnail} alt="" className="size-6 shrink-0 rounded-md object-cover" />
+          <img
+            src={link.thumbnail}
+            alt=""
+            className={cn("shrink-0 rounded-md object-cover", hero ? "size-8" : "size-6")}
+          />
         ) : (
-          <SocialIcon url={link.url ?? ""} className="size-5 shrink-0" />
+          <SocialIcon url={link.url ?? ""} className={cn("shrink-0", hero ? "size-6" : "size-5")} />
         )}
         <span className="min-w-0 flex-1 truncate text-center">{link.title}</span>
         <Icon
           name="arrow-up-right"
-          className="size-4 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+          className={cn(
+            "shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5",
+            hero ? "size-5" : "size-4",
+          )}
         />
       </a>
     );
@@ -167,10 +182,15 @@ export default async function PublicProfilePage({ params }: Params) {
 
   return (
     <main
-      className="mx-auto flex min-h-dvh w-full max-w-lg flex-col items-center gap-6 px-5 py-16"
+      className="relative mx-auto flex min-h-dvh w-full max-w-lg flex-col items-center gap-6 px-5 py-16"
       style={{ background: theme.page, color: theme.text }}
     >
       <ViewTracker userId={user.id} />
+      <ShareButton
+        url={`${APP_URL}/${user.username}`}
+        username={user.username ?? ""}
+        color={theme.text}
+      />
       <header className="flex flex-col items-center gap-3 text-center">
         <span
           className="flex size-24 items-center justify-center overflow-hidden rounded-full text-2xl font-semibold"
@@ -194,12 +214,18 @@ export default async function PublicProfilePage({ params }: Params) {
         </div>
       </header>
 
-      {links.length > 0 ? (
-        <nav className="flex w-full flex-col gap-3">{links.map(renderItem)}</nav>
+      {heroes.length > 0 && (
+        <div className="flex w-full flex-col gap-3">{heroes.map((l) => renderItem(l, true))}</div>
+      )}
+
+      {rest.length > 0 ? (
+        <nav className="flex w-full flex-col gap-3">{rest.map((l) => renderItem(l))}</nav>
       ) : (
-        <p className="text-sm" style={{ color: theme.muted }}>
-          No links yet.
-        </p>
+        heroes.length === 0 && (
+          <p className="text-sm" style={{ color: theme.muted }}>
+            No links yet.
+          </p>
+        )
       )}
 
       <footer className="mt-auto pt-8">

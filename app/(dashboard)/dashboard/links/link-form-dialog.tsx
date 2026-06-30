@@ -26,6 +26,7 @@ type EditableLink = {
   url: string | null;
   type: LinkKind;
   thumbnail: string | null;
+  featured: boolean;
   startsAt: string | null;
   endsAt: string | null;
 };
@@ -267,6 +268,23 @@ export function LinkFormDialog({
               </p>
               <input type="hidden" name="thumbnail" value={thumbnail ?? ""} />
             </div>
+          )}
+
+          {isLink && (
+            <label className="flex items-start gap-2.5 text-sm">
+              <input
+                type="checkbox"
+                name="featured"
+                defaultChecked={link?.featured ?? false}
+                className="mt-0.5 size-4 rounded border-input accent-primary"
+              />
+              <span className="flex flex-col">
+                <span className="font-medium">Feature on profile</span>
+                <span className="text-xs text-muted-foreground">
+                  Pinned to the top as a larger highlight card.
+                </span>
+              </span>
+            </label>
           )}
 
           <div className="flex flex-col gap-1">

@@ -44,6 +44,7 @@ export type LinkItem = {
   title: string;
   url: string | null;
   thumbnail: string | null;
+  featured: boolean;
   isActive: boolean;
   clicks: number;
   startsAt: string | null;
@@ -114,6 +115,9 @@ function SortableLinkRow({
           )}
           {meta.icon && (
             <Icon name={meta.icon} className="size-3.5 shrink-0 text-muted-foreground" />
+          )}
+          {link.featured && (
+            <Icon name="star" className="size-3.5 shrink-0 fill-amber-400 text-amber-500" />
           )}
           <span className="truncate font-medium">{link.title}</span>
           {meta.badge && (

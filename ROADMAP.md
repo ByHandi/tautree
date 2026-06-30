@@ -83,11 +83,11 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 
 **Konten link**
 - [ ] Social icon row — deretan ikon sosmed di header, terpisah dari tombol link; **reuse `SocialIcon`**. _(sedang)_
-- [ ] Featured/pinned link — satu link tampil besar/hero (opsional dengan gambar). _(sedang)_
+- [x] Featured/pinned link — kolom `featured` di Link (khusus LINK), checkbox di dialog + star di dashboard, di halaman publik di-pin ke atas sebagai hero card (padding/teks/ikon lebih besar), sisanya tetap urut + grouping
 - [ ] vCard "Save contact" — tombol download `.vcf` ke HP; diferensiator personal brand, zero infra. _(kecil–sedang)_
 
 **Growth / interaksi**
-- [ ] ⭐ Share + QR di halaman publik — pengunjung bisa share / scan QR profil; **reuse QR infra (`qrcode` + `<QrCard>`)**. _(kecil–sedang)_
+- [x] ⭐ Share + QR di halaman publik — `<ShareButton>` (copy link / native share / QR) di pojok profil; QR via route on-demand `GET /api/qr/[username]` (cache 1 hari, gak nge-bloat HTML), QR baru di-fetch saat dialog dibuka
 - [ ] Email capture / "Subscribe" — kumpulin email pengunjung (lead-gen); butuh model + storage + pertimbangan privacy. _(sedang, nilai tinggi)_
 
 ---

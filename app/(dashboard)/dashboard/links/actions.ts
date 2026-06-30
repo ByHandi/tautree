@@ -51,8 +51,9 @@ export async function createLink(_prev: LinkFormState, formData: FormData): Prom
   if (!schedule.ok) return { error: schedule.reason };
   const thumb = parseThumbnail(String(formData.get("thumbnail") ?? ""));
   if (!thumb.ok) return { error: thumb.reason };
-  // Thumbnails only apply to plain links.
+  // Thumbnails and featuring only apply to plain links.
   const thumbnail = kind === "LINK" ? thumb.thumbnail : null;
+  const featured = kind === "LINK" && formData.get("featured") === "on";
 
   // Append the new link at the end of the list.
   const last = await db.link.findFirst({
@@ -70,6 +71,7 @@ export async function createLink(_prev: LinkFormState, formData: FormData): Prom
         title: String(formData.get("title")).trim(),
         url,
         thumbnail,
+        featured,
         order,
         startsAt: schedule.startsAt,
         endsAt: schedule.endsAt,
@@ -107,8 +109,9 @@ export async function updateLink(_prev: LinkFormState, formData: FormData): Prom
   if (!schedule.ok) return { error: schedule.reason };
   const thumb = parseThumbnail(String(formData.get("thumbnail") ?? ""));
   if (!thumb.ok) return { error: thumb.reason };
-  // Thumbnails only apply to plain links.
+  // Thumbnails and featuring only apply to plain links.
   const thumbnail = kind === "LINK" ? thumb.thumbnail : null;
+  const featured = kind === "LINK" && formData.get("featured") === "on";
 
   // updateMany scopes the write to the owner — no cross-user edits.
   const res = await db.link.updateMany({
@@ -118,6 +121,7 @@ export async function updateLink(_prev: LinkFormState, formData: FormData): Prom
       title: String(formData.get("title")).trim(),
       url,
       thumbnail,
+      featured,
       startsAt: schedule.startsAt,
       endsAt: schedule.endsAt,
     },
