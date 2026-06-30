@@ -2,6 +2,18 @@
 
 export const TITLE_MAX = 80;
 
+/**
+ * A link is publicly live only when it's active AND its owner isn't suspended.
+ * Single source of truth for the public page and the click-redirect — a
+ * suspended account's links must go dark everywhere.
+ */
+export function isLinkLive(
+  link: { isActive: boolean },
+  owner: { suspended: boolean },
+): boolean {
+  return link.isActive && !owner.suspended;
+}
+
 export type TitleCheck = { ok: true } | { ok: false; reason: string };
 export type UrlCheck = { ok: true; url: string } | { ok: false; reason: string };
 

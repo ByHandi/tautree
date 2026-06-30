@@ -35,3 +35,8 @@ jobs:
 
       - name: Test
         run: npm test
+
+      # Catch RSC / build-time errors before they reach the Docker build on
+      # deploy. No database is needed — dynamic routes aren't executed at build.
+      - name: Build
+        run: npm run build

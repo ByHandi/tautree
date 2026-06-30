@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
+import { isLinkLive } from "@/lib/links";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 /**
@@ -16,10 +17,10 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     select: { url: true, isActive: true, user: { select: { suspended: true } } },
   });
 
-  // Skip missing/inactive links, and links owned by a suspended account — a
-  // suspended user's links must go dark everywhere, not just on their (404'd)
-  // public page.
-  if (!link || !link.isActive || link.user.suspended) {
+  // Skip missing links and anything not publicly live (inactive, or owned by a
+  // suspended account — those must go dark everywhere, not just on the 404'd
+  // public page).
+  if (!link || !isLinkLive(link, link.user)) {
     return NextResponse.redirect(new URL("/", _req.url));
   }
 

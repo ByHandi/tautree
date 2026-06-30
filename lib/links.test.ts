@@ -1,6 +1,20 @@
 import { describe, expect, it } from "vitest";
 
-import { normalizeUrl, TITLE_MAX, validateTitle } from "./links";
+import { isLinkLive, normalizeUrl, TITLE_MAX, validateTitle } from "./links";
+
+describe("isLinkLive", () => {
+  it("is live only when active and the owner isn't suspended", () => {
+    expect(isLinkLive({ isActive: true }, { suspended: false })).toBe(true);
+  });
+
+  it("is dark when inactive", () => {
+    expect(isLinkLive({ isActive: false }, { suspended: false })).toBe(false);
+  });
+
+  it("is dark when the owner is suspended, even if active", () => {
+    expect(isLinkLive({ isActive: true }, { suspended: true })).toBe(false);
+  });
+});
 
 describe("validateTitle", () => {
   it("accepts a normal title", () => {

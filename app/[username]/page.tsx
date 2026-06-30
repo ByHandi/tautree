@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { Logo } from "@/components/logo";
 import Icon from "@/components/ui/icon";
 import { db } from "@/lib/db";
+import { isProfilePublic } from "@/lib/profile";
 import { getTheme } from "@/lib/themes";
 import { normalizeUsername, validateUsername } from "@/lib/username";
 
@@ -35,7 +36,7 @@ async function getProfile(rawUsername: string) {
   });
 
   // A suspended account is invisible to the public — treat it as not found.
-  if (user?.suspended) return null;
+  if (user && !isProfilePublic(user)) return null;
   return user;
 }
 

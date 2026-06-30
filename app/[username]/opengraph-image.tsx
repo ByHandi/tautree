@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
 import { db } from "@/lib/db";
+import { isProfilePublic } from "@/lib/profile";
 import { APP_DOMAIN } from "@/lib/site";
 import { normalizeUsername, validateUsername } from "@/lib/username";
 
@@ -29,7 +30,7 @@ export default async function OpengraphImage({
       })
     : null;
   // Suspended profiles fall back to the generic Tautree card.
-  const user = found?.suspended ? null : found;
+  const user = found && isProfilePublic(found) ? found : null;
 
   const displayName = user?.name ?? (user ? `@${user.username}` : "Tautree");
   const handle = user ? `${APP_DOMAIN}/${user.username}` : APP_DOMAIN;

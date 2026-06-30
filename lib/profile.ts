@@ -3,6 +3,14 @@
 export const NAME_MAX = 50;
 export const BIO_MAX = 160;
 
+/**
+ * A profile is publicly visible only when the account isn't suspended. Used by
+ * the public page, the OG image, and the sitemap so moderation is consistent.
+ */
+export function isProfilePublic(user: { suspended: boolean }): boolean {
+  return !user.suspended;
+}
+
 export type NameCheck = { ok: true; name: string | null } | { ok: false; reason: string };
 export type BioCheck = { ok: true; bio: string | null } | { ok: false; reason: string };
 export type AvatarCheck = { ok: true; url: string | null } | { ok: false; reason: string };
