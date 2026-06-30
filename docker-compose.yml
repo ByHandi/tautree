@@ -1,6 +1,6 @@
 # Single-host deploy where PostgreSQL runs on the **host machine** (not in a
-# container). The app/migrate containers reach it via `host.docker.internal`,
-# which is mapped to the host gateway by the `extra_hosts` entry below.
+# container). The app container reaches it via `host.docker.internal`, which is
+# mapped to the host gateway by the `extra_hosts` entry below.
 #
 # Provide secrets via a `.env` file (see `.env.example`). DATABASE_URL must use
 # the `host.docker.internal` host, e.g.:
@@ -8,21 +8,10 @@
 #
 # Bring everything up with:
 #   docker compose up -d --build
-# Migrations run automatically via the one-off `migrate` service before `app`.
+# Migrations run automatically on container start: entrypoint.sh runs
+# `prisma migrate deploy` before launching the server.
 
 services:
-  # One-off job: applies `prisma migrate deploy` against the host DB, then exits.
-  migrate:
-    build:
-      context: .
-      target: migrator
-    env_file: .env
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    restart: "no"
-
   app:
     build:
       context: .
@@ -36,7 +25,4 @@ services:
       - "host.docker.internal:host-gateway"
     ports:
       - "${PORT:-3000}:3000"
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
     restart: unless-stopped

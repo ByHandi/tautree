@@ -35,19 +35,8 @@ COPY . .
 RUN npx prisma generate && npm run build
 
 # ---------------------------------------------------------------------------
-# migrator — full deps + Prisma CLI. Run as a one-off to apply migrations:
-#   docker compose run --rm migrate
-#   (or `docker run --rm --env-file .env <image>-migrate`)
-# ---------------------------------------------------------------------------
-FROM base AS migrator
-ENV NODE_ENV=production
-COPY --from=deps /app/node_modules ./node_modules
-COPY prisma ./prisma
-COPY prisma.config.ts package.json ./
-CMD ["npx", "prisma", "migrate", "deploy"]
-
-# ---------------------------------------------------------------------------
-# runner — minimal production image, runs as a non-root user.
+# runner — production image. Runs `prisma migrate deploy` on startup (via
+# entrypoint.sh) and then the standalone Next.js server, as a non-root user.
 # ---------------------------------------------------------------------------
 FROM base AS runner
 ENV NODE_ENV=production \
@@ -62,6 +51,16 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Migration tooling: the Prisma CLI is a dev dependency and is NOT traced into
+# the standalone bundle, so copy the full deps node_modules plus the schema,
+# migrations and config that `prisma migrate deploy` reads at startup.
+COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/prisma.config.ts /app/package.json ./
+
+COPY --chown=nextjs:nodejs entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
+
 USER nextjs
 EXPOSE 3000
-CMD ["node", "server.js"]
+ENTRYPOINT ["./entrypoint.sh"]
