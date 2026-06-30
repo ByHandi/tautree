@@ -37,6 +37,7 @@ model User {
   // Public-page link button styling (orthogonal to the color theme).
   buttonShape   String    @default("rounded") @map("button_shape")
   buttonFill    String    @default("solid") @map("button_fill")
+  font          String    @default("sans")
   role          Role      @default(USER)
   suspended     Boolean   @default(false)
   links         Link[]

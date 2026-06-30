@@ -78,7 +78,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 
 **Visual / polish**
 - [x] ⭐ Button style variants — kolom `buttonShape`/`buttonFill` di User, `lib/button-style.ts` (`linkButtonAppearance` → inline style, validasi + default), selector Shape/Fill + live preview di Appearance, diterapkan ke tombol & embed di halaman publik, unit test
-- [ ] Font picker — pilihan font halaman publik (sans/serif/mono/display). _(kecil)_
+- [x] Font picker — kolom `font` di User, `lib/fonts.ts` (`fontStack`/`parseFont`, 4 pilihan: Sans/Serif/Mono/Rounded via CSS stacks — zero web-font tambahan), selector + live preview di Appearance, diterapkan ke `<main>` halaman publik, unit test
 - [ ] Cover/banner image — header di belakang avatar; **reuse pola client-resize dari thumbnail**. _(sedang)_
 
 **Konten link**

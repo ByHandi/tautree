@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { parseButtonFill, parseButtonShape } from "@/lib/button-style";
 import { db } from "@/lib/db";
+import { parseFont } from "@/lib/fonts";
 import { Prisma } from "@/lib/generated/prisma/client";
 import {
   CUSTOM_PALETTE_FIELDS,
@@ -29,6 +30,7 @@ export async function updateTheme(
 
   const buttonShape = parseButtonShape(String(formData.get("buttonShape") ?? ""));
   const buttonFill = parseButtonFill(String(formData.get("buttonFill") ?? ""));
+  const font = parseFont(String(formData.get("font") ?? ""));
 
   // For a custom theme, read + validate the palette; presets clear it.
   let customTheme: CustomPalette | null = null;
@@ -44,7 +46,7 @@ export async function updateTheme(
   try {
     const updated = await db.user.update({
       where: { id: session.user.id },
-      data: { theme, customTheme: customTheme ?? Prisma.DbNull, buttonShape, buttonFill },
+      data: { theme, customTheme: customTheme ?? Prisma.DbNull, buttonShape, buttonFill, font },
       select: { username: true },
     });
     username = updated.username;

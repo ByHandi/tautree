@@ -11,6 +11,7 @@ import { ViewTracker } from "@/components/view-tracker";
 import { linkButtonAppearance, parseButtonFill, parseButtonShape } from "@/lib/button-style";
 import { db } from "@/lib/db";
 import { getEmbed } from "@/lib/embed";
+import { fontStack, parseFont } from "@/lib/fonts";
 import { liveScheduleWhere } from "@/lib/links";
 import { isProfilePublic } from "@/lib/profile";
 import { APP_URL } from "@/lib/site";
@@ -37,6 +38,7 @@ async function getProfile(rawUsername: string) {
       customTheme: true,
       buttonShape: true,
       buttonFill: true,
+      font: true,
       suspended: true,
       socials: { orderBy: { order: "asc" }, select: { id: true, url: true } },
       links: {
@@ -184,7 +186,11 @@ export default async function PublicProfilePage({ params }: Params) {
   return (
     <main
       className="relative mx-auto flex min-h-dvh w-full max-w-lg flex-col items-center gap-6 px-5 py-16"
-      style={{ background: theme.page, color: theme.text }}
+      style={{
+        background: theme.page,
+        color: theme.text,
+        fontFamily: fontStack(parseFont(user.font)),
+      }}
     >
       <ViewTracker userId={user.id} />
       <ShareButton

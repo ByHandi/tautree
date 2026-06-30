@@ -5,6 +5,7 @@ import { AppearanceForm } from "./appearance-form";
 import { auth } from "@/auth";
 import { parseButtonFill, parseButtonShape } from "@/lib/button-style";
 import { db } from "@/lib/db";
+import { parseFont } from "@/lib/fonts";
 import { DEFAULT_CUSTOM_PALETTE, DEFAULT_THEME, isThemeId, parseCustomPalette } from "@/lib/themes";
 
 export default async function AppearancePage() {
@@ -13,7 +14,7 @@ export default async function AppearancePage() {
 
   const user = await db.user.findUnique({
     where: { id: session.user.id },
-    select: { theme: true, customTheme: true, buttonShape: true, buttonFill: true },
+    select: { theme: true, customTheme: true, buttonShape: true, buttonFill: true, font: true },
   });
   if (!user) redirect("/login");
 
@@ -34,6 +35,7 @@ export default async function AppearancePage() {
         customPalette={customPalette}
         buttonShape={parseButtonShape(user.buttonShape)}
         buttonFill={parseButtonFill(user.buttonFill)}
+        font={parseFont(user.font)}
       />
     </div>
   );

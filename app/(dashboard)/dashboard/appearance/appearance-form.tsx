@@ -15,6 +15,7 @@ import {
   type ButtonShape,
   linkButtonAppearance,
 } from "@/lib/button-style";
+import { FONT_OPTIONS, type FontId, fontStack } from "@/lib/fonts";
 import {
   CUSTOM_PALETTE_FIELDS,
   CUSTOM_THEME_ID,
@@ -88,16 +89,19 @@ export function AppearanceForm({
   customPalette,
   buttonShape,
   buttonFill,
+  font,
 }: {
   current: ThemeId;
   customPalette: CustomPalette;
   buttonShape: ButtonShape;
   buttonFill: ButtonFill;
+  font: FontId;
 }) {
   const [selected, setSelected] = useState<ThemeId>(current);
   const [palette, setPalette] = useState<CustomPalette>(customPalette);
   const [shape, setShape] = useState<ButtonShape>(buttonShape);
   const [fill, setFill] = useState<ButtonFill>(buttonFill);
+  const [fontId, setFontId] = useState<FontId>(font);
   const [state, formAction, isPending] = useActionState<ThemeFormState, FormData>(
     updateTheme,
     undefined,
@@ -111,7 +115,7 @@ export function AppearanceForm({
     ({ key }) => palette[key] !== customPalette[key],
   );
   const isCustom = selected === CUSTOM_THEME_ID;
-  const styleChanged = shape !== buttonShape || fill !== buttonFill;
+  const styleChanged = shape !== buttonShape || fill !== buttonFill || fontId !== font;
   // Nothing to save when the selection matches what's stored — for the custom
   // theme that also requires the palette to be untouched.
   const unchanged = selected === current && !styleChanged && (!isCustom || !paletteChanged);
@@ -129,6 +133,7 @@ export function AppearanceForm({
       <input type="hidden" name="theme" value={selected} />
       <input type="hidden" name="buttonShape" value={shape} />
       <input type="hidden" name="buttonFill" value={fill} />
+      <input type="hidden" name="font" value={fontId} />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {THEME_LIST.map((theme) => {
@@ -201,15 +206,23 @@ export function AppearanceForm({
 
       <div className="flex flex-col gap-4 rounded-xl border p-4">
         <div className="flex flex-col gap-1">
-          <p className="text-sm font-medium">Buttons</p>
-          <p className="text-xs text-muted-foreground">Shape and fill of your link buttons.</p>
+          <p className="text-sm font-medium">Buttons &amp; font</p>
+          <p className="text-xs text-muted-foreground">
+            Shape and fill of your link buttons, and the page font.
+          </p>
         </div>
 
-        {/* Live preview on the selected theme's background. */}
+        {/* Live preview on the selected theme's background, in the chosen font. */}
         <div
           className="flex flex-col gap-3 rounded-lg p-4"
-          style={{ background: previewTheme.page }}
+          style={{ background: previewTheme.page, fontFamily: fontStack(fontId) }}
         >
+          <span
+            className="text-center text-base font-semibold"
+            style={{ color: previewTheme.text }}
+          >
+            Aa — your name
+          </span>
           {[0, 1].map((i) => (
             <span
               key={i}
@@ -240,6 +253,15 @@ export function AppearanceForm({
             <span className="text-xs font-medium text-muted-foreground">Fill</span>
             <Segmented options={BUTTON_FILLS} value={fill} onChange={setFill} />
           </div>
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <span className="text-xs font-medium text-muted-foreground">Font</span>
+          <Segmented
+            options={FONT_OPTIONS.map((f) => ({ value: f.id, label: f.label }))}
+            value={fontId}
+            onChange={setFontId}
+          />
         </div>
       </div>
 
