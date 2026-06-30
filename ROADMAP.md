@@ -53,7 +53,7 @@ Click  → id, linkId, createdAt   # time-series analytics
 > Bikin user balik & ngerti performa.
 
 - [x] Analytics lanjut: referrer + device (geo ditunda — perlu geo-IP) — model `ProfileView` (device + referrer host, tanpa IP/UA/cookie), `<ViewTracker>` client beacon kirim `document.referrer` ke `/api/v/[id]`, helper `lib/analytics.ts` (`classifyDevice`/`isBot`/`referrerLabel`) + unit test, dashboard nampilin Views/Top sources/Devices
-- [ ] Export analytics ke CSV
+- [x] Export analytics ke CSV — route `GET /dashboard/analytics/export` (auth, ikut `?from&to` + `resolveRange`), CSV harian (date/views/clicks) via `toCsv` (escape RFC-4180), tombol download di dashboard, unit test
 - [ ] QR code per halaman profil (buat cetak/offline)
 - [x] Range tanggal custom di dashboard analytics — `resolveRange` (default 30 hari, cap 366, validasi + clamp) + `<AnalyticsRangePicker>` (date-range-picker → URL `?from&to`), semua query (clicks/views/devices/sources) ikut window, series harian dinamis, unit test
 

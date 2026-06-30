@@ -3,14 +3,11 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
 import { AnalyticsRangePicker } from "@/components/analytics-range-picker";
+import { buttonVariants } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
-import { resolveRange } from "@/lib/analytics";
+import { dayKey, resolveRange } from "@/lib/analytics";
 import { db } from "@/lib/db";
 import { cn } from "@/lib/utils";
-
-function dayKey(d: Date): string {
-  return d.toISOString().slice(0, 10);
-}
 
 export default async function AnalyticsPage({
   searchParams,
@@ -91,7 +88,20 @@ export default async function AnalyticsPage({
             {format(since, "MMM d, yyyy")} – {format(until, "MMM d, yyyy")} · {days} days
           </p>
         </div>
-        <AnalyticsRangePicker from={format(since, "yyyy-MM-dd")} to={format(until, "yyyy-MM-dd")} />
+        <div className="flex items-center gap-2">
+          <AnalyticsRangePicker
+            from={format(since, "yyyy-MM-dd")}
+            to={format(until, "yyyy-MM-dd")}
+          />
+          <a
+            href={`/dashboard/analytics/export?from=${format(since, "yyyy-MM-dd")}&to=${format(until, "yyyy-MM-dd")}`}
+            className={cn(buttonVariants({ variant: "outline", size: "icon" }))}
+            aria-label="Export CSV"
+            title="Export CSV"
+          >
+            <Icon name="download" />
+          </a>
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

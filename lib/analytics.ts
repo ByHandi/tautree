@@ -63,6 +63,23 @@ export function resolveRange(
   return { since, until: untilEnd, days };
 }
 
+/** Stable day bucket key (UTC `YYYY-MM-DD`) — shared by the chart and exports. */
+export function dayKey(d: Date): string {
+  return d.toISOString().slice(0, 10);
+}
+
+/**
+ * Serialize rows to RFC-4180 CSV. Fields containing a comma, quote, or newline
+ * are double-quoted with internal quotes doubled. Rows are CRLF-separated.
+ */
+export function toCsv(rows: (string | number)[][]): string {
+  const escape = (v: string | number) => {
+    const s = String(v);
+    return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  return rows.map((row) => row.map(escape).join(",")).join("\r\n");
+}
+
 export type Device = "mobile" | "tablet" | "desktop";
 
 /** Coarse device class from a User-Agent string. Defaults to "desktop". */

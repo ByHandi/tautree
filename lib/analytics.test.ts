@@ -7,6 +7,7 @@ import {
   isBot,
   referrerLabel,
   resolveRange,
+  toCsv,
 } from "./analytics";
 
 describe("classifyDevice", () => {
@@ -69,6 +70,18 @@ describe("resolveRange", () => {
   it("clamps an over-long span to the max", () => {
     const { days } = resolveRange("2020-01-01", "2026-06-10", now);
     expect(days).toBe(ANALYTICS_MAX_DAYS);
+  });
+});
+
+describe("toCsv", () => {
+  it("joins rows with CRLF and cells with commas", () => {
+    expect(toCsv([["date", "views"], ["2026-06-01", 3]])).toBe("date,views\r\n2026-06-01,3");
+  });
+
+  it("quotes cells containing commas, quotes, or newlines", () => {
+    expect(toCsv([["a,b", 'he said "hi"', "line1\nline2"]])).toBe(
+      '"a,b","he said ""hi""","line1\nline2"',
+    );
   });
 });
 
