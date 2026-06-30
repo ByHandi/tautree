@@ -17,6 +17,7 @@ export default async function LinksPage() {
       type: true,
       title: true,
       url: true,
+      thumbnail: true,
       isActive: true,
       clicks: true,
       startsAt: true,

@@ -5,6 +5,8 @@ import {
   normalizeUrl,
   parseLinkKind,
   parseSchedule,
+  parseThumbnail,
+  THUMBNAIL_MAX_CHARS,
   TITLE_MAX,
   validateTitle,
 } from "./links";
@@ -101,6 +103,32 @@ describe("parseLinkKind", () => {
     expect(parseLinkKind("")).toBe("LINK");
     expect(parseLinkKind("header")).toBe("LINK"); // case-sensitive by design
     expect(parseLinkKind("bogus")).toBe("LINK");
+  });
+});
+
+describe("parseThumbnail", () => {
+  const png = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg==";
+
+  it("treats empty as no thumbnail", () => {
+    expect(parseThumbnail("")).toEqual({ ok: true, thumbnail: null });
+    expect(parseThumbnail("   ")).toEqual({ ok: true, thumbnail: null });
+  });
+
+  it("accepts png/jpeg/webp base64 data URIs", () => {
+    expect(parseThumbnail(png)).toEqual({ ok: true, thumbnail: png });
+    expect(parseThumbnail("data:image/webp;base64,UklGRhoAAABXRUJQ")).toMatchObject({ ok: true });
+    expect(parseThumbnail("data:image/jpeg;base64,/9j/4AAQSkZJRg==")).toMatchObject({ ok: true });
+  });
+
+  it("rejects non-image and script-capable data URIs", () => {
+    expect(parseThumbnail("data:text/html;base64,PHNjcmlwdD4=")).toMatchObject({ ok: false });
+    expect(parseThumbnail("data:image/svg+xml;base64,PHN2Zz4=")).toMatchObject({ ok: false });
+    expect(parseThumbnail("https://example.com/a.png")).toMatchObject({ ok: false });
+  });
+
+  it("rejects an oversized payload", () => {
+    const huge = `data:image/png;base64,${"A".repeat(THUMBNAIL_MAX_CHARS)}`;
+    expect(parseThumbnail(huge)).toMatchObject({ ok: false });
   });
 });
 

@@ -35,7 +35,7 @@ async function getProfile(rawUsername: string) {
         // `isLinkLive`; suspended-owner gating is handled by `isProfilePublic`.
         where: { isActive: true, ...liveScheduleWhere(new Date()) },
         orderBy: { order: "asc" },
-        select: { id: true, type: true, title: true, url: true },
+        select: { id: true, type: true, title: true, url: true, thumbnail: true },
         // (url is the source for embeds; getEmbed runs at render time below)
       },
     },
@@ -132,7 +132,16 @@ export default async function PublicProfilePage({ params }: Params) {
           borderColor: theme.cardBorder,
         }}
       >
-        <SocialIcon url={link.url ?? ""} className="size-5 shrink-0" />
+        {link.thumbnail ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={link.thumbnail}
+            alt=""
+            className="size-6 shrink-0 rounded-md object-cover"
+          />
+        ) : (
+          <SocialIcon url={link.url ?? ""} className="size-5 shrink-0" />
+        )}
         <span className="min-w-0 flex-1 truncate text-center">{link.title}</span>
         <Icon
           name="arrow-up-right"

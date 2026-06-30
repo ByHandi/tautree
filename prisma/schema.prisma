@@ -97,6 +97,10 @@ model Link {
   title     String
   // Null for HEADER rows (section labels have no destination).
   url       String?
+  // Optional custom icon for a LINK, stored as a small image data URI
+  // (resized client-side, size-capped server-side). Null = use the auto
+  // social icon. See `parseThumbnail`.
+  thumbnail String?
   order     Int       @default(0)
   isActive  Boolean   @default(true) @map("is_active")
   clicks    Int       @default(0)

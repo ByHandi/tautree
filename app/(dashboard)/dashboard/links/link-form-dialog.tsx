@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { type LinkFormState, createLink, updateLink } from "./actions";
@@ -17,7 +17,7 @@ import {
 import Icon from "@/components/ui/icon";
 import InputText from "@/components/ui/input-text";
 import { Spinner } from "@/components/ui/spinner";
-import { type LinkKind, TITLE_MAX } from "@/lib/links";
+import { type LinkKind, THUMBNAIL_MAX_CHARS, TITLE_MAX } from "@/lib/links";
 import { cn } from "@/lib/utils";
 
 type EditableLink = {
@@ -25,9 +25,46 @@ type EditableLink = {
   title: string;
   url: string | null;
   type: LinkKind;
+  thumbnail: string | null;
   startsAt: string | null;
   endsAt: string | null;
 };
+
+/** Longest edge (px) of a stored thumbnail — keeps the data URI small. */
+const THUMBNAIL_MAX_DIM = 128;
+
+/**
+ * Read an image file, downscale it to a small square-ish thumbnail on a canvas,
+ * and return a compressed data URI. Done client-side so no upload/storage infra
+ * is needed — the server only validates + stores the resulting string.
+ */
+async function fileToThumbnail(file: File): Promise<string> {
+  const dataUrl = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(new Error("read failed"));
+    reader.readAsDataURL(file);
+  });
+
+  const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error("decode failed"));
+    image.src = dataUrl;
+  });
+
+  const scale = Math.min(1, THUMBNAIL_MAX_DIM / Math.max(img.width, img.height));
+  const width = Math.max(1, Math.round(img.width * scale));
+  const height = Math.max(1, Math.round(img.height * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("no canvas context");
+  ctx.drawImage(img, 0, 0, width, height);
+  // WebP where supported; browsers fall back to PNG (both are server-accepted).
+  return canvas.toDataURL("image/webp", 0.85);
+}
 
 /** ISO string → `datetime-local` value (local wall-clock, minute precision). */
 function toLocalInput(iso: string | null): string {
@@ -65,7 +102,35 @@ export function LinkFormDialog({
   const [kind, setKind] = useState<LinkKind>(link?.type ?? "LINK");
   const isHeader = kind === "HEADER";
   const isEmbed = kind === "EMBED";
+  const isLink = kind === "LINK";
   const noun = isHeader ? "header" : isEmbed ? "embed" : "link";
+
+  const [thumbnail, setThumbnail] = useState<string | null>(link?.thumbnail ?? null);
+  const [thumbBusy, setThumbBusy] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  async function onPickFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // let the same file be re-picked after a remove
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose an image file.");
+      return;
+    }
+    setThumbBusy(true);
+    try {
+      const data = await fileToThumbnail(file);
+      if (data.length > THUMBNAIL_MAX_CHARS) {
+        toast.error("That image is too detailed — try a simpler one.");
+        return;
+      }
+      setThumbnail(data);
+    } catch {
+      toast.error("Couldn't process that image.");
+    } finally {
+      setThumbBusy(false);
+    }
+  }
 
   // Schedule inputs are local wall-clock; hidden fields carry the timezone-safe
   // ISO value that the server action actually reads.
@@ -152,6 +217,56 @@ export function LinkFormDialog({
               autoCapitalize="off"
               spellCheck={false}
             />
+          )}
+
+          {isLink && (
+            <div className="flex flex-col gap-1.5">
+              <span className="text-sm font-medium">
+                Icon <span className="font-normal text-muted-foreground">(optional)</span>
+              </span>
+              <div className="flex items-center gap-3">
+                <span className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-muted">
+                  {thumbnail ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={thumbnail} alt="" className="size-full object-cover" />
+                  ) : (
+                    <Icon name="image" className="size-5 text-muted-foreground" />
+                  )}
+                </span>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={thumbBusy}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  {thumbBusy && <Spinner />}
+                  {thumbnail ? "Replace" : "Upload"}
+                </Button>
+                {thumbnail && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setThumbnail(null)}
+                    disabled={thumbBusy}
+                  >
+                    Remove
+                  </Button>
+                )}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={onPickFile}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Overrides the auto social icon. Resized to {THUMBNAIL_MAX_DIM}px.
+              </p>
+              <input type="hidden" name="thumbnail" value={thumbnail ?? ""} />
+            </div>
           )}
 
           <div className="flex flex-col gap-1">

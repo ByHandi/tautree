@@ -117,3 +117,28 @@ function parseDateInput(raw: string): Date | null | "invalid" {
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? "invalid" : date;
 }
+
+/**
+ * Max length of the thumbnail data URI string (~30 KB decoded). Comfortably
+ * above a real 128px WebP icon (typically <14 KB base64) while bounding the
+ * worst case — these strings ship inline in the public page HTML.
+ */
+export const THUMBNAIL_MAX_CHARS = 40_000;
+
+// Only base64-encoded raster image data URIs — never `data:text/html` or
+// `data:image/svg+xml` (SVG can carry script), which keeps the stored value
+// safe to render in an <img> on the public page.
+const THUMBNAIL_DATA_URI = /^data:image\/(?:png|jpe?g|webp);base64,[A-Za-z0-9+/]+={0,2}$/;
+
+export type ThumbnailCheck =
+  | { ok: true; thumbnail: string | null }
+  | { ok: false; reason: string };
+
+/** Validate an optional thumbnail data URI from the form. Empty → null. */
+export function parseThumbnail(raw: string): ThumbnailCheck {
+  const value = raw.trim();
+  if (value.length === 0) return { ok: true, thumbnail: null };
+  if (value.length > THUMBNAIL_MAX_CHARS) return { ok: false, reason: "Image is too large." };
+  if (!THUMBNAIL_DATA_URI.test(value)) return { ok: false, reason: "Invalid image." };
+  return { ok: true, thumbnail: value };
+}

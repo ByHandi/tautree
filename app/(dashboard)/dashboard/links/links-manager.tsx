@@ -43,6 +43,7 @@ export type LinkItem = {
   type: LinkKind;
   title: string;
   url: string | null;
+  thumbnail: string | null;
   isActive: boolean;
   clicks: number;
   startsAt: string | null;
@@ -107,6 +108,10 @@ function SortableLinkRow({
 
       <div className="flex min-w-0 flex-1 flex-col">
         <span className="flex items-center gap-1.5">
+          {link.thumbnail && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={link.thumbnail} alt="" className="size-4 shrink-0 rounded object-cover" />
+          )}
           {meta.icon && (
             <Icon name={meta.icon} className="size-3.5 shrink-0 text-muted-foreground" />
           )}

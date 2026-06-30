@@ -6,7 +6,13 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { canEmbed } from "@/lib/embed";
-import { normalizeUrl, parseLinkKind, parseSchedule, validateTitle } from "@/lib/links";
+import {
+  normalizeUrl,
+  parseLinkKind,
+  parseSchedule,
+  parseThumbnail,
+  validateTitle,
+} from "@/lib/links";
 
 export type LinkFormState = { error?: string; ok?: boolean } | undefined;
 
@@ -43,6 +49,10 @@ export async function createLink(_prev: LinkFormState, formData: FormData): Prom
     String(formData.get("endsAt") ?? ""),
   );
   if (!schedule.ok) return { error: schedule.reason };
+  const thumb = parseThumbnail(String(formData.get("thumbnail") ?? ""));
+  if (!thumb.ok) return { error: thumb.reason };
+  // Thumbnails only apply to plain links.
+  const thumbnail = kind === "LINK" ? thumb.thumbnail : null;
 
   // Append the new link at the end of the list.
   const last = await db.link.findFirst({
@@ -59,6 +69,7 @@ export async function createLink(_prev: LinkFormState, formData: FormData): Prom
         type: kind,
         title: String(formData.get("title")).trim(),
         url,
+        thumbnail,
         order,
         startsAt: schedule.startsAt,
         endsAt: schedule.endsAt,
@@ -81,9 +92,12 @@ export async function updateLink(_prev: LinkFormState, formData: FormData): Prom
   const title = validateTitle(String(formData.get("title") ?? ""));
   if (!title.ok) return { error: title.reason };
   let url: string | null = null;
-  if (kind === "LINK") {
+  if (kind !== "HEADER") {
     const parsed = normalizeUrl(String(formData.get("url") ?? ""));
     if (!parsed.ok) return { error: parsed.reason };
+    if (kind === "EMBED" && !canEmbed(parsed.url)) {
+      return { error: "Only YouTube and Spotify links can be embedded." };
+    }
     url = parsed.url;
   }
   const schedule = parseSchedule(
@@ -91,6 +105,10 @@ export async function updateLink(_prev: LinkFormState, formData: FormData): Prom
     String(formData.get("endsAt") ?? ""),
   );
   if (!schedule.ok) return { error: schedule.reason };
+  const thumb = parseThumbnail(String(formData.get("thumbnail") ?? ""));
+  if (!thumb.ok) return { error: thumb.reason };
+  // Thumbnails only apply to plain links.
+  const thumbnail = kind === "LINK" ? thumb.thumbnail : null;
 
   // updateMany scopes the write to the owner — no cross-user edits.
   const res = await db.link.updateMany({
@@ -99,6 +117,7 @@ export async function updateLink(_prev: LinkFormState, formData: FormData): Prom
       type: kind,
       title: String(formData.get("title")).trim(),
       url,
+      thumbnail,
       startsAt: schedule.startsAt,
       endsAt: schedule.endsAt,
     },
