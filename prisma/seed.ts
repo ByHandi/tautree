@@ -56,12 +56,13 @@ async function seedDemo() {
       bio: "Building Tautree 🌳",
       links: {
         create: [
-          { title: "GitHub", url: "https://github.com/ByHandi", order: 0 },
-          { title: "Website", url: "https://example.com", order: 1 },
+          { type: "HEADER", title: "Find me online", order: 0 },
+          { title: "GitHub", url: "https://github.com/ByHandi", order: 1 },
+          { title: "Website", url: "https://example.com", order: 2 },
           {
             title: "Twitter / X",
             url: "https://x.com/handi",
-            order: 2,
+            order: 3,
             isActive: false,
           },
         ],

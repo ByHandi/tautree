@@ -23,7 +23,7 @@ export default async function AdminUserDetailPage({ params }: { params: Promise<
       createdAt: true,
       links: {
         orderBy: { order: "asc" },
-        select: { id: true, title: true, url: true, isActive: true, clicks: true },
+        select: { id: true, type: true, title: true, url: true, isActive: true, clicks: true },
       },
     },
   });

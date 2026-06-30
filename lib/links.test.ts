@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { isLinkLive, normalizeUrl, parseSchedule, TITLE_MAX, validateTitle } from "./links";
+import {
+  isLinkLive,
+  normalizeUrl,
+  parseLinkKind,
+  parseSchedule,
+  TITLE_MAX,
+  validateTitle,
+} from "./links";
 
 describe("isLinkLive", () => {
   it("is live only when active and the owner isn't suspended", () => {
@@ -81,6 +88,19 @@ describe("parseSchedule", () => {
   it("allows a start with no end and vice versa", () => {
     expect(parseSchedule("2026-07-01T10:00:00.000Z", "")).toMatchObject({ ok: true });
     expect(parseSchedule("", "2026-07-01T10:00:00.000Z")).toMatchObject({ ok: true });
+  });
+});
+
+describe("parseLinkKind", () => {
+  it("recognizes HEADER", () => {
+    expect(parseLinkKind("HEADER")).toBe("HEADER");
+  });
+
+  it("defaults anything else to LINK", () => {
+    expect(parseLinkKind("LINK")).toBe("LINK");
+    expect(parseLinkKind("")).toBe("LINK");
+    expect(parseLinkKind("header")).toBe("LINK"); // case-sensitive by design
+    expect(parseLinkKind("bogus")).toBe("LINK");
   });
 });
 

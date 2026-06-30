@@ -45,7 +45,7 @@ Click  → id, linkId, createdAt   # time-series analytics
 
 - [x] Auto social icons — `detectPlatform` (`lib/social.ts`) + `SocialIcon` (simple-icons, 17 platform) di tombol publik, fallback globe
 - [x] Scheduling link — kolom `startsAt`/`endsAt` (null = tanpa batas), gating di `isLinkLive` + `liveScheduleWhere` (query publik & redirect), datetime-local di dialog (ISO/UTC, timezone-safe), badge Scheduled/Expired di dashboard, unit test
-- [ ] Tipe link baru: header/divider (grouping), bukan cuma tombol
+- [x] Tipe link baru: header/divider (grouping) — enum `LinkType` (`LINK`/`HEADER`), `url` nullable, render section label di halaman publik, type selector + badge di dashboard, gating redirect anti header, unit test `parseLinkKind`
 - [ ] Embed — YouTube/Spotify/video inline
 - [ ] Thumbnail/icon kustom per link
 

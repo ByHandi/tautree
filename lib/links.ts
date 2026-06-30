@@ -3,6 +3,18 @@
 export const TITLE_MAX = 80;
 
 /**
+ * Plain string union mirroring the Prisma `LinkType` enum. Defined here (not
+ * imported from the generated client) so client components can use it without
+ * pulling in server-only code. Values match the enum exactly.
+ */
+export type LinkKind = "LINK" | "HEADER";
+
+/** Coerce untrusted form input to a valid LinkKind, defaulting to "LINK". */
+export function parseLinkKind(raw: string): LinkKind {
+  return raw === "HEADER" ? "HEADER" : "LINK";
+}
+
+/**
  * A link is publicly live only when it's active, inside its scheduling window,
  * AND its owner isn't suspended. Single source of truth for the public page and
  * the click-redirect — a suspended account's links must go dark everywhere.

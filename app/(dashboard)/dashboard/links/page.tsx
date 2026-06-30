@@ -14,6 +14,7 @@ export default async function LinksPage() {
     orderBy: { order: "asc" },
     select: {
       id: true,
+      type: true,
       title: true,
       url: true,
       isActive: true,

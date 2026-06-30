@@ -14,6 +14,13 @@ enum Role {
   ADMIN
 }
 
+// LINK = a normal clickable button. HEADER = a non-clickable section label used
+// to group links on the public page (no URL).
+enum LinkType {
+  LINK
+  HEADER
+}
+
 model User {
   id            String    @id @default(uuid(7))
   email         String    @unique
@@ -84,8 +91,10 @@ model Link {
   id        String   @id @default(uuid(7))
   userId    String   @map("user_id")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      LinkType @default(LINK)
   title     String
-  url       String
+  // Null for HEADER rows (section labels have no destination).
+  url       String?
   order     Int       @default(0)
   isActive  Boolean   @default(true) @map("is_active")
   clicks    Int       @default(0)

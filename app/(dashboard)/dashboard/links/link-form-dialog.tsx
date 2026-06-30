@@ -14,14 +14,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import Icon from "@/components/ui/icon";
 import InputText from "@/components/ui/input-text";
 import { Spinner } from "@/components/ui/spinner";
-import { TITLE_MAX } from "@/lib/links";
+import { type LinkKind, TITLE_MAX } from "@/lib/links";
+import { cn } from "@/lib/utils";
 
 type EditableLink = {
   id: string;
   title: string;
-  url: string;
+  url: string | null;
+  type: LinkKind;
   startsAt: string | null;
   endsAt: string | null;
 };
@@ -59,6 +62,9 @@ export function LinkFormDialog({
     undefined,
   );
 
+  const [kind, setKind] = useState<LinkKind>(link?.type ?? "LINK");
+  const isHeader = kind === "HEADER";
+
   // Schedule inputs are local wall-clock; hidden fields carry the timezone-safe
   // ISO value that the server action actually reads.
   const [startsLocal, setStartsLocal] = useState(() => toLocalInput(link?.startsAt ?? null));
@@ -75,36 +81,68 @@ export function LinkFormDialog({
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{isEdit ? "Edit link" : "Add link"}</DialogTitle>
+          <DialogTitle>
+            {isEdit ? "Edit" : "Add"} {isHeader ? "header" : "link"}
+          </DialogTitle>
           <DialogDescription>
-            {isEdit ? "Update your link's title or URL." : "Add a new link to your public page."}
+            {isHeader
+              ? "A section label to group the links on your public page."
+              : "Add a new link to your public page."}
           </DialogDescription>
         </DialogHeader>
 
         <form action={formAction} className="flex flex-col gap-4">
           {isEdit && <input type="hidden" name="id" value={link.id} />}
+          <input type="hidden" name="type" value={kind} />
+
+          <div className="grid grid-cols-2 gap-1 rounded-lg bg-muted p-1" role="group">
+            {(
+              [
+                { value: "LINK", label: "Link", icon: "link" },
+                { value: "HEADER", label: "Header", icon: "heading" },
+              ] as const
+            ).map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => setKind(opt.value)}
+                aria-pressed={kind === opt.value}
+                className={cn(
+                  "flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+                  kind === opt.value
+                    ? "bg-background text-foreground shadow-xs"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                <Icon name={opt.icon} className="size-4" />
+                {opt.label}
+              </button>
+            ))}
+          </div>
 
           <InputText
             name="title"
-            label="Title"
-            placeholder="Instagram"
+            label={isHeader ? "Heading" : "Title"}
+            placeholder={isHeader ? "My socials" : "Instagram"}
             defaultValue={link?.title ?? ""}
             required
             maxLength={TITLE_MAX}
             autoComplete="off"
           />
 
-          <InputText
-            name="url"
-            label="URL"
-            placeholder="https://instagram.com/username"
-            defaultValue={link?.url ?? ""}
-            required
-            inputMode="url"
-            autoComplete="off"
-            autoCapitalize="off"
-            spellCheck={false}
-          />
+          {!isHeader && (
+            <InputText
+              name="url"
+              label="URL"
+              placeholder="https://instagram.com/username"
+              defaultValue={link?.url ?? ""}
+              required
+              inputMode="url"
+              autoComplete="off"
+              autoCapitalize="off"
+              spellCheck={false}
+            />
+          )}
 
           <div className="flex flex-col gap-1">
             <div className="grid grid-cols-2 gap-3">
@@ -122,7 +160,7 @@ export function LinkFormDialog({
               />
             </div>
             <p className="text-xs text-muted-foreground">
-              Optional. Leave blank to show the link immediately and indefinitely.
+              Optional. Leave blank to show it immediately and indefinitely.
             </p>
           </div>
           <input type="hidden" name="startsAt" value={toIso(startsLocal)} />

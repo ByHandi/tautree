@@ -35,12 +35,14 @@ import {
 import Icon from "@/components/ui/icon";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
+import type { LinkKind } from "@/lib/links";
 import { cn } from "@/lib/utils";
 
 export type LinkItem = {
   id: string;
+  type: LinkKind;
   title: string;
-  url: string;
+  url: string | null;
   isActive: boolean;
   clicks: number;
   startsAt: string | null;
@@ -74,6 +76,7 @@ function SortableLinkRow({
     id: link.id,
   });
   const status = scheduleStatus(link, Date.now());
+  const isHeader = link.type === "HEADER";
 
   return (
     <li
@@ -96,7 +99,15 @@ function SortableLinkRow({
 
       <div className="flex min-w-0 flex-1 flex-col">
         <span className="flex items-center gap-1.5">
+          {isHeader && (
+            <Icon name="heading" className="size-3.5 shrink-0 text-muted-foreground" />
+          )}
           <span className="truncate font-medium">{link.title}</span>
+          {isHeader && (
+            <span className="shrink-0 rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+              Header
+            </span>
+          )}
           {status === "scheduled" && (
             <span className="shrink-0 rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-600 dark:text-amber-400">
               Scheduled
@@ -108,13 +119,17 @@ function SortableLinkRow({
             </span>
           )}
         </span>
-        <span className="truncate text-sm text-muted-foreground">{link.url}</span>
+        <span className="truncate text-sm text-muted-foreground">
+          {isHeader ? "Section header" : link.url}
+        </span>
       </div>
 
-      <span className="hidden items-center gap-1 px-1 text-xs text-muted-foreground sm:flex">
-        <Icon name="mouse-pointer-click" className="size-3.5" />
-        {link.clicks}
-      </span>
+      {!isHeader && (
+        <span className="hidden items-center gap-1 px-1 text-xs text-muted-foreground sm:flex">
+          <Icon name="mouse-pointer-click" className="size-3.5" />
+          {link.clicks}
+        </span>
+      )}
 
       <Switch
         checked={link.isActive}

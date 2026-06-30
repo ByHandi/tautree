@@ -20,8 +20,9 @@ import { cn } from "@/lib/utils";
 
 type AdminLink = {
   id: string;
+  type: "LINK" | "HEADER";
   title: string;
-  url: string;
+  url: string | null;
   isActive: boolean;
   clicks: number;
 };
@@ -66,7 +67,9 @@ export function AdminUserLinks({ links }: { links: AdminLink[] }) {
             />
             <div className="flex min-w-0 flex-1 flex-col">
               <span className="truncate font-medium">{link.title}</span>
-              <span className="truncate text-sm text-muted-foreground">{link.url}</span>
+              <span className="truncate text-sm text-muted-foreground">
+                {link.type === "HEADER" ? "Section header" : link.url}
+              </span>
             </div>
             <span className="hidden items-center gap-1 px-1 text-xs text-muted-foreground sm:flex">
               <Icon name="mouse-pointer-click" className="size-3.5" />

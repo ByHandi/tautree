@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { normalizeUrl, parseSchedule, validateTitle } from "@/lib/links";
+import { normalizeUrl, parseLinkKind, parseSchedule, validateTitle } from "@/lib/links";
 
 export type LinkFormState = { error?: string; ok?: boolean } | undefined;
 
@@ -23,10 +23,16 @@ function revalidate() {
 export async function createLink(_prev: LinkFormState, formData: FormData): Promise<LinkFormState> {
   const userId = await requireUserId();
 
+  const kind = parseLinkKind(String(formData.get("type") ?? ""));
   const title = validateTitle(String(formData.get("title") ?? ""));
   if (!title.ok) return { error: title.reason };
-  const url = normalizeUrl(String(formData.get("url") ?? ""));
-  if (!url.ok) return { error: url.reason };
+  // Headers are section labels with no destination; only links carry a URL.
+  let url: string | null = null;
+  if (kind === "LINK") {
+    const parsed = normalizeUrl(String(formData.get("url") ?? ""));
+    if (!parsed.ok) return { error: parsed.reason };
+    url = parsed.url;
+  }
   const schedule = parseSchedule(
     String(formData.get("startsAt") ?? ""),
     String(formData.get("endsAt") ?? ""),
@@ -45,8 +51,9 @@ export async function createLink(_prev: LinkFormState, formData: FormData): Prom
     await db.link.create({
       data: {
         userId,
+        type: kind,
         title: String(formData.get("title")).trim(),
-        url: url.url,
+        url,
         order,
         startsAt: schedule.startsAt,
         endsAt: schedule.endsAt,
@@ -65,10 +72,15 @@ export async function updateLink(_prev: LinkFormState, formData: FormData): Prom
   const id = String(formData.get("id") ?? "");
   if (!id) return { error: "Link not found." };
 
+  const kind = parseLinkKind(String(formData.get("type") ?? ""));
   const title = validateTitle(String(formData.get("title") ?? ""));
   if (!title.ok) return { error: title.reason };
-  const url = normalizeUrl(String(formData.get("url") ?? ""));
-  if (!url.ok) return { error: url.reason };
+  let url: string | null = null;
+  if (kind === "LINK") {
+    const parsed = normalizeUrl(String(formData.get("url") ?? ""));
+    if (!parsed.ok) return { error: parsed.reason };
+    url = parsed.url;
+  }
   const schedule = parseSchedule(
     String(formData.get("startsAt") ?? ""),
     String(formData.get("endsAt") ?? ""),
@@ -79,8 +91,9 @@ export async function updateLink(_prev: LinkFormState, formData: FormData): Prom
   const res = await db.link.updateMany({
     where: { id, userId },
     data: {
+      type: kind,
       title: String(formData.get("title")).trim(),
-      url: url.url,
+      url,
       startsAt: schedule.startsAt,
       endsAt: schedule.endsAt,
     },

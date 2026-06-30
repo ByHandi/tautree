@@ -34,7 +34,7 @@ async function getProfile(rawUsername: string) {
         // `isLinkLive`; suspended-owner gating is handled by `isProfilePublic`.
         where: { isActive: true, ...liveScheduleWhere(new Date()) },
         orderBy: { order: "asc" },
-        select: { id: true, title: true, url: true },
+        select: { id: true, type: true, title: true, url: true },
       },
     },
   });
@@ -101,25 +101,35 @@ export default async function PublicProfilePage({ params }: Params) {
 
       {user.links.length > 0 ? (
         <nav className="flex w-full flex-col gap-3">
-          {user.links.map((link) => (
-            <a
-              key={link.id}
-              href={`/api/r/${link.id}`}
-              className="group flex items-center gap-3 rounded-xl border px-5 py-4 font-medium shadow-xs transition-all hover:-translate-y-0.5 hover:shadow-md"
-              style={{
-                background: theme.card,
-                color: theme.cardText,
-                borderColor: theme.cardBorder,
-              }}
-            >
-              <SocialIcon url={link.url} className="size-5 shrink-0" />
-              <span className="min-w-0 flex-1 truncate text-center">{link.title}</span>
-              <Icon
-                name="arrow-up-right"
-                className="size-4 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-              />
-            </a>
-          ))}
+          {user.links.map((link) =>
+            link.type === "HEADER" ? (
+              <h2
+                key={link.id}
+                className="px-1 pt-4 text-center text-xs font-semibold uppercase tracking-widest first:pt-0"
+                style={{ color: theme.muted }}
+              >
+                {link.title}
+              </h2>
+            ) : (
+              <a
+                key={link.id}
+                href={`/api/r/${link.id}`}
+                className="group flex items-center gap-3 rounded-xl border px-5 py-4 font-medium shadow-xs transition-all hover:-translate-y-0.5 hover:shadow-md"
+                style={{
+                  background: theme.card,
+                  color: theme.cardText,
+                  borderColor: theme.cardBorder,
+                }}
+              >
+                <SocialIcon url={link.url ?? ""} className="size-5 shrink-0" />
+                <span className="min-w-0 flex-1 truncate text-center">{link.title}</span>
+                <Icon
+                  name="arrow-up-right"
+                  className="size-4 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
+              </a>
+            ),
+          )}
         </nav>
       ) : (
         <p className="text-sm" style={{ color: theme.muted }}>
