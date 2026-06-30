@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
+import { parseButtonFill, parseButtonShape } from "@/lib/button-style";
 import { db } from "@/lib/db";
 import { Prisma } from "@/lib/generated/prisma/client";
 import {
@@ -26,6 +27,9 @@ export async function updateTheme(
   const theme = String(formData.get("theme") ?? "");
   if (!isThemeId(theme)) return { error: "Invalid theme." };
 
+  const buttonShape = parseButtonShape(String(formData.get("buttonShape") ?? ""));
+  const buttonFill = parseButtonFill(String(formData.get("buttonFill") ?? ""));
+
   // For a custom theme, read + validate the palette; presets clear it.
   let customTheme: CustomPalette | null = null;
   if (theme === CUSTOM_THEME_ID) {
@@ -40,7 +44,7 @@ export async function updateTheme(
   try {
     const updated = await db.user.update({
       where: { id: session.user.id },
-      data: { theme, customTheme: customTheme ?? Prisma.DbNull },
+      data: { theme, customTheme: customTheme ?? Prisma.DbNull, buttonShape, buttonFill },
       select: { username: true },
     });
     username = updated.username;

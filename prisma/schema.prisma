@@ -34,6 +34,9 @@ model User {
   avatarUrl     String?   @map("avatar_url")
   theme         String    @default("default")
   customTheme   Json?     @map("custom_theme")
+  // Public-page link button styling (orthogonal to the color theme).
+  buttonShape   String    @default("rounded") @map("button_shape")
+  buttonFill    String    @default("solid") @map("button_fill")
   role          Role      @default(USER)
   suspended     Boolean   @default(false)
   links         Link[]

@@ -21,9 +21,10 @@ Linktree-style SaaS: tiap user punya satu halaman publik (`tautree.com/username`
 ## Data Model (saat ini)
 
 ```
-User   → id, email, username, name, bio, avatarUrl, theme, customTheme(Json), role(USER|ADMIN), suspended
-Link   → id, userId, title, url, order, isActive, clicks
-Click  → id, linkId, createdAt   # time-series analytics
+User        → id, email, username, name, bio, avatarUrl, theme, customTheme(Json), role(USER|ADMIN), suspended
+Link        → id, userId, type(LINK|HEADER|EMBED), title, url?, thumbnail?, order, isActive, clicks, startsAt?, endsAt?
+Click       → id, linkId, createdAt                       # per-click time-series
+ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly view log (no IP/cookie)
 + Auth.js: Account, Session, VerificationToken
 ```
 
@@ -71,6 +72,23 @@ Click  → id, linkId, createdAt   # time-series analytics
 - [ ] Tambah domain per user + verifikasi kepemilikan via DNS TXT
 - [ ] Routing multi-tenant (middleware: map host → username)
 - [ ] TLS otomatis (Coolify/Caddy on-demand cert)
+
+## Fase 11 — Public Page Enhancements 🎨
+> Bikin halaman publik lebih ekspresif & "punya sendiri". Semua nilai langsung kelihatan ke pengunjung. ⭐ = rekomendasi prioritas (rasio dampak/effort tinggi).
+
+**Visual / polish**
+- [x] ⭐ Button style variants — kolom `buttonShape`/`buttonFill` di User, `lib/button-style.ts` (`linkButtonAppearance` → inline style, validasi + default), selector Shape/Fill + live preview di Appearance, diterapkan ke tombol & embed di halaman publik, unit test
+- [ ] Font picker — pilihan font halaman publik (sans/serif/mono/display). _(kecil)_
+- [ ] Cover/banner image — header di belakang avatar; **reuse pola client-resize dari thumbnail**. _(sedang)_
+
+**Konten link**
+- [ ] Social icon row — deretan ikon sosmed di header, terpisah dari tombol link; **reuse `SocialIcon`**. _(sedang)_
+- [ ] Featured/pinned link — satu link tampil besar/hero (opsional dengan gambar). _(sedang)_
+- [ ] vCard "Save contact" — tombol download `.vcf` ke HP; diferensiator personal brand, zero infra. _(kecil–sedang)_
+
+**Growth / interaksi**
+- [ ] ⭐ Share + QR di halaman publik — pengunjung bisa share / scan QR profil; **reuse QR infra (`qrcode` + `<QrCard>`)**. _(kecil–sedang)_
+- [ ] Email capture / "Subscribe" — kumpulin email pengunjung (lead-gen); butuh model + storage + pertimbangan privacy. _(sedang, nilai tinggi)_
 
 ---
 

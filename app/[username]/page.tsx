@@ -7,12 +7,14 @@ import { Logo } from "@/components/logo";
 import { SocialIcon } from "@/components/social-icon";
 import Icon from "@/components/ui/icon";
 import { ViewTracker } from "@/components/view-tracker";
+import { linkButtonAppearance, parseButtonFill, parseButtonShape } from "@/lib/button-style";
 import { db } from "@/lib/db";
 import { getEmbed } from "@/lib/embed";
 import { liveScheduleWhere } from "@/lib/links";
 import { isProfilePublic } from "@/lib/profile";
 import { getTheme } from "@/lib/themes";
 import { normalizeUsername, validateUsername } from "@/lib/username";
+import { cn } from "@/lib/utils";
 
 type Params = { params: Promise<{ username: string }> };
 
@@ -31,6 +33,8 @@ async function getProfile(rawUsername: string) {
       avatarUrl: true,
       theme: true,
       customTheme: true,
+      buttonShape: true,
+      buttonFill: true,
       suspended: true,
       links: {
         // Only links that are active AND inside their scheduling window. Mirrors
@@ -74,6 +78,11 @@ export default async function PublicProfilePage({ params }: Params) {
   const initial = (user.name ?? user.username ?? "?").charAt(0).toUpperCase();
   const avatar = user.avatarUrl ?? user.image;
   const theme = getTheme(user.theme, user.customTheme);
+  const btn = linkButtonAppearance(
+    theme,
+    parseButtonShape(user.buttonShape),
+    parseButtonFill(user.buttonFill),
+  );
   const links = user.links;
 
   function renderItem(link: (typeof links)[number]) {
@@ -94,8 +103,8 @@ export default async function PublicProfilePage({ params }: Params) {
       return (
         <div
           key={link.id}
-          className="aspect-video w-full overflow-hidden rounded-xl border shadow-xs"
-          style={{ borderColor: theme.cardBorder }}
+          className="aspect-video w-full overflow-hidden border shadow-xs"
+          style={{ borderColor: theme.cardBorder, borderRadius: btn.borderRadius }}
         >
           <iframe
             src={embed.src}
@@ -115,7 +124,8 @@ export default async function PublicProfilePage({ params }: Params) {
           src={embed.src}
           title={link.title}
           height={embed.height}
-          className="w-full rounded-xl"
+          className="w-full"
+          style={{ borderRadius: btn.borderRadius }}
           loading="lazy"
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
         />
@@ -127,11 +137,17 @@ export default async function PublicProfilePage({ params }: Params) {
       <a
         key={link.id}
         href={`/api/r/${link.id}`}
-        className="group flex items-center gap-3 rounded-xl border px-5 py-4 font-medium shadow-xs transition-all hover:-translate-y-0.5 hover:shadow-md"
+        className={cn(
+          "group flex items-center gap-3 px-5 py-4 font-medium transition-all hover:-translate-y-0.5",
+          btn.shadow && "shadow-xs hover:shadow-md",
+        )}
         style={{
-          background: theme.card,
-          color: theme.cardText,
-          borderColor: theme.cardBorder,
+          background: btn.background,
+          color: btn.color,
+          borderColor: btn.borderColor,
+          borderWidth: btn.borderWidth,
+          borderStyle: "solid",
+          borderRadius: btn.borderRadius,
         }}
       >
         {link.thumbnail ? (

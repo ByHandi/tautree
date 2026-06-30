@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { AppearanceForm } from "./appearance-form";
 
 import { auth } from "@/auth";
+import { parseButtonFill, parseButtonShape } from "@/lib/button-style";
 import { db } from "@/lib/db";
 import { DEFAULT_CUSTOM_PALETTE, DEFAULT_THEME, isThemeId, parseCustomPalette } from "@/lib/themes";
 
@@ -12,7 +13,7 @@ export default async function AppearancePage() {
 
   const user = await db.user.findUnique({
     where: { id: session.user.id },
-    select: { theme: true, customTheme: true },
+    select: { theme: true, customTheme: true, buttonShape: true, buttonFill: true },
   });
   if (!user) redirect("/login");
 
@@ -23,10 +24,17 @@ export default async function AppearancePage() {
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 p-6">
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold tracking-tight">Appearance</h1>
-        <p className="text-sm text-muted-foreground">Pick a color theme for your public page.</p>
+        <p className="text-sm text-muted-foreground">
+          Pick a color theme and button style for your public page.
+        </p>
       </div>
 
-      <AppearanceForm current={current} customPalette={customPalette} />
+      <AppearanceForm
+        current={current}
+        customPalette={customPalette}
+        buttonShape={parseButtonShape(user.buttonShape)}
+        buttonFill={parseButtonFill(user.buttonFill)}
+      />
     </div>
   );
 }
