@@ -1,25 +1,17 @@
-# Local / single-host deploy. Provide secrets via a `.env` file (see
-# `.env.example`). Bring everything up with:
+# Single-host deploy where PostgreSQL runs on the **host machine** (not in a
+# container). The app/migrate containers reach it via `host.docker.internal`,
+# which is mapped to the host gateway by the `extra_hosts` entry below.
+#
+# Provide secrets via a `.env` file (see `.env.example`). DATABASE_URL must use
+# the `host.docker.internal` host, e.g.:
+#   DATABASE_URL="postgresql://postgres:postgres@host.docker.internal:5432/tautree?schema=public"
+#
+# Bring everything up with:
 #   docker compose up -d --build
 # Migrations run automatically via the one-off `migrate` service before `app`.
 
 services:
-  db:
-    image: postgres:17-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-tautree}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-tautree}"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
-  # One-off job: applies `prisma migrate deploy`, then exits.
+  # One-off job: applies `prisma migrate deploy` against the host DB, then exits.
   migrate:
     build:
       context: .
@@ -27,9 +19,8 @@ services:
     env_file: .env
     environment:
       DATABASE_URL: ${DATABASE_URL}
-    depends_on:
-      db:
-        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     restart: "no"
 
   app:
@@ -41,14 +32,11 @@ services:
     env_file: .env
     environment:
       DATABASE_URL: ${DATABASE_URL}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "${PORT:-3000}:3000"
     depends_on:
-      db:
-        condition: service_healthy
       migrate:
         condition: service_completed_successfully
     restart: unless-stopped
-
-volumes:
-  pgdata:
