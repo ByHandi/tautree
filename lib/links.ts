@@ -7,11 +7,13 @@ export const TITLE_MAX = 80;
  * imported from the generated client) so client components can use it without
  * pulling in server-only code. Values match the enum exactly.
  */
-export type LinkKind = "LINK" | "HEADER";
+export type LinkKind = "LINK" | "HEADER" | "EMBED";
 
 /** Coerce untrusted form input to a valid LinkKind, defaulting to "LINK". */
 export function parseLinkKind(raw: string): LinkKind {
-  return raw === "HEADER" ? "HEADER" : "LINK";
+  if (raw === "HEADER") return "HEADER";
+  if (raw === "EMBED") return "EMBED";
+  return "LINK";
 }
 
 /**

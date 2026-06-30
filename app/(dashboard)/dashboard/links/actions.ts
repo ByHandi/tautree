@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { canEmbed } from "@/lib/embed";
 import { normalizeUrl, parseLinkKind, parseSchedule, validateTitle } from "@/lib/links";
 
 export type LinkFormState = { error?: string; ok?: boolean } | undefined;
@@ -26,11 +27,15 @@ export async function createLink(_prev: LinkFormState, formData: FormData): Prom
   const kind = parseLinkKind(String(formData.get("type") ?? ""));
   const title = validateTitle(String(formData.get("title") ?? ""));
   if (!title.ok) return { error: title.reason };
-  // Headers are section labels with no destination; only links carry a URL.
+  // Headers are section labels with no destination; links and embeds carry a
+  // URL (embeds must be from a supported provider).
   let url: string | null = null;
-  if (kind === "LINK") {
+  if (kind !== "HEADER") {
     const parsed = normalizeUrl(String(formData.get("url") ?? ""));
     if (!parsed.ok) return { error: parsed.reason };
+    if (kind === "EMBED" && !canEmbed(parsed.url)) {
+      return { error: "Only YouTube and Spotify links can be embedded." };
+    }
     url = parsed.url;
   }
   const schedule = parseSchedule(

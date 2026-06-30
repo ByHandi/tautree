@@ -16,11 +16,12 @@ import {
 } from "@/components/ui/dialog";
 import Icon from "@/components/ui/icon";
 import { Spinner } from "@/components/ui/spinner";
+import type { LinkKind } from "@/lib/links";
 import { cn } from "@/lib/utils";
 
 type AdminLink = {
   id: string;
-  type: "LINK" | "HEADER";
+  type: LinkKind;
   title: string;
   url: string | null;
   isActive: boolean;

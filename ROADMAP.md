@@ -46,7 +46,7 @@ Click  → id, linkId, createdAt   # time-series analytics
 - [x] Auto social icons — `detectPlatform` (`lib/social.ts`) + `SocialIcon` (simple-icons, 17 platform) di tombol publik, fallback globe
 - [x] Scheduling link — kolom `startsAt`/`endsAt` (null = tanpa batas), gating di `isLinkLive` + `liveScheduleWhere` (query publik & redirect), datetime-local di dialog (ISO/UTC, timezone-safe), badge Scheduled/Expired di dashboard, unit test
 - [x] Tipe link baru: header/divider (grouping) — enum `LinkType` (`LINK`/`HEADER`), `url` nullable, render section label di halaman publik, type selector + badge di dashboard, gating redirect anti header, unit test `parseLinkKind`
-- [ ] Embed — YouTube/Spotify/video inline
+- [x] Embed — YouTube/Spotify inline via `LinkType.EMBED` + `lib/embed.ts` (`getEmbed` parse URL→iframe src, id di-sanitasi), render iframe responsif (YT 16:9, Spotify tinggi adaptif) di halaman publik, opsi Embed di dialog + validasi provider, unit test
 - [ ] Thumbnail/icon kustom per link
 
 ## Fase 8 — Analytics & Growth 📈

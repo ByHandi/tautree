@@ -14,11 +14,13 @@ enum Role {
   ADMIN
 }
 
-// LINK = a normal clickable button. HEADER = a non-clickable section label used
-// to group links on the public page (no URL).
+// LINK   = a normal clickable button.
+// HEADER = a non-clickable section label used to group links (no URL).
+// EMBED  = a YouTube/Spotify URL rendered inline as an iframe.
 enum LinkType {
   LINK
   HEADER
+  EMBED
 }
 
 model User {

@@ -76,7 +76,15 @@ function SortableLinkRow({
     id: link.id,
   });
   const status = scheduleStatus(link, Date.now());
-  const isHeader = link.type === "HEADER";
+  const isLink = link.type === "LINK";
+  // Per-type row presentation: leading icon, badge text, and subtitle.
+  const meta = (
+    {
+      LINK: { icon: null, badge: null, subtitle: link.url },
+      HEADER: { icon: "heading", badge: "Header", subtitle: "Section header" },
+      EMBED: { icon: "play", badge: "Embed", subtitle: link.url },
+    } as const
+  )[link.type];
 
   return (
     <li
@@ -99,13 +107,13 @@ function SortableLinkRow({
 
       <div className="flex min-w-0 flex-1 flex-col">
         <span className="flex items-center gap-1.5">
-          {isHeader && (
-            <Icon name="heading" className="size-3.5 shrink-0 text-muted-foreground" />
+          {meta.icon && (
+            <Icon name={meta.icon} className="size-3.5 shrink-0 text-muted-foreground" />
           )}
           <span className="truncate font-medium">{link.title}</span>
-          {isHeader && (
+          {meta.badge && (
             <span className="shrink-0 rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-              Header
+              {meta.badge}
             </span>
           )}
           {status === "scheduled" && (
@@ -119,12 +127,10 @@ function SortableLinkRow({
             </span>
           )}
         </span>
-        <span className="truncate text-sm text-muted-foreground">
-          {isHeader ? "Section header" : link.url}
-        </span>
+        <span className="truncate text-sm text-muted-foreground">{meta.subtitle}</span>
       </div>
 
-      {!isHeader && (
+      {isLink && (
         <span className="hidden items-center gap-1 px-1 text-xs text-muted-foreground sm:flex">
           <Icon name="mouse-pointer-click" className="size-3.5" />
           {link.clicks}
