@@ -4,6 +4,9 @@
  * it's trivially testable and decoupled from the icon assets.
  */
 
+/** Max number of social icons a profile can show in its header. */
+export const SOCIAL_MAX = 8;
+
 /** Registrable host -> platform id. Subdomains (e.g. open.spotify.com) match. */
 const HOST_PLATFORM: Record<string, string> = {
   "github.com": "github",

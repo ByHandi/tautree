@@ -38,6 +38,7 @@ async function getProfile(rawUsername: string) {
       buttonShape: true,
       buttonFill: true,
       suspended: true,
+      socials: { orderBy: { order: "asc" }, select: { id: true, url: true } },
       links: {
         // Only links that are active AND inside their scheduling window. Mirrors
         // `isLinkLive`; suspended-owner gating is handled by `isProfilePublic`.
@@ -212,6 +213,23 @@ export default async function PublicProfilePage({ params }: Params) {
             </p>
           )}
         </div>
+
+        {user.socials.length > 0 && (
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-1">
+            {user.socials.map((s) => (
+              <a
+                key={s.id}
+                href={s.url}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="transition-opacity hover:opacity-70"
+                style={{ color: theme.text }}
+              >
+                <SocialIcon url={s.url} className="size-5" />
+              </a>
+            ))}
+          </div>
+        )}
       </header>
 
       {heroes.length > 0 && (

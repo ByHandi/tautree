@@ -82,7 +82,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 - [ ] Cover/banner image — header di belakang avatar; **reuse pola client-resize dari thumbnail**. _(sedang)_
 
 **Konten link**
-- [ ] Social icon row — deretan ikon sosmed di header, terpisah dari tombol link; **reuse `SocialIcon`**. _(sedang)_
+- [x] Social icon row — model `SocialLink` (url + order, cap `SOCIAL_MAX`=8), manager add/remove di halaman Profile, ikon di-derive via `detectPlatform`/`SocialIcon`, render deretan ikon di header publik (buka tab baru, gak nge-track klik)
 - [x] Featured/pinned link — kolom `featured` di Link (khusus LINK), checkbox di dialog + star di dashboard, di halaman publik di-pin ke atas sebagai hero card (padding/teks/ikon lebih besar), sisanya tetap urut + grouping
 - [ ] vCard "Save contact" — tombol download `.vcf` ke HP; diferensiator personal brand, zero infra. _(kecil–sedang)_
 

@@ -40,6 +40,7 @@ model User {
   role          Role      @default(USER)
   suspended     Boolean   @default(false)
   links         Link[]
+  socials       SocialLink[]
   views         ProfileView[]
   accounts      Account[]
   sessions      Session[]
@@ -121,6 +122,20 @@ model Link {
 
   @@index([userId])
   @@map("links")
+}
+
+// Compact social icons shown in the public profile header (separate from the
+// link buttons). The platform/icon is derived from the URL at render time.
+model SocialLink {
+  id        String   @id @default(uuid(7))
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  url       String
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@map("social_links")
 }
 
 // Privacy-friendly profile page view log. Captures only a coarse device class
