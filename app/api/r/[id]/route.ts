@@ -14,7 +14,13 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 
   const link = await db.link.findUnique({
     where: { id },
-    select: { url: true, isActive: true, user: { select: { suspended: true } } },
+    select: {
+      url: true,
+      isActive: true,
+      startsAt: true,
+      endsAt: true,
+      user: { select: { suspended: true } },
+    },
   });
 
   // Skip missing links and anything not publicly live (inactive, or owned by a

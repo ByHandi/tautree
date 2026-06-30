@@ -9,11 +9,26 @@ export default async function LinksPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
-  const links = await db.link.findMany({
+  const rows = await db.link.findMany({
     where: { userId: session.user.id },
     orderBy: { order: "asc" },
-    select: { id: true, title: true, url: true, isActive: true, clicks: true },
+    select: {
+      id: true,
+      title: true,
+      url: true,
+      isActive: true,
+      clicks: true,
+      startsAt: true,
+      endsAt: true,
+    },
   });
+
+  // Serialize the schedule timestamps to ISO strings for the client component.
+  const links = rows.map((link) => ({
+    ...link,
+    startsAt: link.startsAt?.toISOString() ?? null,
+    endsAt: link.endsAt?.toISOString() ?? null,
+  }));
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-6">

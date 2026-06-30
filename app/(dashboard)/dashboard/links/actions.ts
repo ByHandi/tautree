@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { normalizeUrl, validateTitle } from "@/lib/links";
+import { normalizeUrl, parseSchedule, validateTitle } from "@/lib/links";
 
 export type LinkFormState = { error?: string; ok?: boolean } | undefined;
 
@@ -27,6 +27,11 @@ export async function createLink(_prev: LinkFormState, formData: FormData): Prom
   if (!title.ok) return { error: title.reason };
   const url = normalizeUrl(String(formData.get("url") ?? ""));
   if (!url.ok) return { error: url.reason };
+  const schedule = parseSchedule(
+    String(formData.get("startsAt") ?? ""),
+    String(formData.get("endsAt") ?? ""),
+  );
+  if (!schedule.ok) return { error: schedule.reason };
 
   // Append the new link at the end of the list.
   const last = await db.link.findFirst({
@@ -38,7 +43,14 @@ export async function createLink(_prev: LinkFormState, formData: FormData): Prom
 
   try {
     await db.link.create({
-      data: { userId, title: String(formData.get("title")).trim(), url: url.url, order },
+      data: {
+        userId,
+        title: String(formData.get("title")).trim(),
+        url: url.url,
+        order,
+        startsAt: schedule.startsAt,
+        endsAt: schedule.endsAt,
+      },
     });
   } catch {
     return { error: "Couldn't save. Please try again." };
@@ -57,11 +69,21 @@ export async function updateLink(_prev: LinkFormState, formData: FormData): Prom
   if (!title.ok) return { error: title.reason };
   const url = normalizeUrl(String(formData.get("url") ?? ""));
   if (!url.ok) return { error: url.reason };
+  const schedule = parseSchedule(
+    String(formData.get("startsAt") ?? ""),
+    String(formData.get("endsAt") ?? ""),
+  );
+  if (!schedule.ok) return { error: schedule.reason };
 
   // updateMany scopes the write to the owner — no cross-user edits.
   const res = await db.link.updateMany({
     where: { id, userId },
-    data: { title: String(formData.get("title")).trim(), url: url.url },
+    data: {
+      title: String(formData.get("title")).trim(),
+      url: url.url,
+      startsAt: schedule.startsAt,
+      endsAt: schedule.endsAt,
+    },
   });
   if (res.count === 0) return { error: "Link not found." };
 

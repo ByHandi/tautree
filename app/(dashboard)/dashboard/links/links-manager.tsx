@@ -17,7 +17,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useId, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { deleteLink, reorderLinks, toggleLink } from "./actions";
@@ -43,7 +43,19 @@ export type LinkItem = {
   url: string;
   isActive: boolean;
   clicks: number;
+  startsAt: string | null;
+  endsAt: string | null;
 };
+
+/**
+ * Why a scheduled link isn't currently shown publicly. `null` = either live now
+ * or simply toggled off (no schedule reason to surface). Mirrors `isLinkLive`.
+ */
+function scheduleStatus(link: LinkItem, now: number): "scheduled" | "expired" | null {
+  if (link.endsAt && now >= Date.parse(link.endsAt)) return "expired";
+  if (link.startsAt && now < Date.parse(link.startsAt)) return "scheduled";
+  return null;
+}
 
 function SortableLinkRow({
   link,
@@ -61,6 +73,7 @@ function SortableLinkRow({
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: link.id,
   });
+  const status = scheduleStatus(link, Date.now());
 
   return (
     <li
@@ -82,7 +95,19 @@ function SortableLinkRow({
       </button>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <span className="truncate font-medium">{link.title}</span>
+        <span className="flex items-center gap-1.5">
+          <span className="truncate font-medium">{link.title}</span>
+          {status === "scheduled" && (
+            <span className="shrink-0 rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-600 dark:text-amber-400">
+              Scheduled
+            </span>
+          )}
+          {status === "expired" && (
+            <span className="shrink-0 rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+              Expired
+            </span>
+          )}
+        </span>
         <span className="truncate text-sm text-muted-foreground">{link.url}</span>
       </div>
 
@@ -118,6 +143,10 @@ export function LinksManager({ links }: { links: LinkItem[] }) {
   const [editing, setEditing] = useState<LinkItem | null | undefined>(undefined);
   const [deleting, setDeleting] = useState<LinkItem | null>(null);
   const [isPending, startTransition] = useTransition();
+  // Stable, hydration-safe id for DndContext. Without it, dnd-kit falls back to
+  // a module-global counter that diverges between server and client renders,
+  // producing an aria-describedby hydration mismatch.
+  const dndId = useId();
 
   // Local copy so drag reordering is optimistic; re-sync when the server sends
   // a fresh list (add/edit/delete/reorder all revalidate this page).
@@ -189,7 +218,12 @@ export function LinksManager({ links }: { links: LinkItem[] }) {
           </Button>
         </div>
       ) : (
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <DndContext
+          id={dndId}
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
           <SortableContext items={items.map((l) => l.id)} strategy={verticalListSortingStrategy}>
             <ul className="flex flex-col gap-2">
               {items.map((link) => (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { type LinkFormState, createLink, updateLink } from "./actions";
@@ -18,7 +18,29 @@ import InputText from "@/components/ui/input-text";
 import { Spinner } from "@/components/ui/spinner";
 import { TITLE_MAX } from "@/lib/links";
 
-type EditableLink = { id: string; title: string; url: string };
+type EditableLink = {
+  id: string;
+  title: string;
+  url: string;
+  startsAt: string | null;
+  endsAt: string | null;
+};
+
+/** ISO string → `datetime-local` value (local wall-clock, minute precision). */
+function toLocalInput(iso: string | null): string {
+  if (!iso) return "";
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "";
+  const offsetMs = date.getTimezoneOffset() * 60_000;
+  return new Date(date.getTime() - offsetMs).toISOString().slice(0, 16);
+}
+
+/** `datetime-local` value (local wall-clock) → ISO-8601 with offset, or "". */
+function toIso(local: string): string {
+  if (!local) return "";
+  const date = new Date(local);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString();
+}
 
 /**
  * Create/edit dialog. The parent mounts this fresh per open (via `key`) so the
@@ -36,6 +58,11 @@ export function LinkFormDialog({
     isEdit ? updateLink : createLink,
     undefined,
   );
+
+  // Schedule inputs are local wall-clock; hidden fields carry the timezone-safe
+  // ISO value that the server action actually reads.
+  const [startsLocal, setStartsLocal] = useState(() => toLocalInput(link?.startsAt ?? null));
+  const [endsLocal, setEndsLocal] = useState(() => toLocalInput(link?.endsAt ?? null));
 
   useEffect(() => {
     if (state?.ok) {
@@ -78,6 +105,28 @@ export function LinkFormDialog({
             autoCapitalize="off"
             spellCheck={false}
           />
+
+          <div className="flex flex-col gap-1">
+            <div className="grid grid-cols-2 gap-3">
+              <InputText
+                type="datetime-local"
+                label="Starts"
+                value={startsLocal}
+                onChange={(e) => setStartsLocal(e.target.value)}
+              />
+              <InputText
+                type="datetime-local"
+                label="Ends"
+                value={endsLocal}
+                onChange={(e) => setEndsLocal(e.target.value)}
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Optional. Leave blank to show the link immediately and indefinitely.
+            </p>
+          </div>
+          <input type="hidden" name="startsAt" value={toIso(startsLocal)} />
+          <input type="hidden" name="endsAt" value={toIso(endsLocal)} />
 
           {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
 

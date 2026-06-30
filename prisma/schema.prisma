@@ -86,11 +86,15 @@ model Link {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title     String
   url       String
-  order     Int      @default(0)
-  isActive  Boolean  @default(true) @map("is_active")
-  clicks    Int      @default(0)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  order     Int       @default(0)
+  isActive  Boolean   @default(true) @map("is_active")
+  clicks    Int       @default(0)
+  // Optional scheduling window. Null = no bound: a null `startsAt` means live
+  // immediately, a null `endsAt` means live forever. See `isLinkLive`.
+  startsAt  DateTime? @map("starts_at")
+  endsAt    DateTime? @map("ends_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
 
   clickEvents Click[]
 

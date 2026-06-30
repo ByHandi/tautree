@@ -44,7 +44,7 @@ Click  → id, linkId, createdAt   # time-series analytics
 > Nilai langsung kelihatan di halaman publik.
 
 - [x] Auto social icons — `detectPlatform` (`lib/social.ts`) + `SocialIcon` (simple-icons, 17 platform) di tombol publik, fallback globe
-- [ ] Scheduling link — tanggal mulai/berakhir aktif (kolom + filter query publik + UI)
+- [x] Scheduling link — kolom `startsAt`/`endsAt` (null = tanpa batas), gating di `isLinkLive` + `liveScheduleWhere` (query publik & redirect), datetime-local di dialog (ISO/UTC, timezone-safe), badge Scheduled/Expired di dashboard, unit test
 - [ ] Tipe link baru: header/divider (grouping), bukan cuma tombol
 - [ ] Embed — YouTube/Spotify/video inline
 - [ ] Thumbnail/icon kustom per link

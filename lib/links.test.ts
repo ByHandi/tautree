@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isLinkLive, normalizeUrl, TITLE_MAX, validateTitle } from "./links";
+import { isLinkLive, normalizeUrl, parseSchedule, TITLE_MAX, validateTitle } from "./links";
 
 describe("isLinkLive", () => {
   it("is live only when active and the owner isn't suspended", () => {
@@ -13,6 +13,74 @@ describe("isLinkLive", () => {
 
   it("is dark when the owner is suspended, even if active", () => {
     expect(isLinkLive({ isActive: true }, { suspended: true })).toBe(false);
+  });
+
+  describe("scheduling window", () => {
+    const now = new Date("2026-06-30T12:00:00Z");
+    const earlier = new Date("2026-06-30T11:00:00Z");
+    const later = new Date("2026-06-30T13:00:00Z");
+
+    it("is live with no bounds", () => {
+      expect(isLinkLive({ isActive: true, startsAt: null, endsAt: null }, { suspended: false }, now))
+        .toBe(true);
+    });
+
+    it("is dark before startsAt and live at/after it", () => {
+      expect(isLinkLive({ isActive: true, startsAt: later }, { suspended: false }, now)).toBe(false);
+      expect(isLinkLive({ isActive: true, startsAt: now }, { suspended: false }, now)).toBe(true);
+      expect(isLinkLive({ isActive: true, startsAt: earlier }, { suspended: false }, now)).toBe(
+        true,
+      );
+    });
+
+    it("is dark at/after endsAt and live before it", () => {
+      expect(isLinkLive({ isActive: true, endsAt: now }, { suspended: false }, now)).toBe(false);
+      expect(isLinkLive({ isActive: true, endsAt: earlier }, { suspended: false }, now)).toBe(false);
+      expect(isLinkLive({ isActive: true, endsAt: later }, { suspended: false }, now)).toBe(true);
+    });
+
+    it("is dark inside the window when inactive", () => {
+      expect(
+        isLinkLive(
+          { isActive: false, startsAt: earlier, endsAt: later },
+          { suspended: false },
+          now,
+        ),
+      ).toBe(false);
+    });
+  });
+});
+
+describe("parseSchedule", () => {
+  it("treats empty strings as no bound (null)", () => {
+    expect(parseSchedule("", "")).toEqual({ ok: true, startsAt: null, endsAt: null });
+  });
+
+  it("parses ISO timestamps", () => {
+    const res = parseSchedule("2026-07-01T10:00:00.000Z", "2026-07-02T10:00:00.000Z");
+    expect(res).toMatchObject({ ok: true });
+    if (res.ok) {
+      expect(res.startsAt?.toISOString()).toBe("2026-07-01T10:00:00.000Z");
+      expect(res.endsAt?.toISOString()).toBe("2026-07-02T10:00:00.000Z");
+    }
+  });
+
+  it("rejects an end at or before the start", () => {
+    expect(parseSchedule("2026-07-02T10:00:00.000Z", "2026-07-01T10:00:00.000Z")).toMatchObject({
+      ok: false,
+    });
+    expect(parseSchedule("2026-07-01T10:00:00.000Z", "2026-07-01T10:00:00.000Z")).toMatchObject({
+      ok: false,
+    });
+  });
+
+  it("rejects an unparseable value", () => {
+    expect(parseSchedule("not-a-date", "")).toMatchObject({ ok: false });
+  });
+
+  it("allows a start with no end and vice versa", () => {
+    expect(parseSchedule("2026-07-01T10:00:00.000Z", "")).toMatchObject({ ok: true });
+    expect(parseSchedule("", "2026-07-01T10:00:00.000Z")).toMatchObject({ ok: true });
   });
 });
 

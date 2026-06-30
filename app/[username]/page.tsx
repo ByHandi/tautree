@@ -7,6 +7,7 @@ import { Logo } from "@/components/logo";
 import { SocialIcon } from "@/components/social-icon";
 import Icon from "@/components/ui/icon";
 import { db } from "@/lib/db";
+import { liveScheduleWhere } from "@/lib/links";
 import { isProfilePublic } from "@/lib/profile";
 import { getTheme } from "@/lib/themes";
 import { normalizeUsername, validateUsername } from "@/lib/username";
@@ -29,7 +30,9 @@ async function getProfile(rawUsername: string) {
       customTheme: true,
       suspended: true,
       links: {
-        where: { isActive: true },
+        // Only links that are active AND inside their scheduling window. Mirrors
+        // `isLinkLive`; suspended-owner gating is handled by `isProfilePublic`.
+        where: { isActive: true, ...liveScheduleWhere(new Date()) },
         orderBy: { order: "asc" },
         select: { id: true, title: true, url: true },
       },
