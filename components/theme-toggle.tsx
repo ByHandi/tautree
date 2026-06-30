@@ -15,7 +15,10 @@ function useThemeToggle() {
 
   const isDark = resolvedTheme === "dark";
   const toggle = () => setTheme(isDark ? "light" : "dark");
-  const label = isDark ? "Light mode" : "Dark mode";
+  // Mirror the icon's `mounted` guard: before mount the theme is unknown, so
+  // assume light (Sun + "Dark mode") on both server and first client render to
+  // avoid a hydration mismatch on the label text.
+  const label = mounted && isDark ? "Light mode" : "Dark mode";
 
   return { mounted, isDark, toggle, label };
 }

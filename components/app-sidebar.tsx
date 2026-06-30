@@ -157,7 +157,11 @@ function AppSidebar({ user, isAdmin = false }: { user: SidebarUser; isAdmin?: bo
 
           <SidebarMenuItem>
             <form action={signOutAction}>
-              <SidebarMenuButton type="submit" tooltip="Sign out">
+              <SidebarMenuButton
+                type="submit"
+                tooltip="Sign out"
+                className="text-destructive hover:text-destructive hover:bg-destructive/20"
+              >
                 <Icon name="log-out" />
                 <span>Sign out</span>
               </SidebarMenuButton>

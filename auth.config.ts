@@ -12,7 +12,11 @@ import Google from "next-auth/providers/google";
  * AUTH_GOOGLE_SECRET.
  */
 export default {
-  providers: [Google],
+  // allowDangerousEmailAccountLinking: link Google to an existing user that has
+  // the same email (e.g. one created earlier via the magic link) instead of
+  // throwing OAuthAccountNotLinked. Safe here because Google verifies email
+  // ownership, so it can't be used to hijack an unverified account.
+  providers: [Google({ allowDangerousEmailAccountLinking: true })],
   // Self-hosted behind a reverse proxy: trust the forwarded host header so
   // Auth.js doesn't reject requests with UntrustedHost. Can also be enabled via
   // the AUTH_TRUST_HOST env var.
