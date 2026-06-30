@@ -4,6 +4,65 @@
  * registrable host. Decoupled from the request/DB layer so they're testable.
  */
 
+export const ANALYTICS_DEFAULT_DAYS = 30;
+/** Hard cap on the window so a hand-edited URL can't request an unbounded scan. */
+export const ANALYTICS_MAX_DAYS = 366;
+
+const DAY_MS = 86_400_000;
+
+/** Parse a `YYYY-MM-DD` string to a local-midnight Date, or null if invalid. */
+function parseDay(value: string | undefined): Date | null {
+  if (!value) return null;
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!m) return null;
+  const date = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+export type DateWindow = { since: Date; until: Date; days: number };
+
+/**
+ * Resolve the analytics window from `from`/`to` query strings. Falls back to the
+ * last {@link ANALYTICS_DEFAULT_DAYS} days when either is missing/invalid or the
+ * order is reversed, and clamps the span to {@link ANALYTICS_MAX_DAYS}. Returns
+ * inclusive day boundaries (start-of-`since`, end-of-`until`) plus the day count.
+ */
+export function resolveRange(
+  fromStr: string | undefined,
+  toStr: string | undefined,
+  now: Date = new Date(),
+): DateWindow {
+  const fromDay = parseDay(fromStr);
+  const toDay = parseDay(toStr);
+
+  let since: Date;
+  let until: Date;
+  if (fromDay && toDay && fromDay <= toDay) {
+    since = fromDay;
+    until = toDay;
+  } else {
+    until = new Date(now);
+    since = new Date(now);
+    since.setDate(since.getDate() - (ANALYTICS_DEFAULT_DAYS - 1));
+  }
+
+  // Normalize to day boundaries.
+  since.setHours(0, 0, 0, 0);
+  until.setHours(0, 0, 0, 0);
+
+  // Clamp an over-long span by pulling `since` forward.
+  const maxSpanMs = (ANALYTICS_MAX_DAYS - 1) * DAY_MS;
+  if (until.getTime() - since.getTime() > maxSpanMs) {
+    since = new Date(until.getTime() - maxSpanMs);
+    since.setHours(0, 0, 0, 0);
+  }
+
+  const days = Math.round((until.getTime() - since.getTime()) / DAY_MS) + 1;
+  const untilEnd = new Date(until);
+  untilEnd.setHours(23, 59, 59, 999);
+  return { since, until: untilEnd, days };
+}
+
 export type Device = "mobile" | "tablet" | "desktop";
 
 /** Coarse device class from a User-Agent string. Defaults to "desktop". */

@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { classifyDevice, isBot, referrerLabel } from "./analytics";
+import {
+  ANALYTICS_DEFAULT_DAYS,
+  ANALYTICS_MAX_DAYS,
+  classifyDevice,
+  isBot,
+  referrerLabel,
+  resolveRange,
+} from "./analytics";
 
 describe("classifyDevice", () => {
   it("detects mobile", () => {
@@ -31,6 +38,37 @@ describe("isBot", () => {
   it("passes real browsers", () => {
     expect(isBot("Mozilla/5.0 (iPhone) Safari")).toBe(false);
     expect(isBot(null)).toBe(false);
+  });
+});
+
+describe("resolveRange", () => {
+  const now = new Date(2026, 5, 30, 15, 0, 0); // 2026-06-30, local
+
+  it("uses an explicit valid range inclusively", () => {
+    const { since, until, days } = resolveRange("2026-06-01", "2026-06-10", now);
+    expect(since.getFullYear()).toBe(2026);
+    expect(since.getMonth()).toBe(5);
+    expect(since.getDate()).toBe(1);
+    expect(since.getHours()).toBe(0);
+    expect(until.getDate()).toBe(10);
+    expect(until.getHours()).toBe(23);
+    expect(days).toBe(10);
+  });
+
+  it("falls back to the default window when params are missing or invalid", () => {
+    for (const r of [
+      resolveRange(undefined, undefined, now),
+      resolveRange("garbage", "2026-06-10", now),
+      resolveRange("2026-06-10", "2026-06-01", now), // reversed
+    ]) {
+      expect(r.days).toBe(ANALYTICS_DEFAULT_DAYS);
+      expect(r.until.getDate()).toBe(30);
+    }
+  });
+
+  it("clamps an over-long span to the max", () => {
+    const { days } = resolveRange("2020-01-01", "2026-06-10", now);
+    expect(days).toBe(ANALYTICS_MAX_DAYS);
   });
 });
 

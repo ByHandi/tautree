@@ -1,26 +1,30 @@
+import { format } from "date-fns";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
+import { AnalyticsRangePicker } from "@/components/analytics-range-picker";
 import Icon from "@/components/ui/icon";
+import { resolveRange } from "@/lib/analytics";
 import { db } from "@/lib/db";
 import { cn } from "@/lib/utils";
-
-const WINDOW_DAYS = 30;
 
 function dayKey(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
 
-export default async function AnalyticsPage() {
+export default async function AnalyticsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ from?: string; to?: string }>;
+}) {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const userId = session.user.id;
 
-  const since = new Date();
-  since.setHours(0, 0, 0, 0);
-  since.setDate(since.getDate() - (WINDOW_DAYS - 1));
+  const { from, to } = await searchParams;
+  const { since, until, days } = resolveRange(from, to);
 
-  const viewWhere = { userId, createdAt: { gte: since } };
+  const viewWhere = { userId, createdAt: { gte: since, lte: until } };
   const [links, daily, totalViews, deviceRows, referrerRows] = await Promise.all([
     db.link.findMany({
       where: { userId },
@@ -31,7 +35,7 @@ export default async function AnalyticsPage() {
       SELECT date_trunc('day', ce.created_at) AS day, count(*)::int AS count
       FROM click_events ce
       JOIN links l ON l.id = ce.link_id
-      WHERE l.user_id = ${userId} AND ce.created_at >= ${since}
+      WHERE l.user_id = ${userId} AND ce.created_at >= ${since} AND ce.created_at <= ${until}
       GROUP BY day
       ORDER BY day
     `,
@@ -43,9 +47,9 @@ export default async function AnalyticsPage() {
   const totalClicks = links.reduce((sum, l) => sum + l.clicks, 0);
   const windowClicks = daily.reduce((sum, r) => sum + r.count, 0);
 
-  // Build a continuous 30-day series, filling gaps with 0.
+  // Build a continuous day-by-day series across the window, filling gaps with 0.
   const counts = new Map(daily.map((r) => [dayKey(new Date(r.day)), r.count]));
-  const series = Array.from({ length: WINDOW_DAYS }, (_, i) => {
+  const series = Array.from({ length: days }, (_, i) => {
     const d = new Date(since);
     d.setDate(since.getDate() + i);
     return { date: d, count: counts.get(dayKey(d)) ?? 0 };
@@ -72,19 +76,22 @@ export default async function AnalyticsPage() {
   const maxSource = Math.max(1, ...sources.map((s) => s.count));
 
   const stats = [
-    { label: "Views (30 days)", value: totalViews, icon: "eye" as const },
+    { label: "Views (period)", value: totalViews, icon: "eye" as const },
+    { label: "Clicks (period)", value: windowClicks, icon: "trending-up" as const },
     { label: "Total clicks", value: totalClicks, icon: "mouse-pointer-click" as const },
-    { label: "Clicks (30 days)", value: windowClicks, icon: "trending-up" as const },
     { label: "Total links", value: links.length, icon: "link" as const },
   ];
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-6">
-      <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">Analytics</h1>
-        <p className="text-sm text-muted-foreground">
-          See how your links have performed over the last 30 days.
-        </p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl font-semibold tracking-tight">Analytics</h1>
+          <p className="text-sm text-muted-foreground">
+            {format(since, "MMM d, yyyy")} – {format(until, "MMM d, yyyy")} · {days} days
+          </p>
+        </div>
+        <AnalyticsRangePicker from={format(since, "yyyy-MM-dd")} to={format(until, "yyyy-MM-dd")} />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -103,7 +110,7 @@ export default async function AnalyticsPage() {
         <h2 className="text-sm font-medium">Clicks per day</h2>
         {windowClicks === 0 ? (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            No clicks in the last 30 days yet.
+            No clicks in this period yet.
           </p>
         ) : (
           <div className="flex h-40 items-end gap-1">
