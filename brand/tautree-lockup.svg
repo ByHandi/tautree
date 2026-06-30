@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="205" height="56" viewBox="0 0 205 56" role="img" aria-label="Tautree logo lockup">
+  <defs>
+    <linearGradient id="ttChip" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#34E0A1"/>
+      <stop offset="1" stop-color="#10B981"/>
+    </linearGradient>
+  </defs>
+  <rect width="56" height="56" rx="16" fill="url(#ttChip)"/>
+  <g transform="translate(11.76 11.76) scale(1.015)">
+    <g fill="none" stroke="#0A0F0D" stroke-width="2.2" stroke-linecap="round">
+      <path d="M16 27.5V6.5"/>
+      <path d="M16 17C13 16 9.5 15 6.5 9.5"/>
+      <path d="M16 17C19 16 22.5 15 25.5 9.5"/>
+    </g>
+    <g fill="#0A0F0D">
+      <circle cx="16" cy="28" r="2.6"/>
+      <circle cx="16" cy="6" r="2.6"/>
+      <circle cx="6" cy="9" r="2.6"/>
+      <circle cx="26" cy="9" r="2.6"/>
+    </g>
+  </g>
+  <text x="74" y="37" fill="#0A0F0D" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="30" font-weight="650" letter-spacing="-0.6">Tautree</text>
+</svg>

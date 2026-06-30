@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Tautree icon (radial)">
+  <defs>
+    <radialGradient id="ttGradRad" cx="25%" cy="20%" r="120%">
+      <stop offset="0" stop-color="#6CF3BE"/>
+      <stop offset="0.7" stop-color="#10B981"/>
+      <stop offset="1" stop-color="#0C9D6E"/>
+    </radialGradient>
+  </defs>
+  <rect width="256" height="256" rx="60" fill="url(#ttGradRad)"/>
+  <g transform="translate(56.32 56.32) scale(4.48)">
+    <g fill="none" stroke="#0A0F0D" stroke-width="2.2" stroke-linecap="round">
+      <path d="M16 27.5V6.5"/>
+      <path d="M16 17C13 16 9.5 15 6.5 9.5"/>
+      <path d="M16 17C19 16 22.5 15 25.5 9.5"/>
+    </g>
+    <g fill="#0A0F0D">
+      <circle cx="16" cy="28" r="2.6"/>
+      <circle cx="16" cy="6" r="2.6"/>
+      <circle cx="6" cy="9" r="2.6"/>
+      <circle cx="26" cy="9" r="2.6"/>
+    </g>
+  </g>
+</svg>
