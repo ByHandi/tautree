@@ -1,41 +1,51 @@
 import Link from "next/link";
 
-import {
-  ArrowRightIcon,
-  ArrowUpRightIcon,
-  ChartNoAxesColumnIcon,
-  GripVerticalIcon,
-  PaletteIcon,
-  UserRoundIcon,
-} from "lucide-react";
+import { IconName } from "lucide-react/dynamic";
 
 import { Logo } from "@/components/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
+import Icon from "@/components/ui/icon";
 import { APP_DOMAIN } from "@/lib/site";
 import { THEMES } from "@/lib/themes";
 import { cn } from "@/lib/utils";
 
-const features = [
+interface FeaturesItem {
+  icon: IconName;
+  title: string;
+  desc: string;
+}
+
+const features: FeaturesItem[] = [
   {
-    icon: GripVerticalIcon,
-    title: "Manage links with ease",
-    desc: "Add, edit, enable/disable, and reorder links with simple drag-and-drop.",
+    icon: "grip-vertical",
+    title: "Links, your way",
+    desc: "Reorder with drag-and-drop, group with headers, schedule links to go live or expire, and pin a featured one to the top.",
   },
   {
-    icon: PaletteIcon,
-    title: "Themes to match your vibe",
-    desc: "Six ready-made themes — from clean minimal light to sunset & ocean gradients.",
+    icon: "play",
+    title: "Embed media inline",
+    desc: "Drop in a YouTube video or Spotify track and it plays right on your page — no extra click.",
   },
   {
-    icon: ChartNoAxesColumnIcon,
-    title: "Built-in analytics",
-    desc: "Track total clicks, 30-day trends, and which links get tapped the most.",
+    icon: "palette",
+    title: "Make it truly yours",
+    desc: "Six themes plus your own custom color, four fonts, and button shapes & fills to match your style.",
   },
   {
-    icon: UserRoundIcon,
-    title: "A profile that's really you",
-    desc: "Set your name, bio, and photo. Your public page looks clean and personal right away.",
+    icon: "chart-no-axes-column",
+    title: "Know what works",
+    desc: "Total clicks and 30-day trends, plus top sources, device breakdown, custom date ranges, and CSV export.",
+  },
+  {
+    icon: "qr-code",
+    title: "Share in a tap",
+    desc: "A built-in QR code and one-tap share button get your page in front of people, online or in person.",
+  },
+  {
+    icon: "sparkles",
+    title: "Polished by default",
+    desc: "Auto-detected icons for 17 platforms, a social icon row in your header, and custom thumbnails per link.",
   },
 ];
 
@@ -47,7 +57,7 @@ const steps = [
 
 function HeroPreview() {
   const theme = THEMES.sunset;
-  const items = ["Instagram", "YouTube", "Online Store"];
+  const links = ["Instagram", "Online Store"];
 
   return (
     <div
@@ -67,15 +77,51 @@ function HeroPreview() {
           All my links live here ✨
         </span>
       </div>
+
+      {/* social icon row */}
+      <div className="flex items-center gap-2">
+        {[0, 1, 2, 3].map((i) => (
+          <span
+            key={i}
+            className="size-7 rounded-full border"
+            style={{ background: theme.card, borderColor: theme.cardBorder }}
+          />
+        ))}
+      </div>
+
       <div className="flex w-full flex-col gap-2">
-        {items.map((label) => (
+        {/* featured / pinned link */}
+        <span
+          className="flex items-center gap-2 rounded-xl border px-4 py-3 text-xs font-semibold"
+          style={{ background: theme.card, color: theme.cardText, borderColor: theme.cardBorder }}
+        >
+          <Icon name="star" className="size-3.5 shrink-0" fill="currentColor" />
+          <span className="flex-1 text-center">Latest drop</span>
+          <Icon name="arrow-up-right" className="size-3.5 shrink-0" />
+        </span>
+
+        {/* embedded media */}
+        <span
+          className="flex aspect-video items-center justify-center rounded-xl border"
+          style={{ background: theme.card, borderColor: theme.cardBorder }}
+        >
+          <Icon
+            name="play"
+            className="size-6"
+            style={{ color: theme.cardText }}
+            fill="currentColor"
+          />
+        </span>
+
+        {/* regular links */}
+        {links.map((label) => (
           <span
             key={label}
             className="flex items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-medium"
             style={{ background: theme.card, color: theme.cardText, borderColor: theme.cardBorder }}
           >
             <span className="flex-1 text-center">{label}</span>
-            <ArrowUpRightIcon className="size-3.5" />
+            <Icon name="arrow-up-right" className="size-3.5 shrink-0" />
           </span>
         ))}
       </div>
@@ -118,13 +164,13 @@ export default function Home() {
               All your links, on one page
             </h1>
             <p className="text-pretty text-muted-foreground">
-              Tautree helps you bring your socials, work, and store together into one beautiful page
-              that’s easy to share — complete with themes and analytics.
+              Tautree brings your socials, work, and store together into one page that’s truly yours
+              — embed media, make it your style, see what’s working, and share it with a tap.
             </p>
             <div className="flex flex-wrap items-center gap-3">
               <Link href="/dashboard" className={cn(buttonVariants({ size: "lg" }))}>
                 Create your page
-                <ArrowRightIcon />
+                <Icon name="arrow-right" />
               </Link>
               <Link
                 href="/login"
@@ -146,14 +192,15 @@ export default function Home() {
             <div className="mx-auto flex max-w-xl flex-col items-center gap-3 text-center">
               <h2 className="text-3xl font-semibold tracking-tight">Everything you need</h2>
               <p className="text-pretty text-muted-foreground">
-                Lean but complete — so you can focus on sharing, not fiddling with the tech.
+                From media embeds to analytics and styling — everything to build a page worth
+                sharing, without fiddling with the tech.
               </p>
             </div>
             <div className="mt-10 grid gap-4 sm:grid-cols-2">
               {features.map((f) => (
                 <div key={f.title} className="flex flex-col gap-3 rounded-xl border bg-card p-5">
                   <span className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <f.icon className="size-5" />
+                    <Icon name={f.icon} className="size-5" />
                   </span>
                   <div className="flex flex-col gap-1">
                     <h3 className="font-medium">{f.title}</h3>
@@ -192,7 +239,7 @@ export default function Home() {
             <p className="text-pretty text-muted-foreground">Free, fast, and hassle-free.</p>
             <Link href="/dashboard" className={cn(buttonVariants({ size: "lg" }))}>
               Get started
-              <ArrowRightIcon />
+              <Icon name="arrow-right" />
             </Link>
           </div>
         </section>
