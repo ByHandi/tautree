@@ -19,6 +19,7 @@ model User {
   image         String?
   avatarUrl     String?   @map("avatar_url")
   theme         String    @default("default")
+  customTheme   Json?     @map("custom_theme")
   links         Link[]
   accounts      Account[]
   sessions      Session[]

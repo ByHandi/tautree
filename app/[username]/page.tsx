@@ -23,6 +23,7 @@ async function getProfile(rawUsername: string) {
       image: true,
       avatarUrl: true,
       theme: true,
+      customTheme: true,
       links: {
         where: { isActive: true },
         orderBy: { order: "asc" },
@@ -57,7 +58,7 @@ export default async function PublicProfilePage({ params }: Params) {
   const displayName = user.name ?? `@${user.username}`;
   const initial = (user.name ?? user.username ?? "?").charAt(0).toUpperCase();
   const avatar = user.avatarUrl ?? user.image;
-  const theme = getTheme(user.theme);
+  const theme = getTheme(user.theme, user.customTheme);
 
   return (
     <main

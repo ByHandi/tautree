@@ -4,7 +4,12 @@ import { AppearanceForm } from "./appearance-form";
 
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { DEFAULT_THEME, isThemeId } from "@/lib/themes";
+import {
+  DEFAULT_CUSTOM_PALETTE,
+  DEFAULT_THEME,
+  isThemeId,
+  parseCustomPalette,
+} from "@/lib/themes";
 
 export default async function AppearancePage() {
   const session = await auth();
@@ -12,11 +17,12 @@ export default async function AppearancePage() {
 
   const user = await db.user.findUnique({
     where: { id: session.user.id },
-    select: { theme: true },
+    select: { theme: true, customTheme: true },
   });
   if (!user) redirect("/login");
 
   const current = isThemeId(user.theme) ? user.theme : DEFAULT_THEME;
+  const customPalette = parseCustomPalette(user.customTheme) ?? DEFAULT_CUSTOM_PALETTE;
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 p-6">
@@ -27,7 +33,7 @@ export default async function AppearancePage() {
         </p>
       </div>
 
-      <AppearanceForm current={current} />
+      <AppearanceForm current={current} customPalette={customPalette} />
     </div>
   );
 }

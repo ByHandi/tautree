@@ -5,7 +5,14 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { isThemeId } from "@/lib/themes";
+import { Prisma } from "@/lib/generated/prisma/client";
+import {
+  CUSTOM_PALETTE_FIELDS,
+  CUSTOM_THEME_ID,
+  isThemeId,
+  parseCustomPalette,
+  type CustomPalette,
+} from "@/lib/themes";
 
 export type ThemeFormState = { error?: string; ok?: boolean } | undefined;
 
@@ -19,11 +26,21 @@ export async function updateTheme(
   const theme = String(formData.get("theme") ?? "");
   if (!isThemeId(theme)) return { error: "Invalid theme." };
 
+  // For a custom theme, read + validate the palette; presets clear it.
+  let customTheme: CustomPalette | null = null;
+  if (theme === CUSTOM_THEME_ID) {
+    const raw = Object.fromEntries(
+      CUSTOM_PALETTE_FIELDS.map(({ key }) => [key, formData.get(key)]),
+    );
+    customTheme = parseCustomPalette(raw);
+    if (!customTheme) return { error: "Invalid custom colors." };
+  }
+
   let username: string | null;
   try {
     const updated = await db.user.update({
       where: { id: session.user.id },
-      data: { theme },
+      data: { theme, customTheme: customTheme ?? Prisma.DbNull },
       select: { username: true },
     });
     username = updated.username;

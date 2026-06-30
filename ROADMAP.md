@@ -9,10 +9,10 @@ Linktree-style SaaS: tiap user punya satu halaman publik (`tautree.com/username`
 | Framework | Next.js 15 (App Router) + TypeScript | ✅ ada |
 | UI | shadcn v4 (Base UI + Radix) + Tailwind v4 | ✅ ada |
 | Theme/Toast | next-themes + sonner | ✅ ada |
-| Database | PostgreSQL (Neon / Supabase free tier) | ⬜ belum |
-| ORM | Prisma | ⬜ belum |
+| Database | PostgreSQL (host-resident, via Docker Compose) | ✅ ada |
+| ORM | Prisma 7 | ✅ ada |
 | Auth | Auth.js (NextAuth v5) | ✅ ada |
-| Deploy | Vercel | ⬜ belum |
+| Deploy | Coolify (self-hosted, Docker) | ✅ ada |
 
 **Keputusan:** Monolith Next.js (FE + API jadi satu). **Tanpa** NestJS & **tanpa** Payload — overkill untuk CRUD user-generated. Bisa diekstrak ke service terpisah nanti kalau backend tumbuh kompleks.
 
@@ -78,10 +78,11 @@ Click  → id, linkId, createdAt   # analytics ✅ (tabel click_events; counter 
 ## Fase 5 — Polish SaaS
 > Bikin layak jadi produk.
 
-- [x] Tema/warna kustom per halaman — 6 preset (`/dashboard/appearance`); custom color belum
+- [x] Tema/warna kustom per halaman — 6 preset + **custom color** (color picker, palette tersimpan di kolom `custom_theme` Json, validasi hex-only) (`/dashboard/appearance`)
 - [x] Analytics dasar (total klik, klik per link, grafik harian 30 hari — model `Click`)
 - [x] Rate limiting & validasi URL — validasi URL (`lib/links.ts`) + limiter in-memory (`lib/rate-limit.ts`) di `/api/username/check` & redirect klik
-- [ ] Deploy ke Vercel + domain
+- [x] Deploy ke Coolify (self-hosted Docker) + domain
+- [x] Custom color per halaman (color picker, 6 field palette, validasi hex)
 - [ ] (Opsional) Panel admin buat moderasi user
 
 ---
