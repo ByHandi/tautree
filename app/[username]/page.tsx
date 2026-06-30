@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
 import { Logo } from "@/components/logo";
+import { SocialIcon } from "@/components/social-icon";
 import Icon from "@/components/ui/icon";
 import { db } from "@/lib/db";
 import { isProfilePublic } from "@/lib/profile";
@@ -30,7 +31,7 @@ async function getProfile(rawUsername: string) {
       links: {
         where: { isActive: true },
         orderBy: { order: "asc" },
-        select: { id: true, title: true },
+        select: { id: true, title: true, url: true },
       },
     },
   });
@@ -108,6 +109,7 @@ export default async function PublicProfilePage({ params }: Params) {
                 borderColor: theme.cardBorder,
               }}
             >
+              <SocialIcon url={link.url} className="size-5 shrink-0" />
               <span className="min-w-0 flex-1 truncate text-center">{link.title}</span>
               <Icon
                 name="arrow-up-right"

@@ -43,7 +43,7 @@ Click  → id, linkId, createdAt   # time-series analytics
 ## Fase 7 — Link Power-ups ⚡
 > Nilai langsung kelihatan di halaman publik.
 
-- [ ] Auto social icons — deteksi domain (github/x/ig/yt/tiktok/…) → ikon otomatis di tombol
+- [x] Auto social icons — `detectPlatform` (`lib/social.ts`) + `SocialIcon` (simple-icons, 17 platform) di tombol publik, fallback globe
 - [ ] Scheduling link — tanggal mulai/berakhir aktif (kolom + filter query publik + UI)
 - [ ] Tipe link baru: header/divider (grouping), bukan cuma tombol
 - [ ] Embed — YouTube/Spotify/video inline
