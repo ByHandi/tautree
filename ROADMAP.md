@@ -52,7 +52,7 @@ Click  → id, linkId, createdAt   # time-series analytics
 ## Fase 8 — Analytics & Growth 📈
 > Bikin user balik & ngerti performa.
 
-- [ ] Analytics lanjut: referrer, device, geo (privacy-friendly, tanpa cookie pihak ketiga)
+- [x] Analytics lanjut: referrer + device (geo ditunda — perlu geo-IP) — model `ProfileView` (device + referrer host, tanpa IP/UA/cookie), `<ViewTracker>` client beacon kirim `document.referrer` ke `/api/v/[id]`, helper `lib/analytics.ts` (`classifyDevice`/`isBot`/`referrerLabel`) + unit test, dashboard nampilin Views/Top sources/Devices
 - [ ] Export analytics ke CSV
 - [ ] QR code per halaman profil (buat cetak/offline)
 - [ ] Range tanggal custom di dashboard analytics (sekarang fix 30 hari)

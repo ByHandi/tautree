@@ -37,6 +37,7 @@ model User {
   role          Role      @default(USER)
   suspended     Boolean   @default(false)
   links         Link[]
+  views         ProfileView[]
   accounts      Account[]
   sessions      Session[]
   createdAt     DateTime  @default(now()) @map("created_at")
@@ -115,6 +116,22 @@ model Link {
 
   @@index([userId])
   @@map("links")
+}
+
+// Privacy-friendly profile page view log. Captures only a coarse device class
+// and the registrable referrer host (or null = direct) — no IP, no full
+// user-agent, no cookies. Powers the traffic-source and device breakdowns.
+model ProfileView {
+  id        String   @id @default(uuid(7))
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device    String
+  referrer  String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("profile_views")
 }
 
 // Per-click event log for time-series analytics. The denormalized `Link.clicks`

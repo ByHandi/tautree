@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
@@ -28,8 +29,12 @@ export default async function DashboardLayout({
   // DB-truthful username gate (the edge middleware can't read the DB).
   if (!user.username) redirect("/onboarding");
 
+  // Restore the persisted collapse state (set as a cookie on toggle) so a
+  // reload doesn't snap the sidebar back to its default-open state.
+  const sidebarOpen = (await cookies()).get("sidebar_state")?.value !== "false";
+
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={sidebarOpen}>
       <AppSidebar
         user={{
           username: user.username,
@@ -39,11 +44,10 @@ export default async function DashboardLayout({
         }}
         isAdmin={user.role === "ADMIN"}
       />
+
       <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="sticky top-2 left-2 z-10 w-fit rounded-xl bg-background/95 p-1 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <SidebarTrigger />
-          <div className="h-4 w-px bg-border" />
-          <span className="text-sm font-medium">Dashboard</span>
         </header>
         {children}
       </SidebarInset>

@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 
 import { Logo } from "@/components/logo";
 import { SocialIcon } from "@/components/social-icon";
+import { ViewTracker } from "@/components/view-tracker";
 import Icon from "@/components/ui/icon";
 import { db } from "@/lib/db";
 import { getEmbed } from "@/lib/embed";
@@ -22,6 +23,7 @@ async function getProfile(rawUsername: string) {
   const user = await db.user.findUnique({
     where: { username },
     select: {
+      id: true,
       name: true,
       username: true,
       bio: true,
@@ -156,6 +158,7 @@ export default async function PublicProfilePage({ params }: Params) {
       className="mx-auto flex min-h-dvh w-full max-w-lg flex-col items-center gap-6 px-5 py-16"
       style={{ background: theme.page, color: theme.text }}
     >
+      <ViewTracker userId={user.id} />
       <header className="flex flex-col items-center gap-3 text-center">
         <span
           className="flex size-24 items-center justify-center overflow-hidden rounded-full text-2xl font-semibold"
