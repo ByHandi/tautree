@@ -1,6 +1,6 @@
-# <img src="./brand/tautree-app-icon.svg" alt="" width="28" align="top"> Tautree — Roadmap v2
+# <img src="./brand/tautree-app-icon.svg" alt="" width="28" align="center"> Tautree — Roadmap v2
 
-🇬🇧 **[Read in English →](./ROADMAP.md)**  ·  📖 **[README →](./README.id.md)**
+🇬🇧 **[Read in English →](./ROADMAP.md)** · 📖 **[README →](./README.id.md)**
 
 Linktree-style SaaS: tiap user punya satu halaman publik (`tautree.com/username`) berisi daftar link, dikelola lewat dashboard pribadi.
 
@@ -8,17 +8,17 @@ Linktree-style SaaS: tiap user punya satu halaman publik (`tautree.com/username`
 
 ## Tech Stack
 
-| Layer | Pilihan | Status |
-| --- | --- | --- |
-| Framework | Next.js 15 (App Router) + TypeScript | ✅ |
-| UI | shadcn v4 (Base UI + Radix) + Tailwind v4 | ✅ |
-| Theme/Toast | next-themes + sonner | ✅ |
-| Database | PostgreSQL (host-resident, via Docker Compose) | ✅ |
-| ORM | Prisma 7 | ✅ |
-| Auth | Auth.js (NextAuth v5, JWT) — Google + magic link | ✅ |
-| Testing | Vitest (unit) | ✅ |
-| CI | GitHub Actions (typecheck + lint + test + build) | ✅ |
-| Deploy | Coolify (self-hosted, Docker) | ✅ |
+| Layer       | Pilihan                                          | Status |
+| ----------- | ------------------------------------------------ | ------ |
+| Framework   | Next.js 15 (App Router) + TypeScript             | ✅     |
+| UI          | shadcn v4 (Base UI + Radix) + Tailwind v4        | ✅     |
+| Theme/Toast | next-themes + sonner                             | ✅     |
+| Database    | PostgreSQL (host-resident, via Docker Compose)   | ✅     |
+| ORM         | Prisma 7                                         | ✅     |
+| Auth        | Auth.js (NextAuth v5, JWT) — Google + magic link | ✅     |
+| Testing     | Vitest (unit)                                    | ✅     |
+| CI          | GitHub Actions (typecheck + lint + test + build) | ✅     |
+| Deploy      | Coolify (self-hosted, Docker)                    | ✅     |
 
 ## Data Model (saat ini)
 
@@ -36,6 +36,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 ---
 
 ## Fase 6 — Production Hardening 🛡️
+
 > De-risk yang udah live. Prioritas tertinggi.
 
 - [x] CI: tambah step `build` (tangkap error RSC sebelum deploy)
@@ -47,6 +48,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 - [ ] Keputusan: suspended = sembunyi publik (sekarang) **atau** blokir login total?
 
 ## Fase 7 — Link Power-ups ⚡
+
 > Nilai langsung kelihatan di halaman publik.
 
 - [x] Auto social icons — `detectPlatform` (`lib/social.ts`) + `SocialIcon` (simple-icons, 17 platform) di tombol publik, fallback globe
@@ -56,6 +58,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 - [x] Thumbnail/icon kustom per link — kolom `thumbnail` (data URI), resize di client (canvas 128px → WebP), validasi + cap ukuran server (`parseThumbnail`, tolak svg/non-image), upload/preview/remove di dialog, render di tombol publik (override social icon), unit test. Zero-infra (no S3/volume).
 
 ## Fase 8 — Analytics & Growth 📈
+
 > Bikin user balik & ngerti performa.
 
 - [x] Analytics lanjut: referrer + device (geo ditunda — perlu geo-IP) — model `ProfileView` (device + referrer host, tanpa IP/UA/cookie), `<ViewTracker>` client beacon kirim `document.referrer` ke `/api/v/[id]`, helper `lib/analytics.ts` (`classifyDevice`/`isBot`/`referrerLabel`) + unit test, dashboard nampilin Views/Top sources/Devices
@@ -64,6 +67,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 - [x] Range tanggal custom di dashboard analytics — `resolveRange` (default 30 hari, cap 366, validasi + clamp) + `<AnalyticsRangePicker>` (date-range-picker → URL `?from&to`), semua query (clicks/views/devices/sources) ikut window, series harian dinamis, unit test
 
 ## Fase 9 — Monetisasi 💳 (opsional)
+
 > Kalau mau jadiin produk berbayar.
 
 - [ ] Tier berbayar: hapus branding "Made with Tautree", analytics lanjut, link unlimited
@@ -72,6 +76,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 - [ ] Panel admin: lihat tier & status billing per user
 
 ## Fase 10 — Custom Domain 🌐 (paling kompleks)
+
 > User pakai domain sendiri (`links.budi.com`).
 
 - [ ] Tambah domain per user + verifikasi kepemilikan via DNS TXT
@@ -79,19 +84,23 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 - [ ] TLS otomatis (Coolify/Caddy on-demand cert)
 
 ## Fase 11 — Public Page Enhancements 🎨
+
 > Bikin halaman publik lebih ekspresif & "punya sendiri". Semua nilai langsung kelihatan ke pengunjung. ⭐ = rekomendasi prioritas (rasio dampak/effort tinggi).
 
 **Visual / polish**
+
 - [x] ⭐ Button style variants — kolom `buttonShape`/`buttonFill` di User, `lib/button-style.ts` (`linkButtonAppearance` → inline style, validasi + default), selector Shape/Fill + live preview di Appearance, diterapkan ke tombol & embed di halaman publik, unit test
 - [x] Font picker — kolom `font` di User, `lib/fonts.ts` (`fontStack`/`parseFont`, 4 pilihan: Sans/Serif/Mono/Rounded via CSS stacks — zero web-font tambahan), selector + live preview di Appearance, diterapkan ke `<main>` halaman publik, unit test
 - [ ] Cover/banner image — header di belakang avatar; **reuse pola client-resize dari thumbnail**. _(sedang)_
 
 **Konten link**
+
 - [x] Social icon row — model `SocialLink` (url + order, cap `SOCIAL_MAX`=8), manager add/remove di halaman Profile, ikon di-derive via `detectPlatform`/`SocialIcon`, render deretan ikon di header publik (buka tab baru, gak nge-track klik)
 - [x] Featured/pinned link — kolom `featured` di Link (khusus LINK), checkbox di dialog + star di dashboard, di halaman publik di-pin ke atas sebagai hero card (padding/teks/ikon lebih besar), sisanya tetap urut + grouping
 - [ ] vCard "Save contact" — tombol download `.vcf` ke HP; diferensiator personal brand, zero infra. _(kecil–sedang)_
 
 **Growth / interaksi**
+
 - [x] ⭐ Share + QR di halaman publik — `<ShareButton>` (copy link / native share / QR) di pojok profil; QR via route on-demand `GET /api/qr/[username]` (cache 1 hari, gak nge-bloat HTML), QR baru di-fetch saat dialog dibuka
 - [ ] Email capture / "Subscribe" — kumpulin email pengunjung (lead-gen); butuh model + storage + pertimbangan privacy. _(sedang, nilai tinggi)_
 

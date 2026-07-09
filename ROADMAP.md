@@ -1,6 +1,6 @@
-# <img src="./brand/tautree-app-icon.svg" alt="" width="28" align="top"> Tautree — Roadmap v2
+# <img src="./brand/tautree-app-icon.svg" alt="" width="28" align="center"> Tautree — Roadmap v2
 
-🇮🇩 **[Baca dalam Bahasa Indonesia →](./ROADMAP.id.md)**  ·  📖 **[README →](./README.md)**
+🇮🇩 **[Baca dalam Bahasa Indonesia →](./ROADMAP.id.md)** · 📖 **[README →](./README.md)**
 
 Linktree-style app: every user gets one public page (`tautree.com/username`) with a list of links, managed from a personal dashboard.
 
@@ -8,17 +8,17 @@ Linktree-style app: every user gets one public page (`tautree.com/username`) wit
 
 ## Tech Stack
 
-| Layer | Choice | Status |
-| --- | --- | --- |
-| Framework | Next.js 15 (App Router) + TypeScript | ✅ |
-| UI | shadcn v4 (Base UI + Radix) + Tailwind v4 | ✅ |
-| Theme/Toast | next-themes + sonner | ✅ |
-| Database | PostgreSQL (host-resident, via Docker Compose) | ✅ |
-| ORM | Prisma 7 | ✅ |
-| Auth | Auth.js (NextAuth v5, JWT) — Google + magic link | ✅ |
-| Testing | Vitest (unit) | ✅ |
-| CI | GitHub Actions (typecheck + lint + test + build) | ✅ |
-| Deploy | Coolify (self-hosted, Docker) | ✅ |
+| Layer       | Choice                                           | Status |
+| ----------- | ------------------------------------------------ | ------ |
+| Framework   | Next.js 15 (App Router) + TypeScript             | ✅     |
+| UI          | shadcn v4 (Base UI + Radix) + Tailwind v4        | ✅     |
+| Theme/Toast | next-themes + sonner                             | ✅     |
+| Database    | PostgreSQL (host-resident, via Docker Compose)   | ✅     |
+| ORM         | Prisma 7                                         | ✅     |
+| Auth        | Auth.js (NextAuth v5, JWT) — Google + magic link | ✅     |
+| Testing     | Vitest (unit)                                    | ✅     |
+| CI          | GitHub Actions (typecheck + lint + test + build) | ✅     |
+| Deploy      | Coolify (self-hosted, Docker)                    | ✅     |
 
 ## Data Model (current)
 
@@ -36,6 +36,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 ---
 
 ## Phase 6 — Production Hardening 🛡️
+
 > De-risk what's already live. Highest priority.
 
 - [x] CI: add a `build` step (catch RSC errors before deploy)
@@ -47,6 +48,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 - [ ] Decision: suspended = hidden from public (current) **or** block login entirely?
 
 ## Phase 7 — Link Power-ups ⚡
+
 > Value visible directly on the public page.
 
 - [x] Auto social icons — `detectPlatform` (`lib/social.ts`) + `SocialIcon` (simple-icons, 17 platforms) on public buttons, globe fallback
@@ -56,6 +58,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 - [x] Custom per-link thumbnail/icon — `thumbnail` column (data URI), client-side resize (canvas 128px → WebP), server-side validation + size cap (`parseThumbnail`, rejects svg/non-image), upload/preview/remove in the dialog, rendered on public buttons (overrides the social icon), unit tests. Zero-infra (no S3/volume).
 
 ## Phase 8 — Analytics & Growth 📈
+
 > Bring users back and help them understand performance.
 
 - [x] Advanced analytics: referrer + device (geo deferred — needs geo-IP) — `ProfileView` model (device + referrer host, no IP/UA/cookie), `<ViewTracker>` client beacon sends `document.referrer` to `/api/v/[id]`, `lib/analytics.ts` helpers (`classifyDevice`/`isBot`/`referrerLabel`) + unit tests, dashboard shows Views/Top sources/Devices
@@ -64,6 +67,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 - [x] Custom date range in the analytics dashboard — `resolveRange` (default 30 days, cap 366, validation + clamp) + `<AnalyticsRangePicker>` (date-range-picker → URL `?from&to`), all queries (clicks/views/devices/sources) follow the window, dynamic daily series, unit tests
 
 ## Phase 9 — Monetization 💳 (optional)
+
 > If you want to turn it into a paid product.
 
 - [ ] Paid tier: remove "Made with Tautree" branding, advanced analytics, unlimited links
@@ -72,6 +76,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 - [ ] Admin panel: view tier & billing status per user
 
 ## Phase 10 — Custom Domain 🌐 (most complex)
+
 > Users bring their own domain (`links.budi.com`).
 
 - [ ] Add a domain per user + verify ownership via DNS TXT
@@ -79,19 +84,23 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 - [ ] Automatic TLS (Coolify/Caddy on-demand cert)
 
 ## Phase 11 — Public Page Enhancements 🎨
+
 > Make the public page more expressive and "yours." All value is visible directly to visitors. ⭐ = priority recommendation (high impact/effort ratio).
 
 **Visual / polish**
+
 - [x] ⭐ Button style variants — `buttonShape`/`buttonFill` columns on User, `lib/button-style.ts` (`linkButtonAppearance` → inline style, validation + defaults), Shape/Fill selectors + live preview in Appearance, applied to buttons & embeds on the public page, unit tests
 - [x] Font picker — `font` column on User, `lib/fonts.ts` (`fontStack`/`parseFont`, 4 options: Sans/Serif/Mono/Rounded via CSS stacks — zero extra web fonts), selector + live preview in Appearance, applied to the public page `<main>`, unit tests
 - [ ] Cover/banner image — header behind the avatar; **reuse the client-resize pattern from thumbnails**. _(medium)_
 
 **Link content**
+
 - [x] Social icon row — `SocialLink` model (url + order, cap `SOCIAL_MAX`=8), add/remove manager on the Profile page, icons derived via `detectPlatform`/`SocialIcon`, icon row rendered in the public header (opens a new tab, doesn't track clicks)
 - [x] Featured/pinned link — `featured` column on Link (LINK only), checkbox in the dialog + star in the dashboard, pinned to the top of the public page as a hero card (larger padding/text/icon), the rest stay ordered + grouped
 - [ ] vCard "Save contact" — `.vcf` download button to the phone; a personal-brand differentiator, zero infra. _(small–medium)_
 
 **Growth / interaction**
+
 - [x] ⭐ Share + QR on the public page — `<ShareButton>` (copy link / native share / QR) in the profile corner; QR via the on-demand route `GET /api/qr/[username]` (cached 1 day, doesn't bloat the HTML), a fresh QR is fetched when the dialog opens
 - [ ] Email capture / "Subscribe" — collect visitor emails (lead-gen); needs a model + storage + privacy considerations. _(medium, high value)_
 

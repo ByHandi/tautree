@@ -1,4 +1,4 @@
-# <img src="./brand/tautree-app-icon.svg" alt="" width="28" align="top"> Tautree
+# <img src="./brand/tautree-app-icon.svg" alt="" width="28" align="center"> Tautree
 
 > A self-hostable, open-source Linktree alternative. Every user gets one public page (`/[username]`) with a list of links, managed from a personal dashboard.
 
@@ -10,7 +10,7 @@
   <a href="./README.id.md"><img alt="Bahasa Indonesia" src="https://img.shields.io/badge/lang-Bahasa%20Indonesia-red"></a>
 </p>
 
-🇮🇩 **[Baca dalam Bahasa Indonesia →](./README.id.md)**  ·  🗺️ **[Roadmap →](./ROADMAP.md)**
+🇮🇩 **[Baca dalam Bahasa Indonesia →](./README.id.md)** · 🗺️ **[Roadmap →](./ROADMAP.md)**
 
 <p align="center">
   <img src="./screenshots/tautree_landing_page.png" alt="Tautree landing page" width="820">
@@ -91,6 +91,7 @@ ADMIN_EMAIL=...                             # this user is seeded as ADMIN
 ```
 
 Login providers are **optional and additive**:
+
 - **Google OAuth** — enabled when `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` are set.
 - **Magic link** — enabled when `EMAIL_SERVER` / `EMAIL_FROM` are set.
 

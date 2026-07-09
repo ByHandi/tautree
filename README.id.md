@@ -1,4 +1,4 @@
-# <img src="./brand/tautree-app-icon.svg" alt="" width="28" align="top"> Tautree
+# <img src="./brand/tautree-app-icon.svg" alt="" width="28" align="center"> Tautree
 
 > Alternatif Linktree yang open-source & bisa di-self-host. Tiap user punya satu halaman publik (`/[username]`) berisi daftar link, dikelola lewat dashboard pribadi.
 
@@ -10,7 +10,7 @@
   <a href="./README.md"><img alt="English" src="https://img.shields.io/badge/lang-English-blue"></a>
 </p>
 
-🇬🇧 **[Read in English →](./README.md)**  ·  🗺️ **[Roadmap →](./ROADMAP.id.md)**
+🇬🇧 **[Read in English →](./README.md)** · 🗺️ **[Roadmap →](./ROADMAP.id.md)**
 
 <p align="center">
   <img src="./screenshots/tautree_landing_page.png" alt="Landing page Tautree" width="820">
@@ -91,6 +91,7 @@ ADMIN_EMAIL=...                             # user ini di-seed jadi ADMIN
 ```
 
 Provider login bersifat **opsional & aditif**:
+
 - **Google OAuth** — aktif kalau `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` diset.
 - **Magic link** — aktif kalau `EMAIL_SERVER` / `EMAIL_FROM` diset.
 
