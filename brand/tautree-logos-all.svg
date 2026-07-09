@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="770" height="340" viewBox="0 0 770 340" role="img" aria-label="Tautree logo bundle — all variants">
+  <defs>
+    <linearGradient id="lin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#34E0A1"/>
+      <stop offset="1" stop-color="#10B981"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="770" height="340" fill="#F4F8F6"/>
+
+  <!-- lockup -->
+  <g transform="translate(40 30)">
+    <rect width="44" height="44" rx="13" fill="url(#lin)"/>
+    <g transform="translate(11.88 11.88) scale(0.6325)">
+      <g fill="none" stroke="#0A0F0D" stroke-width="2.2" stroke-linecap="round">
+        <path d="M16 27.5V6.5"/>
+        <path d="M16 17C13 16 9.5 15 6.5 9.5"/>
+        <path d="M16 17C19 16 22.5 15 25.5 9.5"/>
+      </g>
+      <g fill="#0A0F0D">
+        <circle cx="16" cy="28" r="2.6"/>
+        <circle cx="16" cy="6" r="2.6"/>
+        <circle cx="6" cy="9" r="2.6"/>
+        <circle cx="26" cy="9" r="2.6"/>
+      </g>
+    </g>
+    <text x="58" y="30" fill="#0A0F0D" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="24" font-weight="650" letter-spacing="-0.5">Tautree</text>
+  </g>
+  <text x="730" y="42" text-anchor="end" fill="#5E726B" font-family="ui-monospace, monospace" font-size="12" letter-spacing="2">BRAND MARK · v1</text>
+
+  <!-- tile 1: app icon (gradient, ink) -->
+  <g transform="translate(40 110)">
+    <rect width="150" height="150" rx="20" fill="url(#lin)"/>
+    <g transform="translate(40.5 40.5) scale(2.156)">
+      <g fill="none" stroke="#0A0F0D" stroke-width="2.2" stroke-linecap="round">
+        <path d="M16 27.5V6.5"/>
+        <path d="M16 17C13 16 9.5 15 6.5 9.5"/>
+        <path d="M16 17C19 16 22.5 15 25.5 9.5"/>
+      </g>
+      <g fill="#0A0F0D">
+        <circle cx="16" cy="28" r="2.6"/>
+        <circle cx="16" cy="6" r="2.6"/>
+        <circle cx="6" cy="9" r="2.6"/>
+        <circle cx="26" cy="9" r="2.6"/>
+      </g>
+    </g>
+  </g>
+  <text x="115" y="288" text-anchor="middle" fill="#5E726B" font-family="ui-monospace, monospace" font-size="12">App icon</text>
+
+  <!-- tile 2: on light (emerald) -->
+  <g transform="translate(220 110)">
+    <rect width="150" height="150" rx="20" fill="#F4F8F6" stroke="#E2EAE6"/>
+    <g transform="translate(40.5 40.5) scale(2.156)">
+      <g fill="none" stroke="#10B981" stroke-width="2.2" stroke-linecap="round">
+        <path d="M16 27.5V6.5"/>
+        <path d="M16 17C13 16 9.5 15 6.5 9.5"/>
+        <path d="M16 17C19 16 22.5 15 25.5 9.5"/>
+      </g>
+      <g fill="#10B981">
+        <circle cx="16" cy="28" r="2.6"/>
+        <circle cx="16" cy="6" r="2.6"/>
+        <circle cx="6" cy="9" r="2.6"/>
+        <circle cx="26" cy="9" r="2.6"/>
+      </g>
+    </g>
+  </g>
+  <text x="295" y="288" text-anchor="middle" fill="#5E726B" font-family="ui-monospace, monospace" font-size="12">On light</text>
+
+  <!-- tile 3: on dark (mint) -->
+  <g transform="translate(400 110)">
+    <rect width="150" height="150" rx="20" fill="#0B1411"/>
+    <g transform="translate(40.5 40.5) scale(2.156)">
+      <g fill="none" stroke="#34E0A1" stroke-width="2.2" stroke-linecap="round">
+        <path d="M16 27.5V6.5"/>
+        <path d="M16 17C13 16 9.5 15 6.5 9.5"/>
+        <path d="M16 17C19 16 22.5 15 25.5 9.5"/>
+      </g>
+      <g fill="#34E0A1">
+        <circle cx="16" cy="28" r="2.6"/>
+        <circle cx="16" cy="6" r="2.6"/>
+        <circle cx="6" cy="9" r="2.6"/>
+        <circle cx="26" cy="9" r="2.6"/>
+      </g>
+    </g>
+  </g>
+  <text x="475" y="288" text-anchor="middle" fill="#5E726B" font-family="ui-monospace, monospace" font-size="12">On dark</text>
+
+  <!-- tile 4: monochrome (ink) -->
+  <g transform="translate(580 110)">
+    <rect width="150" height="150" rx="20" fill="#FFFFFF" stroke="#E2EAE6"/>
+    <g transform="translate(40.5 40.5) scale(2.156)">
+      <g fill="none" stroke="#0A0F0D" stroke-width="2.2" stroke-linecap="round">
+        <path d="M16 27.5V6.5"/>
+        <path d="M16 17C13 16 9.5 15 6.5 9.5"/>
+        <path d="M16 17C19 16 22.5 15 25.5 9.5"/>
+      </g>
+      <g fill="#0A0F0D">
+        <circle cx="16" cy="28" r="2.6"/>
+        <circle cx="16" cy="6" r="2.6"/>
+        <circle cx="6" cy="9" r="2.6"/>
+        <circle cx="26" cy="9" r="2.6"/>
+      </g>
+    </g>
+  </g>
+  <text x="655" y="288" text-anchor="middle" fill="#5E726B" font-family="ui-monospace, monospace" font-size="12">Monochrome</text>
+</svg>

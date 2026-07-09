@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tautree — Brand Mark</title>
+<meta name="description" content="Brand mark for Tautree: one root branching into many leaves — one link, all your links.">
+<style>
+  :root {
+    --ink: #0A0F0D;
+    --paper: #F4F8F6;
+    --card: #FFFFFF;
+    --mint: #34E0A1;
+    --emerald: #10B981;
+    --moss: #5E726B;
+    --line: #E2EAE6;
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+
+  .wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: clamp(28px, 5vw, 72px) clamp(20px, 4vw, 48px) 80px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--moss);
+    margin: 0;
+  }
+
+  /* ---- top bar ---- */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--line);
+  }
+  .lockup { display: flex; align-items: center; gap: 12px; }
+  .lockup .name {
+    font-size: 20px; font-weight: 650; letter-spacing: -0.02em;
+  }
+  .chip {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: 11px;
+    background: linear-gradient(135deg, var(--mint), var(--emerald));
+    color: var(--ink);
+  }
+
+  /* ---- hero ---- */
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(24px, 5vw, 56px);
+    align-items: center;
+    padding: clamp(36px, 6vw, 72px) 0;
+  }
+  @media (max-width: 680px) { .hero { grid-template-columns: 1fr; } }
+
+  .hero-tile {
+    aspect-ratio: 1 / 1;
+    border-radius: 28px;
+    background: radial-gradient(120% 120% at 25% 20%, #6CF3BE 0%, var(--emerald) 70%, #0C9D6E 100%);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 24px 60px -24px rgba(16,185,129,0.6);
+    color: var(--ink);
+  }
+  .hero-tile svg { width: 56%; height: 56%; }
+
+  .hero h1 {
+    font-size: clamp(34px, 5.5vw, 52px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+    text-wrap: balance;
+    margin: 18px 0 14px;
+  }
+  .hero p {
+    color: var(--moss);
+    max-width: 46ch;
+    margin: 0;
+    font-size: 16px;
+  }
+
+  /* ---- section ---- */
+  section { padding-top: 56px; }
+  section > h2 {
+    font-size: 13px;
+    font-family: var(--mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--moss);
+    font-weight: 600;
+    margin: 0 0 20px;
+  }
+
+  /* ---- usage grid ---- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 680px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .tile {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--card);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .tile .face {
+    aspect-ratio: 4 / 3;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tile .face svg { width: 46%; height: 46%; }
+  .tile .cap {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--moss);
+    padding: 10px 12px;
+    border-top: 1px solid var(--line);
+  }
+  .face.icon  { background: linear-gradient(135deg, var(--mint), var(--emerald)); color: var(--ink); }
+  .face.light { background: var(--paper); color: var(--emerald); }
+  .face.dark  { background: #0B1411; color: var(--mint); }
+  .face.mono  { background: var(--card); color: var(--ink); }
+
+  /* ---- sizes ---- */
+  .sizes {
+    display: flex;
+    align-items: flex-end;
+    gap: clamp(20px, 5vw, 44px);
+    flex-wrap: wrap;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--card);
+    padding: 32px;
+    color: var(--emerald);
+  }
+  .size-item { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .size-item .cap { font-family: var(--mono); font-size: 11px; color: var(--moss); }
+
+  /* ---- specs ---- */
+  .specs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 680px) { .specs { grid-template-columns: 1fr; } }
+  .spec {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--card);
+    padding: 22px 24px;
+  }
+  .spec h3 { margin: 0 0 14px; font-size: 14px; font-weight: 650; }
+  .spec dl { margin: 0; font-family: var(--mono); font-size: 12.5px; }
+  .spec .row {
+    display: flex; justify-content: space-between; gap: 16px;
+    padding: 7px 0; border-bottom: 1px dashed var(--line);
+  }
+  .spec .row:last-child { border-bottom: 0; }
+  .spec .row dt { color: var(--moss); }
+  .spec .row dd { margin: 0; }
+
+  .swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+  .sw { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; flex: 1; min-width: 70px; }
+  .sw .dot { width: 100%; height: 40px; border-radius: 9px; border: 1px solid rgba(0,0,0,0.06); }
+  .sw .lab { font-family: var(--mono); font-size: 11px; color: var(--moss); }
+
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--moss);
+    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  }
+</style>
+</head>
+<body>
+
+<!-- reusable mark, inherits currentColor -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 32 32">
+    <path d="M16 27.5V6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+    <path d="M16 17C13 16 9.5 15 6.5 9.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+    <path d="M16 17C19 16 22.5 15 25.5 9.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+    <circle cx="16" cy="28" r="2.6" fill="currentColor"/>
+    <circle cx="16" cy="6" r="2.6" fill="currentColor"/>
+    <circle cx="6" cy="9" r="2.6" fill="currentColor"/>
+    <circle cx="26" cy="9" r="2.6" fill="currentColor"/>
+  </symbol>
+</svg>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="lockup">
+      <span class="chip"><svg width="22" height="22"><use href="#mark"/></svg></span>
+      <span class="name">Tautree</span>
+    </div>
+    <p class="eyebrow">Brand mark · v1</p>
+  </div>
+
+  <div class="hero">
+    <div class="hero-tile"><svg viewBox="0 0 32 32"><use href="#mark"/></svg></div>
+    <div>
+      <p class="eyebrow">The mark</p>
+      <h1>One root, many leaves.</h1>
+      <p>
+        A single node at the base branches upward into many — the literal shape of
+        Tautree: all your links gathered into one page. <em>Taut</em> (link) meets tree.
+        Built from one stroke weight and four nodes, so it stays crisp from a 16px
+        favicon up to a hero.
+      </p>
+    </div>
+  </div>
+
+  <section>
+    <h2>Usage</h2>
+    <div class="grid">
+      <div class="tile">
+        <div class="face icon"><svg viewBox="0 0 32 32"><use href="#mark"/></svg></div>
+        <div class="cap">App icon</div>
+      </div>
+      <div class="tile">
+        <div class="face light"><svg viewBox="0 0 32 32"><use href="#mark"/></svg></div>
+        <div class="cap">On light</div>
+      </div>
+      <div class="tile">
+        <div class="face dark"><svg viewBox="0 0 32 32"><use href="#mark"/></svg></div>
+        <div class="cap">On dark</div>
+      </div>
+      <div class="tile">
+        <div class="face mono"><svg viewBox="0 0 32 32"><use href="#mark"/></svg></div>
+        <div class="cap">Monochrome</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Scales down clean</h2>
+    <div class="sizes">
+      <div class="size-item"><svg width="16" height="16"><use href="#mark"/></svg><span class="cap">16</span></div>
+      <div class="size-item"><svg width="24" height="24"><use href="#mark"/></svg><span class="cap">24</span></div>
+      <div class="size-item"><svg width="32" height="32"><use href="#mark"/></svg><span class="cap">32</span></div>
+      <div class="size-item"><svg width="48" height="48"><use href="#mark"/></svg><span class="cap">48</span></div>
+      <div class="size-item"><svg width="72" height="72"><use href="#mark"/></svg><span class="cap">72</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Specs</h2>
+    <div class="specs">
+      <div class="spec">
+        <h3>Geometry</h3>
+        <dl>
+          <div class="row"><dt>viewBox</dt><dd>0 0 32 32</dd></div>
+          <div class="row"><dt>stroke</dt><dd>2.2 · round cap</dd></div>
+          <div class="row"><dt>nodes</dt><dd>4 · r 2.6</dd></div>
+          <div class="row"><dt>color</dt><dd>currentColor</dd></div>
+        </dl>
+      </div>
+      <div class="spec">
+        <h3>Palette</h3>
+        <div class="swatches">
+          <div class="sw"><span class="dot" style="background:#34E0A1"></span><span class="lab">#34E0A1</span></div>
+          <div class="sw"><span class="dot" style="background:#10B981"></span><span class="lab">#10B981</span></div>
+          <div class="sw"><span class="dot" style="background:#0A0F0D"></span><span class="lab">#0A0F0D</span></div>
+          <div class="sw"><span class="dot" style="background:#F4F8F6;border-color:#E2EAE6"></span><span class="lab">#F4F8F6</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Tautree — brand mark</span>
+    <span>components/logo.tsx · app/icon.svg</span>
+  </footer>
+</div>
+
+</body>
+</html>
