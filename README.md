@@ -12,9 +12,9 @@
 
 🇮🇩 **[Baca dalam Bahasa Indonesia →](./README.id.md)**  ·  🗺️ **[Roadmap →](./ROADMAP.md)**
 
-<!-- Drop a demo GIF or hero screenshot here once you have one, e.g.:
-<p align="center"><img src="./public/demo.gif" alt="Tautree demo" width="720"></p>
--->
+<p align="center">
+  <img src="./screenshots/tautree_landing_page.png" alt="Tautree landing page" width="820">
+</p>
 
 ---
 
@@ -35,6 +35,23 @@ Most link-in-bio tools are closed SaaS: your page, your analytics, and your audi
 - **Social** — auto-detected icons for 17 platforms, social icon row in the header, share + QR code
 - **Analytics** — total clicks, 30-day trend, top sources, device breakdown, custom date range, CSV export
 - **Admin** — `/admin` panel (list/search users, suspend, delete link/user), admin seeded from `ADMIN_EMAIL`
+
+## Screenshots
+
+<table>
+  <tr>
+    <td width="50%"><img src="./screenshots/tautree_dashboard.png" alt="Dashboard"><br><sub><b>Dashboard</b></sub></td>
+    <td width="50%"><img src="./screenshots/tautree_links.png" alt="Links manager"><br><sub><b>Links — drag-and-drop, scheduling, embeds</b></sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="./screenshots/tautree_appearance.png" alt="Appearance"><br><sub><b>Appearance — themes, fonts, button variants</b></sub></td>
+    <td width="50%"><img src="./screenshots/tautree_analytics.png" alt="Analytics"><br><sub><b>Analytics — trend, sources, device breakdown</b></sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="./screenshots/tautree_settings.png" alt="Settings"><br><sub><b>Settings</b></sub></td>
+    <td width="50%"></td>
+  </tr>
+</table>
 
 ## Stack
 
