@@ -164,7 +164,7 @@ npx shadcn@latest add <component>
 
 ## Kontribusi
 
-Issue & PR sangat diterima. Jalankan `npm run lint`, `npm run typecheck`, dan `npm run test` sebelum buka PR — CI mewajibkan ketiganya plus build. Lihat [`.github`](./.github) untuk template issue & PR.
+Issue & PR sangat diterima — lihat [`CONTRIBUTING.md`](./CONTRIBUTING.md) untuk setup, konvensi, dan alur kerjanya. Jalankan `npm run lint`, `npm run typecheck`, dan `npm run test` sebelum buka PR — CI mewajibkan ketiganya plus build.
 
 ## Keamanan
 

@@ -165,7 +165,7 @@ npx shadcn@latest add <component>
 
 ## Contributing
 
-Issues and PRs are welcome. Please run `npm run lint`, `npm run typecheck`, and `npm run test` before opening a PR — CI enforces all three plus a build. See [`.github`](./.github) for issue and PR templates.
+Issues and PRs are welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md) for setup, conventions, and the workflow. Please run `npm run lint`, `npm run typecheck`, and `npm run test` before opening a PR — CI enforces all three plus a build.
 
 ## Security
 
