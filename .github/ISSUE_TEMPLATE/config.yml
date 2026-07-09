@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Questions & discussion
+    url: https://github.com/ByHandi/tautree/discussions
+    about: Ask questions, share your instance, or discuss ideas here.
+  - name: 🔒 Report a security vulnerability
+    url: https://github.com/ByHandi/tautree/security/policy
+    about: Please disclose security issues privately — do not open a public issue.
