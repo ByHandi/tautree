@@ -1,4 +1,4 @@
-# 🌳 Tautree
+# <img src="./brand/tautree-app-icon.svg" alt="" width="28" align="top"> Tautree
 
 > A self-hostable, open-source Linktree alternative. Every user gets one public page (`/[username]`) with a list of links, managed from a personal dashboard.
 

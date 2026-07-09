@@ -1,12 +1,14 @@
-# 🌳 Tautree — Roadmap v2
+# <img src="./brand/tautree-app-icon.svg" alt="" width="28" align="top"> Tautree — Roadmap v2
 
-Linktree-style SaaS: tiap user punya satu halaman publik (`tautree.com/username`) berisi daftar link, dikelola lewat dashboard pribadi.
+🇮🇩 **[Baca dalam Bahasa Indonesia →](./ROADMAP.id.md)**  ·  📖 **[README →](./README.md)**
 
-> **v1 (MVP) sudah selesai & live di Coolify.** Roadmap ini fokus ke fase pasca-launch: hardening, fitur bernilai langsung, analytics, dan monetisasi. Detail v1 ada di bagian [Arsip v1](#arsip--v1-mvp-selesai) di bawah.
+Linktree-style app: every user gets one public page (`tautree.com/username`) with a list of links, managed from a personal dashboard.
+
+> **v1 (MVP) is done & live on Coolify.** This roadmap focuses on the post-launch phases: hardening, high-value features, analytics, and monetization. The v1 details are in the [v1 Archive](#archive--v1-mvp-done) at the bottom.
 
 ## Tech Stack
 
-| Layer | Pilihan | Status |
+| Layer | Choice | Status |
 | --- | --- | --- |
 | Framework | Next.js 15 (App Router) + TypeScript | ✅ |
 | UI | shadcn v4 (Base UI + Radix) + Tailwind v4 | ✅ |
@@ -15,14 +17,17 @@ Linktree-style SaaS: tiap user punya satu halaman publik (`tautree.com/username`
 | ORM | Prisma 7 | ✅ |
 | Auth | Auth.js (NextAuth v5, JWT) — Google + magic link | ✅ |
 | Testing | Vitest (unit) | ✅ |
-| CI | GitHub Actions (typecheck + lint + test) | ✅ |
+| CI | GitHub Actions (typecheck + lint + test + build) | ✅ |
 | Deploy | Coolify (self-hosted, Docker) | ✅ |
 
-## Data Model (saat ini)
+## Data Model (current)
 
 ```
-User        → id, email, username, name, bio, avatarUrl, theme, customTheme(Json), role(USER|ADMIN), suspended
-Link        → id, userId, type(LINK|HEADER|EMBED), title, url?, thumbnail?, order, isActive, clicks, startsAt?, endsAt?
+User        → id, email, username, name, bio, avatarUrl, theme, customTheme(Json),
+              buttonShape, buttonFill, font, role(USER|ADMIN), suspended
+Link        → id, userId, type(LINK|HEADER|EMBED), title, url?, thumbnail?, featured,
+              order, isActive, clicks, startsAt?, endsAt?
+SocialLink  → id, userId, url, order                     # social icon row in the header
 Click       → id, linkId, createdAt                       # per-click time-series
 ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly view log (no IP/cookie)
 + Auth.js: Account, Session, VerificationToken
@@ -30,79 +35,79 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 
 ---
 
-## Fase 6 — Production Hardening 🛡️
-> De-risk yang udah live. Prioritas tertinggi.
+## Phase 6 — Production Hardening 🛡️
+> De-risk what's already live. Highest priority.
 
-- [x] CI: tambah step `build` (tangkap error RSC sebelum deploy)
+- [x] CI: add a `build` step (catch RSC errors before deploy)
 - [x] Global `app/error.tsx` + `global-error.tsx` + `not-found.tsx` + dashboard `loading.tsx`
-- [x] Refactor logika gating → `isLinkLive` (`lib/links.ts`) + `isProfilePublic` (`lib/profile.ts`), dipakai di page/OG/redirect, + unit test anti-regresi
-- [x] `robots.ts` + `sitemap.ts` (`force-dynamic`, profil non-suspended ber-username)
-- [ ] Rate limit durable (Postgres/Redis) — **trigger: saat scale > 1 container**
-- [ ] Error monitoring (Sentry / log terstruktur) — opsional tapi murah
-- [ ] Keputusan: suspended = sembunyi publik (sekarang) **atau** blokir login total?
+- [x] Refactor gating logic → `isLinkLive` (`lib/links.ts`) + `isProfilePublic` (`lib/profile.ts`), used across page/OG/redirect, + regression unit tests
+- [x] `robots.ts` + `sitemap.ts` (`force-dynamic`, non-suspended profiles with a username)
+- [ ] Durable rate limiting (Postgres/Redis) — **trigger: when scaling beyond 1 container**
+- [ ] Error monitoring (Sentry / structured logs) — optional but cheap
+- [ ] Decision: suspended = hidden from public (current) **or** block login entirely?
 
-## Fase 7 — Link Power-ups ⚡
-> Nilai langsung kelihatan di halaman publik.
+## Phase 7 — Link Power-ups ⚡
+> Value visible directly on the public page.
 
-- [x] Auto social icons — `detectPlatform` (`lib/social.ts`) + `SocialIcon` (simple-icons, 17 platform) di tombol publik, fallback globe
-- [x] Scheduling link — kolom `startsAt`/`endsAt` (null = tanpa batas), gating di `isLinkLive` + `liveScheduleWhere` (query publik & redirect), datetime-local di dialog (ISO/UTC, timezone-safe), badge Scheduled/Expired di dashboard, unit test
-- [x] Tipe link baru: header/divider (grouping) — enum `LinkType` (`LINK`/`HEADER`), `url` nullable, render section label di halaman publik, type selector + badge di dashboard, gating redirect anti header, unit test `parseLinkKind`
-- [x] Embed — YouTube/Spotify inline via `LinkType.EMBED` + `lib/embed.ts` (`getEmbed` parse URL→iframe src, id di-sanitasi), render iframe responsif (YT 16:9, Spotify tinggi adaptif) di halaman publik, opsi Embed di dialog + validasi provider, unit test
-- [x] Thumbnail/icon kustom per link — kolom `thumbnail` (data URI), resize di client (canvas 128px → WebP), validasi + cap ukuran server (`parseThumbnail`, tolak svg/non-image), upload/preview/remove di dialog, render di tombol publik (override social icon), unit test. Zero-infra (no S3/volume).
+- [x] Auto social icons — `detectPlatform` (`lib/social.ts`) + `SocialIcon` (simple-icons, 17 platforms) on public buttons, globe fallback
+- [x] Link scheduling — `startsAt`/`endsAt` columns (null = no bound), gated in `isLinkLive` + `liveScheduleWhere` (public query & redirect), datetime-local in the dialog (ISO/UTC, timezone-safe), Scheduled/Expired badges in the dashboard, unit tests
+- [x] New link types: header/divider (grouping) — `LinkType` enum (`LINK`/`HEADER`), nullable `url`, section labels rendered on the public page, type selector + badge in the dashboard, redirect gating against headers, `parseLinkKind` unit tests
+- [x] Embed — inline YouTube/Spotify via `LinkType.EMBED` + `lib/embed.ts` (`getEmbed` parses URL→iframe src, id sanitized), responsive iframe render (YT 16:9, Spotify adaptive height) on the public page, Embed option in the dialog + provider validation, unit tests
+- [x] Custom per-link thumbnail/icon — `thumbnail` column (data URI), client-side resize (canvas 128px → WebP), server-side validation + size cap (`parseThumbnail`, rejects svg/non-image), upload/preview/remove in the dialog, rendered on public buttons (overrides the social icon), unit tests. Zero-infra (no S3/volume).
 
-## Fase 8 — Analytics & Growth 📈
-> Bikin user balik & ngerti performa.
+## Phase 8 — Analytics & Growth 📈
+> Bring users back and help them understand performance.
 
-- [x] Analytics lanjut: referrer + device (geo ditunda — perlu geo-IP) — model `ProfileView` (device + referrer host, tanpa IP/UA/cookie), `<ViewTracker>` client beacon kirim `document.referrer` ke `/api/v/[id]`, helper `lib/analytics.ts` (`classifyDevice`/`isBot`/`referrerLabel`) + unit test, dashboard nampilin Views/Top sources/Devices
-- [x] Export analytics ke CSV — route `GET /dashboard/analytics/export` (auth, ikut `?from&to` + `resolveRange`), CSV harian (date/views/clicks) via `toCsv` (escape RFC-4180), tombol download di dashboard, unit test
-- [x] QR code per halaman profil — generate PNG data URI server-side (`qrcode`, pure-JS, EC level H) untuk URL publik; `<QrCard>` nampilin QR + brand logo di tengah + URL caption, tombol Download PNG composite QR+logo+URL ke canvas client-side (logo & URL ikut ke file)
-- [x] Range tanggal custom di dashboard analytics — `resolveRange` (default 30 hari, cap 366, validasi + clamp) + `<AnalyticsRangePicker>` (date-range-picker → URL `?from&to`), semua query (clicks/views/devices/sources) ikut window, series harian dinamis, unit test
+- [x] Advanced analytics: referrer + device (geo deferred — needs geo-IP) — `ProfileView` model (device + referrer host, no IP/UA/cookie), `<ViewTracker>` client beacon sends `document.referrer` to `/api/v/[id]`, `lib/analytics.ts` helpers (`classifyDevice`/`isBot`/`referrerLabel`) + unit tests, dashboard shows Views/Top sources/Devices
+- [x] CSV analytics export — `GET /dashboard/analytics/export` route (auth, honors `?from&to` + `resolveRange`), daily CSV (date/views/clicks) via `toCsv` (RFC-4180 escaping), download button in the dashboard, unit tests
+- [x] Per-profile QR code — server-side PNG data URI generation (`qrcode`, pure-JS, EC level H) for the public URL; `<QrCard>` shows the QR + brand logo in the center + URL caption, Download PNG button composites QR+logo+URL onto a client-side canvas (logo & URL included in the file)
+- [x] Custom date range in the analytics dashboard — `resolveRange` (default 30 days, cap 366, validation + clamp) + `<AnalyticsRangePicker>` (date-range-picker → URL `?from&to`), all queries (clicks/views/devices/sources) follow the window, dynamic daily series, unit tests
 
-## Fase 9 — Monetisasi 💳 (opsional)
-> Kalau mau jadiin produk berbayar.
+## Phase 9 — Monetization 💳 (optional)
+> If you want to turn it into a paid product.
 
-- [ ] Tier berbayar: hapus branding "Made with Tautree", analytics lanjut, link unlimited
-- [ ] Billing — Stripe / Lemon Squeezy + webhook → update tier di DB
-- [ ] Verifikasi/badge centang
-- [ ] Panel admin: lihat tier & status billing per user
+- [ ] Paid tier: remove "Made with Tautree" branding, advanced analytics, unlimited links
+- [ ] Billing — Stripe / Lemon Squeezy + webhook → update tier in the DB
+- [ ] Verification/checkmark badge
+- [ ] Admin panel: view tier & billing status per user
 
-## Fase 10 — Custom Domain 🌐 (paling kompleks)
-> User pakai domain sendiri (`links.budi.com`).
+## Phase 10 — Custom Domain 🌐 (most complex)
+> Users bring their own domain (`links.budi.com`).
 
-- [ ] Tambah domain per user + verifikasi kepemilikan via DNS TXT
-- [ ] Routing multi-tenant (middleware: map host → username)
-- [ ] TLS otomatis (Coolify/Caddy on-demand cert)
+- [ ] Add a domain per user + verify ownership via DNS TXT
+- [ ] Multi-tenant routing (middleware: map host → username)
+- [ ] Automatic TLS (Coolify/Caddy on-demand cert)
 
-## Fase 11 — Public Page Enhancements 🎨
-> Bikin halaman publik lebih ekspresif & "punya sendiri". Semua nilai langsung kelihatan ke pengunjung. ⭐ = rekomendasi prioritas (rasio dampak/effort tinggi).
+## Phase 11 — Public Page Enhancements 🎨
+> Make the public page more expressive and "yours." All value is visible directly to visitors. ⭐ = priority recommendation (high impact/effort ratio).
 
 **Visual / polish**
-- [x] ⭐ Button style variants — kolom `buttonShape`/`buttonFill` di User, `lib/button-style.ts` (`linkButtonAppearance` → inline style, validasi + default), selector Shape/Fill + live preview di Appearance, diterapkan ke tombol & embed di halaman publik, unit test
-- [x] Font picker — kolom `font` di User, `lib/fonts.ts` (`fontStack`/`parseFont`, 4 pilihan: Sans/Serif/Mono/Rounded via CSS stacks — zero web-font tambahan), selector + live preview di Appearance, diterapkan ke `<main>` halaman publik, unit test
-- [ ] Cover/banner image — header di belakang avatar; **reuse pola client-resize dari thumbnail**. _(sedang)_
+- [x] ⭐ Button style variants — `buttonShape`/`buttonFill` columns on User, `lib/button-style.ts` (`linkButtonAppearance` → inline style, validation + defaults), Shape/Fill selectors + live preview in Appearance, applied to buttons & embeds on the public page, unit tests
+- [x] Font picker — `font` column on User, `lib/fonts.ts` (`fontStack`/`parseFont`, 4 options: Sans/Serif/Mono/Rounded via CSS stacks — zero extra web fonts), selector + live preview in Appearance, applied to the public page `<main>`, unit tests
+- [ ] Cover/banner image — header behind the avatar; **reuse the client-resize pattern from thumbnails**. _(medium)_
 
-**Konten link**
-- [x] Social icon row — model `SocialLink` (url + order, cap `SOCIAL_MAX`=8), manager add/remove di halaman Profile, ikon di-derive via `detectPlatform`/`SocialIcon`, render deretan ikon di header publik (buka tab baru, gak nge-track klik)
-- [x] Featured/pinned link — kolom `featured` di Link (khusus LINK), checkbox di dialog + star di dashboard, di halaman publik di-pin ke atas sebagai hero card (padding/teks/ikon lebih besar), sisanya tetap urut + grouping
-- [ ] vCard "Save contact" — tombol download `.vcf` ke HP; diferensiator personal brand, zero infra. _(kecil–sedang)_
+**Link content**
+- [x] Social icon row — `SocialLink` model (url + order, cap `SOCIAL_MAX`=8), add/remove manager on the Profile page, icons derived via `detectPlatform`/`SocialIcon`, icon row rendered in the public header (opens a new tab, doesn't track clicks)
+- [x] Featured/pinned link — `featured` column on Link (LINK only), checkbox in the dialog + star in the dashboard, pinned to the top of the public page as a hero card (larger padding/text/icon), the rest stay ordered + grouped
+- [ ] vCard "Save contact" — `.vcf` download button to the phone; a personal-brand differentiator, zero infra. _(small–medium)_
 
-**Growth / interaksi**
-- [x] ⭐ Share + QR di halaman publik — `<ShareButton>` (copy link / native share / QR) di pojok profil; QR via route on-demand `GET /api/qr/[username]` (cache 1 hari, gak nge-bloat HTML), QR baru di-fetch saat dialog dibuka
-- [ ] Email capture / "Subscribe" — kumpulin email pengunjung (lead-gen); butuh model + storage + pertimbangan privacy. _(sedang, nilai tinggi)_
+**Growth / interaction**
+- [x] ⭐ Share + QR on the public page — `<ShareButton>` (copy link / native share / QR) in the profile corner; QR via the on-demand route `GET /api/qr/[username]` (cached 1 day, doesn't bloat the HTML), a fresh QR is fetched when the dialog opens
+- [ ] Email capture / "Subscribe" — collect visitor emails (lead-gen); needs a model + storage + privacy considerations. _(medium, high value)_
 
 ---
 
-## Arsip — v1 (MVP, selesai)
+## Archive — v1 (MVP, done)
 
 <details>
-<summary>Fase 0–5 — semua ✅</summary>
+<summary>Phases 0–5 — all ✅</summary>
 
-- **Fase 0 — Fondasi:** route group dashboard, root layout publik, landing, bersihin template registry.
-- **Fase 1 — Data Layer:** Postgres + Prisma 7 (generator `prisma-client`, driver adapter `@prisma/adapter-pg`, config di `prisma.config.ts`), model + migrasi + seed.
-- **Fase 2 — Auth & Onboarding:** Auth.js v5 JWT, Google + magic link, adapter Prisma, middleware proteksi, onboarding username real-time. `allowDangerousEmailAccountLinking` aktif di Google (aman, email terverifikasi).
-- **Fase 3 — Dashboard CRUD:** list/tambah/edit/hapus link, reorder drag-and-drop (`dnd-kit`), toggle aktif, edit profil.
-- **Fase 4 — Halaman Publik:** `/[username]` mobile-first, hanya link aktif & terurut, track klik via `/api/r/[id]`, 404 state, OG image + SEO dinamis. Gating `suspended` di semua jalur (page, OG, redirect).
-- **Fase 5 — Polish SaaS:** 6 preset tema **+ custom color** (color picker, palette Json, validasi hex-only), analytics dasar (grafik 30 hari, model `Click`), validasi URL + rate limit, deploy Coolify, **panel admin** (`/admin`: role di DB, list+cari user, suspend, hapus link/user), **admin seed** dari `ADMIN_EMAIL` (idempotent, di entrypoint).
-- **Hardening awal:** Vitest (32 unit test untuk validasi keamanan) + CI GitHub Actions.
+- **Phase 0 — Foundation:** dashboard route group, public root layout, landing page, cleaned-up template registry.
+- **Phase 1 — Data Layer:** Postgres + Prisma 7 (`prisma-client` generator, `@prisma/adapter-pg` driver adapter, config in `prisma.config.ts`), models + migrations + seed.
+- **Phase 2 — Auth & Onboarding:** Auth.js v5 JWT, Google + magic link, Prisma adapter, protection middleware, real-time username onboarding. `allowDangerousEmailAccountLinking` enabled for Google (safe, verified emails).
+- **Phase 3 — Dashboard CRUD:** list/add/edit/delete links, drag-and-drop reorder (`dnd-kit`), active toggle, profile edit.
+- **Phase 4 — Public Page:** `/[username]` mobile-first, active + ordered links only, click tracking via `/api/r/[id]`, 404 state, dynamic OG image + SEO. `suspended` gating on every path (page, OG, redirect).
+- **Phase 5 — SaaS Polish:** 6 preset themes **+ custom color** (color picker, Json palette, hex-only validation), basic analytics (30-day chart, `Click` model), URL validation + rate limiting, Coolify deploy, **admin panel** (`/admin`: role in the DB, list+search users, suspend, delete link/user), **admin seed** from `ADMIN_EMAIL` (idempotent, at entrypoint).
+- **Early hardening:** Vitest (32 security-validation unit tests) + GitHub Actions CI.
 
 </details>
