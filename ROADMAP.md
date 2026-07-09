@@ -2,7 +2,7 @@
 
 🇮🇩 **[Baca dalam Bahasa Indonesia →](./ROADMAP.id.md)** · 📖 **[README →](./README.md)**
 
-Linktree-style app: every user gets one public page (`tautree.com/username`) with a list of links, managed from a personal dashboard.
+Linktree-style app: every user gets one public page (`your-domain.com/username`) with a list of links, managed from a personal dashboard.
 
 > **v1 (MVP) is done & live on Coolify.** This roadmap focuses on the post-launch phases: hardening, high-value features, analytics, and monetization. The v1 details are in the [v1 Archive](#archive--v1-mvp-done) at the bottom.
 

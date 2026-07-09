@@ -4,8 +4,8 @@
  */
 const RAW = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
-/** Full origin without a trailing slash — e.g. `https://tautree.com`. */
+/** Full origin without a trailing slash — e.g. `https://your-domain.com`. */
 export const APP_URL = RAW.replace(/\/+$/, "");
 
-/** Host only, for display — e.g. `tautree.com`. */
+/** Host only, for display — e.g. `your-domain.com`. */
 export const APP_DOMAIN = APP_URL.replace(/^https?:\/\//, "");

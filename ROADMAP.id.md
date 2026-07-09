@@ -2,7 +2,7 @@
 
 🇬🇧 **[Read in English →](./ROADMAP.md)** · 📖 **[README →](./README.id.md)**
 
-Linktree-style SaaS: tiap user punya satu halaman publik (`tautree.com/username`) berisi daftar link, dikelola lewat dashboard pribadi.
+Alternatif Linktree yang self-hostable: tiap user punya satu halaman publik (`your-domain.com/username`) berisi daftar link, dikelola lewat dashboard pribadi.
 
 > **v1 (MVP) sudah selesai & live di Coolify.** Roadmap ini fokus ke fase pasca-launch: hardening, fitur bernilai langsung, analytics, dan monetisasi. Detail v1 ada di bagian [Arsip v1](#arsip--v1-mvp-selesai) di bawah.
 
