@@ -1,4 +1,4 @@
-# 🌳 Tautree
+# <img src="./brand/tautree-app-icon.svg" alt="" width="28" align="center"> Tautree
 
 > Alternatif Linktree yang open-source & bisa di-self-host. Tiap user punya satu halaman publik (`/[username]`) berisi daftar link, dikelola lewat dashboard pribadi.
 
@@ -10,11 +10,11 @@
   <a href="./README.md"><img alt="English" src="https://img.shields.io/badge/lang-English-blue"></a>
 </p>
 
-🇬🇧 **[Read in English →](./README.md)**  ·  🗺️ **[Roadmap →](./ROADMAP.md)**
+🇬🇧 **[Read in English →](./README.md)** · 🗺️ **[Roadmap →](./ROADMAP.id.md)**
 
-<!-- Taruh demo GIF atau screenshot hero di sini kalau sudah ada, contoh:
-<p align="center"><img src="./public/demo.gif" alt="Demo Tautree" width="720"></p>
--->
+<p align="center">
+  <img src="./screenshots/tautree_landing_page.png" alt="Landing page Tautree" width="820">
+</p>
 
 ---
 
@@ -35,6 +35,23 @@ Kebanyakan tool link-in-bio itu SaaS tertutup: halaman, analytics, dan audiens l
 - **Social** — auto-detect ikon 17 platform, social icon row di header, share + QR code
 - **Analytics** — total clicks, tren 30 hari, top sources, device breakdown, custom date range, export CSV
 - **Admin** — panel `/admin` (list/cari user, suspend, hapus link/user), seed admin dari `ADMIN_EMAIL`
+
+## Screenshot
+
+<table>
+  <tr>
+    <td width="50%"><img src="./screenshots/tautree_dashboard.png" alt="Dashboard"><br><sub><b>Dashboard</b></sub></td>
+    <td width="50%"><img src="./screenshots/tautree_links.png" alt="Manajemen link"><br><sub><b>Link — drag-and-drop, scheduling, embed</b></sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="./screenshots/tautree_appearance.png" alt="Tampilan"><br><sub><b>Tampilan — tema, font, varian tombol</b></sub></td>
+    <td width="50%"><img src="./screenshots/tautree_analytics.png" alt="Analytics"><br><sub><b>Analytics — tren, sumber, device breakdown</b></sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="./screenshots/tautree_settings.png" alt="Pengaturan"><br><sub><b>Pengaturan</b></sub></td>
+    <td width="50%"></td>
+  </tr>
+</table>
 
 ## Stack
 
@@ -74,6 +91,7 @@ ADMIN_EMAIL=...                             # user ini di-seed jadi ADMIN
 ```
 
 Provider login bersifat **opsional & aditif**:
+
 - **Google OAuth** — aktif kalau `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` diset.
 - **Magic link** — aktif kalau `EMAIL_SERVER` / `EMAIL_FROM` diset.
 

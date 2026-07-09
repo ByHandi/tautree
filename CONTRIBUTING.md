@@ -14,6 +14,8 @@ project, the conventions we follow, and how to get a change merged.
 
 For anything non-trivial, please open an issue to discuss before you build it — it saves everyone a round-trip.
 
+By participating, you're expected to uphold our [Code of Conduct](./CODE_OF_CONDUCT.md).
+
 ## Development setup
 
 Requires **Node 20+** and a running **PostgreSQL** instance.

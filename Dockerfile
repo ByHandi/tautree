@@ -24,7 +24,7 @@ RUN npm ci
 # ---------------------------------------------------------------------------
 # builder — produce the standalone Next.js server.
 # NEXT_PUBLIC_* vars are inlined at build time, so pass the app URL as a build
-# arg (override with `--build-arg NEXT_PUBLIC_APP_URL=https://tautree.com`).
+# arg (override with `--build-arg NEXT_PUBLIC_APP_URL=https://your-domain.com`).
 # ---------------------------------------------------------------------------
 FROM base AS builder
 ARG NEXT_PUBLIC_APP_URL=http://localhost:3000
