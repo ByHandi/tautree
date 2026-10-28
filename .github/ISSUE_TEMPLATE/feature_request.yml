@@ -1,5 +1,6 @@
 name: ✨ Feature request
 description: Suggest an idea or improvement
+title: "[TAUTREE-XX] feat: "
 labels: ["enhancement"]
 body:
   - type: markdown
