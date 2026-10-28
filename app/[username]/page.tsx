@@ -10,7 +10,7 @@ import Icon from "@/components/ui/icon";
 import { ViewTracker } from "@/components/view-tracker";
 import { linkButtonAppearance, parseButtonFill, parseButtonShape } from "@/lib/button-style";
 import { db } from "@/lib/db";
-import { getEmbed } from "@/lib/embed";
+import { type Embed, getEmbed } from "@/lib/embed";
 import { fontStack, parseFont } from "@/lib/fonts";
 import { liveScheduleWhere } from "@/lib/links";
 import { isProfilePublic } from "@/lib/profile";
@@ -55,6 +55,103 @@ async function getProfile(rawUsername: string) {
   // A suspended account is invisible to the public — treat it as not found.
   if (user && !isProfilePublic(user)) return null;
   return user;
+}
+
+type ProfileLink = NonNullable<Awaited<ReturnType<typeof getProfile>>>["links"][number];
+type ButtonAppearance = ReturnType<typeof linkButtonAppearance>;
+
+/** Inline YouTube (16:9 card) or Spotify (provider-sized) player. */
+function EmbedFrame({
+  embed,
+  title,
+  borderColor,
+  borderRadius,
+}: {
+  embed: Embed;
+  title: string;
+  borderColor: string;
+  borderRadius: ButtonAppearance["borderRadius"];
+}) {
+  if (embed.provider === "youtube") {
+    return (
+      <div
+        className="aspect-video w-full overflow-hidden border shadow-xs"
+        style={{ borderColor, borderRadius }}
+      >
+        <iframe
+          src={embed.src}
+          title={title}
+          className="size-full"
+          loading="lazy"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        />
+      </div>
+    );
+  }
+  return (
+    <iframe
+      src={embed.src}
+      title={title}
+      height={embed.height}
+      className="w-full"
+      style={{ borderRadius }}
+      loading="lazy"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+    />
+  );
+}
+
+/**
+ * Clickable link button (tracked through `/api/r/[id]`). Heroes (featured) get
+ * extra padding and a larger label/icon.
+ */
+function LinkButton({
+  link,
+  hero,
+  btn,
+}: {
+  link: ProfileLink;
+  hero: boolean;
+  btn: ButtonAppearance;
+}) {
+  return (
+    <a
+      href={`/api/r/${link.id}`}
+      className={cn(
+        "group flex items-center gap-3 font-medium transition-all hover:-translate-y-0.5",
+        hero ? "px-6 py-5 text-lg" : "px-5 py-4",
+        btn.shadow && "shadow-xs hover:shadow-md",
+      )}
+      style={{
+        background: btn.background,
+        color: btn.color,
+        borderColor: btn.borderColor,
+        borderWidth: btn.borderWidth,
+        borderStyle: "solid",
+        borderRadius: btn.borderRadius,
+      }}
+    >
+      {link.thumbnail ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={link.thumbnail}
+          alt=""
+          className={cn("shrink-0 rounded-md object-cover", hero ? "size-8" : "size-6")}
+        />
+      ) : (
+        <SocialIcon url={link.url ?? ""} className={cn("shrink-0", hero ? "size-6" : "size-5")} />
+      )}
+      <span className="min-w-0 flex-1 truncate text-center">{link.title}</span>
+      <Icon
+        name="arrow-up-right"
+        className={cn(
+          "shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5",
+          hero ? "size-5" : "size-4",
+        )}
+      />
+    </a>
+  );
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
@@ -108,79 +205,20 @@ export default async function PublicProfilePage({ params }: Params) {
     }
 
     const embed = link.type === "EMBED" ? getEmbed(link.url ?? "") : null;
-    if (embed?.provider === "youtube") {
+    if (embed) {
       return (
-        <div
+        <EmbedFrame
           key={link.id}
-          className="aspect-video w-full overflow-hidden border shadow-xs"
-          style={{ borderColor: theme.cardBorder, borderRadius: btn.borderRadius }}
-        >
-          <iframe
-            src={embed.src}
-            title={link.title}
-            className="size-full"
-            loading="lazy"
-            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          />
-        </div>
-      );
-    }
-    if (embed?.provider === "spotify") {
-      return (
-        <iframe
-          key={link.id}
-          src={embed.src}
+          embed={embed}
           title={link.title}
-          height={embed.height}
-          className="w-full"
-          style={{ borderRadius: btn.borderRadius }}
-          loading="lazy"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          borderColor={theme.cardBorder}
+          borderRadius={btn.borderRadius}
         />
       );
     }
 
-    // LINK (and any embed that failed to resolve) → a clickable button. Heroes
-    // (featured) get extra padding and a larger label/icon.
-    return (
-      <a
-        key={link.id}
-        href={`/api/r/${link.id}`}
-        className={cn(
-          "group flex items-center gap-3 font-medium transition-all hover:-translate-y-0.5",
-          hero ? "px-6 py-5 text-lg" : "px-5 py-4",
-          btn.shadow && "shadow-xs hover:shadow-md",
-        )}
-        style={{
-          background: btn.background,
-          color: btn.color,
-          borderColor: btn.borderColor,
-          borderWidth: btn.borderWidth,
-          borderStyle: "solid",
-          borderRadius: btn.borderRadius,
-        }}
-      >
-        {link.thumbnail ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={link.thumbnail}
-            alt=""
-            className={cn("shrink-0 rounded-md object-cover", hero ? "size-8" : "size-6")}
-          />
-        ) : (
-          <SocialIcon url={link.url ?? ""} className={cn("shrink-0", hero ? "size-6" : "size-5")} />
-        )}
-        <span className="min-w-0 flex-1 truncate text-center">{link.title}</span>
-        <Icon
-          name="arrow-up-right"
-          className={cn(
-            "shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5",
-            hero ? "size-5" : "size-4",
-          )}
-        />
-      </a>
-    );
+    // LINK (and any embed that failed to resolve) → a clickable button.
+    return <LinkButton key={link.id} link={link} hero={hero} btn={btn} />;
   }
 
   return (

@@ -11,6 +11,25 @@ import { db } from "@/lib/db";
 import { APP_DOMAIN, APP_URL } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
+/**
+ * QR for the public page — handy for print/offline sharing. Generated as a PNG
+ * data URI (qrcode is pure-JS, safe in the standalone server bundle); null until
+ * the user has picked a username.
+ */
+async function profileQr(username: string | null | undefined) {
+  const profileUrl = `${APP_URL}/${username ?? ""}`;
+  const qrDataUri = username
+    ? await QRCode.toDataURL(profileUrl, {
+        width: 512,
+        margin: 1,
+        // High EC so the centered logo punch-out stays scannable.
+        errorCorrectionLevel: "H",
+        color: { dark: "#0f172a", light: "#ffffff" },
+      })
+    : null;
+  return { profileUrl, qrDataUri };
+}
+
 export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
@@ -28,18 +47,7 @@ export default async function DashboardPage() {
   const totalClicks = sum._sum.clicks ?? 0;
   const publicHref = user?.username ? `/${user.username}` : "/";
 
-  // QR for the public page — handy for print/offline sharing. Generated as a
-  // PNG data URI (qrcode is pure-JS, safe in the standalone server bundle).
-  const profileUrl = `${APP_URL}/${user?.username ?? ""}`;
-  const qrDataUri = user?.username
-    ? await QRCode.toDataURL(profileUrl, {
-        width: 512,
-        margin: 1,
-        // High EC so the centered logo punch-out stays scannable.
-        errorCorrectionLevel: "H",
-        color: { dark: "#0f172a", light: "#ffffff" },
-      })
-    : null;
+  const { profileUrl, qrDataUri } = await profileQr(user?.username);
 
   const stats = [
     { label: "Total links", value: totalLinks, icon: "link" as const },

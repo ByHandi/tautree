@@ -50,6 +50,17 @@ Open [http://localhost:3000](http://localhost:3000). See the [README](./README.m
 
 Formatting and auto-fixable lint issues are fixed and re-staged automatically; anything else (lint errors, type errors) blocks the commit. CI runs the same checks, so skipping the hook (`git commit --no-verify`) only moves the failure to the PR.
 
+## Complexity limits
+
+Functions are kept small enough to follow at a glance. ESLint enforces both limits (so `npm run lint`, the pre-commit hook, and CI all catch them):
+
+| Rule                           | Max |
+| ------------------------------ | --- |
+| `complexity` (cyclomatic)      | 15  |
+| `sonarjs/cognitive-complexity` | 15  |
+
+When a function grows past a limit, split it into well-named helpers — a pure function for logic that doesn't need component state, a lookup table instead of a ternary chain, a presentational subcomponent (at module level, taking props) for a block of JSX — instead of raising the limit or disabling the rule. `components/ui` (shadcn primitives and the form wrappers built on them) is exempt from `complexity` only, because it counts every prop default and `?.`; cognitive complexity still applies there.
+
 ## Before you open a PR
 
 CI runs typecheck, lint, test, **and** build — all four must pass. Run them locally first:
