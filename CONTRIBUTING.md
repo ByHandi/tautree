@@ -62,10 +62,21 @@ npm run build
 - **Database changes** — edit `prisma/schema.prisma`, then generate a migration with `npm run db:migrate`. **Commit the generated migration** in `prisma/migrations/`. Never edit an already-committed migration.
 - **Privacy** — analytics are intentionally IP/cookie/UA-free. Keep it that way; don't introduce tracking that identifies visitors.
 
+## Issue & branch workflow
+
+- **Backlog** — GitHub Issues and milestones are the source of truth for planned work; [`ROADMAP.md`](./ROADMAP.md) summarizes them. Pick an open issue from the current milestone, and open one before starting anything non-trivial.
+- **Ticket keys** — every issue gets a sequential `TAUTREE-XX` key (two digits, separate from the GitHub issue number), in the title as `[TAUTREE-XX] type: short description`, where `type` is the Conventional Commit type (e.g. `[TAUTREE-10] feat: vCard "Save contact" button`). The issue templates prefill `[TAUTREE-XX]`; the maintainer replaces `XX` with the next free key when triaging. To find the latest key:
+
+  ```bash
+  gh issue list --state all --search 'TAUTREE in:title' --limit 200 --json title --jq '.[].title' | grep -o 'TAUTREE-[0-9][0-9]*' | sort -t- -k2 -n | tail -1
+  ```
+
+- **Branches** — branch off `dev` (the integration branch) as `<type>/TAUTREE-XX-short-description`, e.g. `feat/TAUTREE-10-vcard-download` or `fix/TAUTREE-11-embed-height`. A small change without an issue can use `<type>/short-description`. Every development PR (features, fixes, chores, docs) targets `dev`.
+- **Where the key goes** — in the issue title, the branch name, and the linked issue on the PR. Commit subjects stay plain Conventional Commits without the key.
+
 ## Commit & PR conventions
 
-- **Commit messages** follow [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`. Write a clear, imperative subject.
-- **Branch** off `dev` (the integration branch); every development PR (features, fixes, chores, docs) targets `dev`.
+- **Commit messages** follow [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`, `ci:`, with an optional scope (`feat(analytics): …`). Write a clear, imperative subject.
 - **Releases** — when a milestone is complete, a maintainer opens a release PR `dev` → `main`. `main` only moves through these release PRs.
 - **Keep PRs focused** — one logical change per PR is easier to review.
 - **Changelog** — add user-visible changes under `## [Unreleased]` in [`CHANGELOG.md`](./CHANGELOG.md) in the same PR. Internal refactors, CI, and tooling changes don't need an entry.
