@@ -41,7 +41,7 @@ body:
       label: Environment details
       description: Node version, browser, deploy target, relevant logs — anything that helps.
       placeholder: |
-        - Node: 20.x
+        - Node: 24.x
         - Browser: Chrome 140
         - Deploy: Coolify
     validations:

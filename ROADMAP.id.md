@@ -110,10 +110,10 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 
 **[v0.2.0](https://github.com/ByHandi/tautree/milestone/1) — Development Workflow & Quality Gates**
 
-- [ ] Model branch — **diputuskan:** `dev` jadi branch integrasi; semua PR development ke `dev`, dan saat milestone selesai, release PR merge `dev` → `main`. CONTRIBUTING.md udah diupdate; sisa: CI jalan di PR ke `dev` — [#10](https://github.com/ByHandi/tautree/issues/10)
+- [x] Model branch — `dev` jadi branch integrasi; semua PR development ke `dev`, dan saat milestone selesai, release PR merge `dev` → `main`. Didokumentasikan di CONTRIBUTING.md; CI jalan di PR ke `dev` dan `main` — [#10](https://github.com/ByHandi/tautree/issues/10)
 - [ ] Issue key `TAUTREE-XX` + penamaan branch (`feat/TAUTREE-XX-…`), `Closes #N` di PR, GitHub Issues sebagai backlog — [#11](https://github.com/ByHandi/tautree/issues/11)
 - [ ] `CHANGELOG.md` (Keep a Changelog + SemVer, section `[Unreleased]`, backfill `0.1.0`) — [#12](https://github.com/ByHandi/tautree/issues/12)
-- [ ] Samain versi Node di CONTRIBUTING.md dengan CI/Docker (24) — [#21](https://github.com/ByHandi/tautree/issues/21)
+- [x] Samain versi Node di CONTRIBUTING.md, README, dan template bug report dengan CI/Docker (24) — [#21](https://github.com/ByHandi/tautree/issues/21)
 - [ ] Pre-commit hook husky + lint-staged (Prettier, `eslint --fix`, typecheck) — [#13](https://github.com/ByHandi/tautree/issues/13)
 - [ ] Batas complexity di ESLint: cyclomatic 15 + `sonarjs/cognitive-complexity` 15 — [#14](https://github.com/ByHandi/tautree/issues/14)
 - [ ] Hardening CI: permissions read-only, `prettier --check`, `npm audit`, jadwal mingguan, validasi Docker/compose — [#17](https://github.com/ByHandi/tautree/issues/17)

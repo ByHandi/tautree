@@ -110,10 +110,10 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 
 **[v0.2.0](https://github.com/ByHandi/tautree/milestone/1) — Development Workflow & Quality Gates**
 
-- [ ] Branch model — **decided:** `dev` is the integration branch; every development PR targets `dev`, and when a milestone is complete a release PR merges `dev` → `main`. CONTRIBUTING.md updated; remaining: CI runs on PRs to `dev` — [#10](https://github.com/ByHandi/tautree/issues/10)
+- [x] Branch model — `dev` is the integration branch; every development PR targets `dev`, and when a milestone is complete a release PR merges `dev` → `main`. Documented in CONTRIBUTING.md; CI runs on PRs to `dev` and `main` — [#10](https://github.com/ByHandi/tautree/issues/10)
 - [ ] `TAUTREE-XX` issue keys + branch naming (`feat/TAUTREE-XX-…`), `Closes #N` in PRs, GitHub Issues as the backlog — [#11](https://github.com/ByHandi/tautree/issues/11)
 - [ ] `CHANGELOG.md` (Keep a Changelog + SemVer, `[Unreleased]` section, backfill `0.1.0`) — [#12](https://github.com/ByHandi/tautree/issues/12)
-- [ ] Align the Node version in CONTRIBUTING.md with CI/Docker (24) — [#21](https://github.com/ByHandi/tautree/issues/21)
+- [x] Align the Node version in CONTRIBUTING.md, READMEs and the bug report template with CI/Docker (24) — [#21](https://github.com/ByHandi/tautree/issues/21)
 - [ ] husky + lint-staged pre-commit hook (Prettier, `eslint --fix`, typecheck) — [#13](https://github.com/ByHandi/tautree/issues/13)
 - [ ] Complexity limits in ESLint: cyclomatic 15 + `sonarjs/cognitive-complexity` 15 — [#14](https://github.com/ByHandi/tautree/issues/14)
 - [ ] CI hardening: read-only permissions, `prettier --check`, `npm audit`, weekly schedule, Docker/compose validation — [#17](https://github.com/ByHandi/tautree/issues/17)

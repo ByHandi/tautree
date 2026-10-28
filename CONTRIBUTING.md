@@ -18,7 +18,7 @@ By participating, you're expected to uphold our [Code of Conduct](./CODE_OF_COND
 
 ## Development setup
 
-Requires **Node 20+** and a running **PostgreSQL** instance.
+Requires **Node 24** and a running **PostgreSQL** instance.
 
 ```bash
 # 1. Fork, then clone your fork
