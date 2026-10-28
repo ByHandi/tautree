@@ -18,6 +18,7 @@
 - [ ] `npm run test` passes
 - [ ] Added/updated tests for changed behavior (if applicable)
 - [ ] Added/updated a Prisma migration (if the schema changed)
+- [ ] Added an entry under `[Unreleased]` in `CHANGELOG.md` (user-visible changes)
 - [ ] Updated docs / `.env.example` / `ROADMAP.md` (if applicable)
 
 ## Screenshots / notes
