@@ -104,6 +104,28 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 - [x] ⭐ Share + QR di halaman publik — `<ShareButton>` (copy link / native share / QR) di pojok profil; QR via route on-demand `GET /api/qr/[username]` (cache 1 hari, gak nge-bloat HTML), QR baru di-fetch saat dialog dibuka
 - [ ] Email capture / "Subscribe" — kumpulin email pengunjung (lead-gen); butuh model + storage + pertimbangan privacy. _(sedang, nilai tinggi)_
 
+## Fase 12 — Development Workflow 🧰
+
+> Samain workflow development dengan [Ostra](https://github.com/ByHandi/ostra): aturan proses dikunci lewat tooling, bukan cuma ditulis. Tiap item punya GitHub issue, dikelompokkan ke milestone versi.
+
+**[v0.2.0](https://github.com/ByHandi/tautree/milestone/1) — Development Workflow & Quality Gates**
+
+- [ ] Model branch — **diputuskan:** `dev` jadi branch integrasi; semua PR development ke `dev`, dan saat milestone selesai, release PR merge `dev` → `main`. Sisa: update CONTRIBUTING.md + trigger branch di CI — [#10](https://github.com/ByHandi/tautree/issues/10)
+- [ ] Issue key `TAUTREE-XX` + penamaan branch (`feat/TAUTREE-XX-…`), `Closes #N` di PR, GitHub Issues sebagai backlog — [#11](https://github.com/ByHandi/tautree/issues/11)
+- [ ] `CHANGELOG.md` (Keep a Changelog + SemVer, section `[Unreleased]`, backfill `0.1.0`) — [#12](https://github.com/ByHandi/tautree/issues/12)
+- [ ] Samain versi Node di CONTRIBUTING.md dengan CI/Docker (24) — [#21](https://github.com/ByHandi/tautree/issues/21)
+- [ ] Pre-commit hook husky + lint-staged (Prettier, `eslint --fix`, typecheck) — [#13](https://github.com/ByHandi/tautree/issues/13)
+- [ ] Batas complexity di ESLint: cyclomatic 15 + `sonarjs/cognitive-complexity` 15 — [#14](https://github.com/ByHandi/tautree/issues/14)
+- [ ] Hardening CI: permissions read-only, `prettier --check`, `npm audit`, jadwal mingguan, validasi Docker/compose — [#17](https://github.com/ByHandi/tautree/issues/17)
+- [ ] `AGENTS.md` lengkap (task discovery, git policy, urutan layer fitur, konvensi, verifikasi) + `CLAUDE.md` yang meng-import-nya — [#15](https://github.com/ByHandi/tautree/issues/15)
+- [ ] Template feature request jadi mini-PRD (desain backend, alur UI, checklist acceptance criteria) — [#16](https://github.com/ByHandi/tautree/issues/16)
+
+**[v0.3.0](https://github.com/ByHandi/tautree/milestone/2) — Release Automation & Maintenance**
+
+- [ ] Release workflow: tag `vX.Y.Z` → CI → GitHub Release dengan notes dari CHANGELOG (image GHCR opsional) — [#18](https://github.com/ByHandi/tautree/issues/18)
+- [ ] Dependabot: bulanan, satu PR per ecosystem (npm, docker, compose, actions) — [#19](https://github.com/ByHandi/tautree/issues/19)
+- [ ] Project Claude skills (`add-feature`, `cut-release`) + `.claude/launch.json` — [#20](https://github.com/ByHandi/tautree/issues/20)
+
 ---
 
 ## Arsip — v1 (MVP, selesai)
