@@ -20,6 +20,17 @@ When a milestone is complete, release it:
 - Local development now requires Node 24, matching CI and the Docker image (the docs previously
   said Node 20+).
 
+### Security
+
+- Upgraded Next.js from 15.5.19 to 15.5.28, fixing critical advisories including remote code
+  execution in the Image Optimization API, server-side request forgery in Server Actions, and
+  cache poisoning of SSG/ISR pages. Rebuild and redeploy self-hosted instances.
+- Updated vulnerable transitive dependencies (including `proxy-addr`, `fast-uri`, `ip-address`,
+  and `sharp`) and Prisma to 7.10.1.
+- Known remaining advisories: `@auth/core` (Auth.js) and `nodemailer` 7, which `next-auth` still
+  requires (no upstream fix yet), and the PostCSS copy bundled with Next.js 15 (used only at build
+  time on the project's own CSS; fixed in Next.js 16).
+
 ## [0.1.0] - 2026-07-09
 
 First public, open-source release: a self-hostable Linktree alternative where every user gets one
