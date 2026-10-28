@@ -114,7 +114,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 - [x] Issue key `TAUTREE-XX` + penamaan branch (`feat/TAUTREE-XX-…`), PR di-link manual ke issue-nya (sidebar Development; `Closes #N` nggak jalan di PR ke `dev`), GitHub Issues sebagai backlog — [#11](https://github.com/ByHandi/tautree/issues/11)
 - [x] `CHANGELOG.md` (Keep a Changelog + SemVer, section `[Unreleased]`, backfill `0.1.0`) — [#12](https://github.com/ByHandi/tautree/issues/12)
 - [x] Samain versi Node di CONTRIBUTING.md, README, dan template bug report dengan CI/Docker (24) — [#21](https://github.com/ByHandi/tautree/issues/21)
-- [ ] Pre-commit hook husky + lint-staged (Prettier, `eslint --fix`, typecheck) — [#13](https://github.com/ByHandi/tautree/issues/13)
+- [x] Pre-commit hook husky + lint-staged (Prettier, `eslint --fix`, typecheck) — [#13](https://github.com/ByHandi/tautree/issues/13)
 - [ ] Batas complexity di ESLint: cyclomatic 15 + `sonarjs/cognitive-complexity` 15 — [#14](https://github.com/ByHandi/tautree/issues/14)
 - [ ] Hardening CI: permissions read-only, `prettier --check`, `npm audit`, jadwal mingguan, validasi Docker/compose — [#17](https://github.com/ByHandi/tautree/issues/17)
 - [ ] `AGENTS.md` lengkap (task discovery, git policy, urutan layer fitur, konvensi, verifikasi) + `CLAUDE.md` yang meng-import-nya — [#15](https://github.com/ByHandi/tautree/issues/15)

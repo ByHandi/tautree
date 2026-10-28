@@ -30,7 +30,7 @@ cp .env.example .env      # set DATABASE_URL, AUTH_SECRET, NEXT_PUBLIC_APP_URL,
                           # ADMIN_EMAIL, and at least one login provider
 
 # 3. Install + database
-npm install
+npm install               # also installs the git pre-commit hook (husky)
 npm run db:migrate        # create schema + run migrations
 npm run db:seed           # seed initial data (incl. admin)
 
@@ -39,6 +39,16 @@ npm run dev               # or: npm run dev:turbo
 ```
 
 Open [http://localhost:3000](http://localhost:3000). See the [README](./README.md#quick-start-local-dev) for more on env vars and login providers.
+
+## Pre-commit hook
+
+`npm install` sets up a [husky](https://typicode.github.io/husky/) pre-commit hook that runs [lint-staged](https://github.com/lint-staged/lint-staged) on the staged files (config in `package.json`):
+
+- `*.{js,jsx,mjs,ts,tsx}`: `prettier --write`, then `eslint --fix`
+- `*.{json,css,md,yml,yaml}`: `prettier --write`
+- then `npm run typecheck`, only when the commit touches code, `package.json`, or `tsconfig.json`
+
+Formatting and auto-fixable lint issues are fixed and re-staged automatically; anything else (lint errors, type errors) blocks the commit. CI runs the same checks, so skipping the hook (`git commit --no-verify`) only moves the failure to the PR.
 
 ## Before you open a PR
 
@@ -51,7 +61,7 @@ npm run test
 npm run build
 ```
 
-`npm run format` (Prettier) keeps formatting consistent — run it before committing.
+The pre-commit hook formats staged files; `npm run format` (Prettier) reformats every `.ts`/`.tsx` file if you need it.
 
 ## Project conventions
 
