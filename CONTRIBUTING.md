@@ -65,7 +65,8 @@ npm run build
 ## Commit & PR conventions
 
 - **Commit messages** follow [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`. Write a clear, imperative subject.
-- **Branch** off `dev` (the integration branch); PRs target `main`.
+- **Branch** off `dev` (the integration branch); every development PR (features, fixes, chores, docs) targets `dev`.
+- **Releases** — when a milestone is complete, a maintainer opens a release PR `dev` → `main`. `main` only moves through these release PRs.
 - **Keep PRs focused** — one logical change per PR is easier to review.
 - Fill in the [PR template](./.github/pull_request_template.md) checklist. Link the issue it closes (`Closes #123`).
 - For UI changes, include before/after screenshots.
