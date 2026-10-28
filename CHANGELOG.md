@@ -15,6 +15,11 @@ When a milestone is complete, release it:
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-28
+
+Security patch. Upgrading: rebuild the image and redeploy. There are no database migrations, new
+environment variables, or Docker Compose changes.
+
 ### Changed
 
 - Local development now requires Node 24, matching CI and the Docker image (the docs previously
@@ -75,5 +80,6 @@ public page (`your-domain.com/username`) managed from a personal dashboard.
 - URL validation for links and hex-only validation for custom theme colors; thumbnails reject SVG
   and non-image data.
 
-[Unreleased]: https://github.com/ByHandi/tautree/compare/v0.1.0...dev
+[Unreleased]: https://github.com/ByHandi/tautree/compare/v0.1.1...dev
+[0.1.1]: https://github.com/ByHandi/tautree/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/ByHandi/tautree/releases/tag/v0.1.0
