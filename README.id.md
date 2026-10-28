@@ -65,7 +65,7 @@ Kebanyakan tool link-in-bio itu SaaS tertutup: halaman, analytics, dan audiens l
 
 ## Mulai cepat (dev lokal)
 
-Butuh **Node 20+** dan **PostgreSQL** yang jalan.
+Butuh **Node 24** dan **PostgreSQL** yang jalan.
 
 ```bash
 git clone https://github.com/ByHandi/tautree.git

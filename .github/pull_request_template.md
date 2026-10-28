@@ -2,7 +2,7 @@
 
 ## Summary
 
-<!-- What does this PR do and why? Link any related issue: Closes #123 -->
+<!-- What does this PR do and why? Mention the related issue (#123) and link it under "Development" in the sidebar — PRs into `dev` don't auto-close issues, so close it by hand after merging. -->
 
 ## Type of change
 
