@@ -68,7 +68,8 @@ npm run build
 - **Branch** off `dev` (the integration branch); every development PR (features, fixes, chores, docs) targets `dev`.
 - **Releases** — when a milestone is complete, a maintainer opens a release PR `dev` → `main`. `main` only moves through these release PRs.
 - **Keep PRs focused** — one logical change per PR is easier to review.
-- Fill in the [PR template](./.github/pull_request_template.md) checklist. Link the issue it closes (`Closes #123`).
+- Fill in the [PR template](./.github/pull_request_template.md) checklist.
+- **Link the issue by hand** in the PR's **Development** sidebar. PRs target `dev`, not the default branch, so `Closes #123` in the description doesn't link or auto-close the issue — close it by hand once the PR is merged into `dev`.
 - For UI changes, include before/after screenshots.
 
 ## Reporting security issues
