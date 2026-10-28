@@ -1,0 +1,6 @@
+npx lint-staged
+
+# Same type check as CI, only when the commit touches code or TypeScript config.
+if git diff --cached --name-only | grep -qE '\.(ts|tsx|mts|cts|js|jsx|mjs)$|^(package|tsconfig)\.json$'; then
+  npm run typecheck
+fi
