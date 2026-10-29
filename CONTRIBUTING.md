@@ -16,6 +16,8 @@ For anything non-trivial, please open an issue to discuss before you build it â€
 
 By participating, you're expected to uphold our [Code of Conduct](./CODE_OF_CONDUCT.md).
 
+Working with an AI coding assistant? [`AGENTS.md`](./AGENTS.md) (imported by [`CLAUDE.md`](./CLAUDE.md)) condenses this guide into rules for agents.
+
 ## Development setup
 
 Requires **Node 24** and a running **PostgreSQL** instance.
