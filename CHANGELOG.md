@@ -15,7 +15,7 @@ When a milestone is complete, release it:
 
 ## [Unreleased]
 
-## [0.1.1] - 2026-10-28
+## [0.1.1] - 2026-10-29
 
 Security patch. Upgrading: rebuild the image and redeploy. There are no database migrations, new
 environment variables, or Docker Compose changes.

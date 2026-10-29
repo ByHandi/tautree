@@ -117,7 +117,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 - [x] Patch dependency produksi yang rentan (Next.js 15.5.28 + `npm audit fix`); advisory Auth.js/nodemailer nunggu fix upstream — [#28](https://github.com/ByHandi/tautree/issues/28)
 - [x] Pre-commit hook husky + lint-staged (Prettier, `eslint --fix`, typecheck) — [#13](https://github.com/ByHandi/tautree/issues/13)
 - [x] Batas complexity di ESLint: cyclomatic 15 + `sonarjs/cognitive-complexity` 15 — [#14](https://github.com/ByHandi/tautree/issues/14)
-- [ ] Hardening CI: permissions read-only, `prettier --check`, `npm audit`, jadwal mingguan, validasi Docker/compose — [#17](https://github.com/ByHandi/tautree/issues/17)
+- [x] Hardening CI: permissions read-only, `prettier --check`, `npm audit`, jadwal mingguan, validasi Docker/compose — [#17](https://github.com/ByHandi/tautree/issues/17)
 - [ ] `AGENTS.md` lengkap (task discovery, git policy, urutan layer fitur, konvensi, verifikasi) + `CLAUDE.md` yang meng-import-nya — [#15](https://github.com/ByHandi/tautree/issues/15)
 - [ ] Template feature request jadi mini-PRD (desain backend, alur UI, checklist acceptance criteria) — [#16](https://github.com/ByHandi/tautree/issues/16)
 
