@@ -3,29 +3,43 @@ name: CI
 on:
   push:
     branches: [main, dev]
+  # Development PRs target `dev`; release PRs merge `dev` → `main`.
   pull_request:
     branches: [main, dev]
+  # Lets a release workflow reuse these checks, so releases only ship commits that pass CI.
+  workflow_call:
+  # Every Monday at 00:00 UTC (07:00 WIB): catches newly disclosed vulnerabilities in
+  # dependencies (npm audit) even when there are no new commits.
+  schedule:
+    - cron: "0 0 * * 1"
 
-# Cancel superseded runs on the same ref (e.g. rapid pushes to a PR branch).
+permissions:
+  contents: read
+
+# Cancel superseded runs on the same PR (e.g. rapid pushes), but never a push run on `dev`/`main`.
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   verify:
+    name: Verify
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: npm
 
       # `npm ci` runs the `postinstall` hook (`prisma generate`), which produces
       # lib/generated/prisma — required for typecheck. No database is needed.
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
+
+      - name: Format
+        run: npx prettier --check .
 
       - name: Typecheck
         run: npm run typecheck
@@ -36,7 +50,40 @@ jobs:
       - name: Test
         run: npm test
 
+      # Blocks on critical advisories in the dependencies shipped to production.
+      - name: npm audit (critical, blocking)
+        run: npm audit --omit=dev --audit-level=critical
+
+      # High advisories are reported but don't fail the run: the remaining ones (Auth.js,
+      # nodemailer) have no upstream fix yet. Make this blocking once they do.
+      - name: npm audit (high, report only)
+        continue-on-error: true
+        run: npm audit --omit=dev --audit-level=high
+
       # Catch RSC / build-time errors before they reach the Docker build on
       # deploy. No database is needed — dynamic routes aren't executed at build.
       - name: Build
         run: npm run build
+
+  docker:
+    name: Docker image & compose
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # docker-compose.yml reads `.env` (env_file), so validate it against the example values.
+      - name: Validate docker-compose
+        run: |
+          cp .env.example .env
+          docker compose config --quiet
+
+      - uses: docker/setup-buildx-action@v4
+
+      - name: Build image (no push)
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          target: runner
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

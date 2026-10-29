@@ -63,16 +63,26 @@ When a function grows past a limit, split it into well-named helpers — a pure 
 
 ## Before you open a PR
 
-CI runs typecheck, lint, test, **and** build — all four must pass. Run them locally first:
+CI (`.github/workflows/ci.yml`) runs on every PR to `dev` and `main`, on pushes to both, and weekly
+on Monday 00:00 UTC. It checks formatting, typecheck, lint, tests, a dependency audit, and the
+build, and in a separate job validates `docker-compose.yml` and builds the Docker image. Run the
+same checks locally first:
 
 ```bash
+npx prettier --check .
 npm run typecheck
 npm run lint
 npm run test
+npm audit --omit=dev --audit-level=critical
 npm run build
 ```
 
-The pre-commit hook formats staged files; `npm run format` (Prettier) reformats every `.ts`/`.tsx` file if you need it.
+The audit fails CI only on **critical** advisories in production dependencies; high ones are
+reported without failing the run. If your change touches dependencies or Docker, also run
+`docker build --target runner .`.
+
+The pre-commit hook formats staged files; `npx prettier --write <file>` fixes any file that
+`prettier --check` flags.
 
 ## Project conventions
 
