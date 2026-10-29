@@ -29,6 +29,22 @@ describe("getEmbed — YouTube", () => {
   it("rejects a watch URL with no video id", () => {
     expect(getEmbed("https://www.youtube.com/watch")).toBeNull();
   });
+
+  it("parses embed URLs and youtube.com subdomains", () => {
+    expect(getEmbed("https://www.youtube.com/embed/abc123XYZ_")).toEqual({
+      provider: "youtube",
+      src: "https://www.youtube.com/embed/abc123XYZ_",
+    });
+    expect(getEmbed("https://m.youtube.com/watch?v=dQw4w9WgXcQ")).toMatchObject({
+      provider: "youtube",
+    });
+  });
+
+  it("rejects other youtube.com paths, bad ids, and lookalike hosts", () => {
+    expect(getEmbed("https://www.youtube.com/channel/UC123456")).toBeNull();
+    expect(getEmbed("https://youtu.be/bad<id>")).toBeNull();
+    expect(getEmbed("https://notyoutube.com/watch?v=dQw4w9WgXcQ")).toBeNull();
+  });
 });
 
 describe("getEmbed — Spotify", () => {
@@ -58,6 +74,21 @@ describe("getEmbed — Spotify", () => {
 
   it("rejects an unknown resource type", () => {
     expect(getEmbed("https://open.spotify.com/user/someone")).toBeNull();
+  });
+
+  it("gives episodes a medium player and albums a tall one", () => {
+    expect(getEmbed("https://open.spotify.com/episode/4cOdK2wGLETKBW3PvgPWqT")).toMatchObject({
+      height: 232,
+    });
+    expect(getEmbed("https://open.spotify.com/album/4cOdK2wGLETKBW3PvgPWqT")).toMatchObject({
+      height: 352,
+    });
+  });
+
+  it("rejects a missing or invalid id and lookalike hosts", () => {
+    expect(getEmbed("https://open.spotify.com/track")).toBeNull();
+    expect(getEmbed("https://open.spotify.com/track/short")).toBeNull();
+    expect(getEmbed("https://notspotify.com/track/4cOdK2wGLETKBW3PvgPWqT")).toBeNull();
   });
 });
 

@@ -104,6 +104,29 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 - [x] ⭐ Share + QR on the public page — `<ShareButton>` (copy link / native share / QR) in the profile corner; QR via the on-demand route `GET /api/qr/[username]` (cached 1 day, doesn't bloat the HTML), a fresh QR is fetched when the dialog opens
 - [ ] Email capture / "Subscribe" — collect visitor emails (lead-gen); needs a model + storage + privacy considerations. _(medium, high value)_
 
+## Phase 12 — Development Workflow 🧰
+
+> Align the dev workflow with [Ostra](https://github.com/ByHandi/ostra): process rules enforced by tooling, not just written down. Each item is a GitHub issue, grouped into version milestones.
+
+**[v0.2.0](https://github.com/ByHandi/tautree/milestone/1) — Development Workflow & Quality Gates**
+
+- [x] Branch model — `dev` is the integration branch; every development PR targets `dev`, and when a milestone is complete a release PR merges `dev` → `main`. Documented in CONTRIBUTING.md; CI runs on PRs to `dev` and `main` — [#10](https://github.com/ByHandi/tautree/issues/10)
+- [x] `TAUTREE-XX` issue keys + branch naming (`feat/TAUTREE-XX-…`), PRs linked to their issue by hand (Development sidebar; `Closes #N` doesn't work on PRs into `dev`), GitHub Issues as the backlog — [#11](https://github.com/ByHandi/tautree/issues/11)
+- [x] `CHANGELOG.md` (Keep a Changelog + SemVer, `[Unreleased]` section, backfill `0.1.0`) — [#12](https://github.com/ByHandi/tautree/issues/12)
+- [x] Align the Node version in CONTRIBUTING.md, READMEs and the bug report template with CI/Docker (24) — [#21](https://github.com/ByHandi/tautree/issues/21)
+- [x] Patch vulnerable production dependencies (Next.js 15.5.28 + `npm audit fix`); Auth.js/nodemailer advisories wait on upstream — [#28](https://github.com/ByHandi/tautree/issues/28)
+- [x] husky + lint-staged pre-commit hook (Prettier, `eslint --fix`, typecheck) — [#13](https://github.com/ByHandi/tautree/issues/13)
+- [x] Complexity limits in ESLint: cyclomatic 15 + `sonarjs/cognitive-complexity` 15 — [#14](https://github.com/ByHandi/tautree/issues/14)
+- [ ] CI hardening: read-only permissions, `prettier --check`, `npm audit`, weekly schedule, Docker/compose validation — [#17](https://github.com/ByHandi/tautree/issues/17)
+- [ ] Full `AGENTS.md` (task discovery, git policy, feature layer order, conventions, verification) + `CLAUDE.md` importing it — [#15](https://github.com/ByHandi/tautree/issues/15)
+- [ ] Feature request template as a mini-PRD (backend design, UI flow, acceptance criteria checklist) — [#16](https://github.com/ByHandi/tautree/issues/16)
+
+**[v0.3.0](https://github.com/ByHandi/tautree/milestone/2) — Release Automation & Maintenance**
+
+- [ ] Release workflow: release PR `dev` → `main` merged → tag `vX.Y.Z` on `main` → CI → GitHub Release with notes from CHANGELOG (GHCR image optional) — [#18](https://github.com/ByHandi/tautree/issues/18)
+- [ ] Dependabot: monthly, one grouped PR per ecosystem (npm, docker, compose, actions) — [#19](https://github.com/ByHandi/tautree/issues/19)
+- [ ] Project Claude skills (`add-feature`, `cut-release`) + `.claude/launch.json` — [#20](https://github.com/ByHandi/tautree/issues/20)
+
 ---
 
 ## Archive — v1 (MVP, done)

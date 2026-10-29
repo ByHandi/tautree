@@ -65,7 +65,7 @@ Most link-in-bio tools are closed SaaS: your page, your analytics, and your audi
 
 ## Quick start (local dev)
 
-Requires **Node 20+** and a running **PostgreSQL** instance.
+Requires **Node 24** and a running **PostgreSQL** instance.
 
 ```bash
 git clone https://github.com/ByHandi/tautree.git

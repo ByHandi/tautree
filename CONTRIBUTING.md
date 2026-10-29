@@ -18,7 +18,7 @@ By participating, you're expected to uphold our [Code of Conduct](./CODE_OF_COND
 
 ## Development setup
 
-Requires **Node 20+** and a running **PostgreSQL** instance.
+Requires **Node 24** and a running **PostgreSQL** instance.
 
 ```bash
 # 1. Fork, then clone your fork
@@ -30,7 +30,7 @@ cp .env.example .env      # set DATABASE_URL, AUTH_SECRET, NEXT_PUBLIC_APP_URL,
                           # ADMIN_EMAIL, and at least one login provider
 
 # 3. Install + database
-npm install
+npm install               # also installs the git pre-commit hook (husky)
 npm run db:migrate        # create schema + run migrations
 npm run db:seed           # seed initial data (incl. admin)
 
@@ -39,6 +39,27 @@ npm run dev               # or: npm run dev:turbo
 ```
 
 Open [http://localhost:3000](http://localhost:3000). See the [README](./README.md#quick-start-local-dev) for more on env vars and login providers.
+
+## Pre-commit hook
+
+`npm install` sets up a [husky](https://typicode.github.io/husky/) pre-commit hook that runs [lint-staged](https://github.com/lint-staged/lint-staged) on the staged files (config in `package.json`):
+
+- `*.{js,jsx,mjs,ts,tsx}`: `prettier --write`, then `eslint --fix`
+- `*.{json,css,md,yml,yaml}`: `prettier --write`
+- then `npm run typecheck`, only when the commit touches code, `package.json`, or `tsconfig.json`
+
+Formatting and auto-fixable lint issues are fixed and re-staged automatically; anything else (lint errors, type errors) blocks the commit. CI runs the same checks, so skipping the hook (`git commit --no-verify`) only moves the failure to the PR.
+
+## Complexity limits
+
+Functions are kept small enough to follow at a glance. ESLint enforces both limits (so `npm run lint`, the pre-commit hook, and CI all catch them):
+
+| Rule                           | Max |
+| ------------------------------ | --- |
+| `complexity` (cyclomatic)      | 15  |
+| `sonarjs/cognitive-complexity` | 15  |
+
+When a function grows past a limit, split it into well-named helpers — a pure function for logic that doesn't need component state, a lookup table instead of a ternary chain, a presentational subcomponent (at module level, taking props) for a block of JSX — instead of raising the limit or disabling the rule. `components/ui` (shadcn primitives and the form wrappers built on them) is exempt from `complexity` only, because it counts every prop default and `?.`; cognitive complexity still applies there.
 
 ## Before you open a PR
 
@@ -51,7 +72,7 @@ npm run test
 npm run build
 ```
 
-`npm run format` (Prettier) keeps formatting consistent — run it before committing.
+The pre-commit hook formats staged files; `npm run format` (Prettier) reformats every `.ts`/`.tsx` file if you need it.
 
 ## Project conventions
 
@@ -62,12 +83,26 @@ npm run build
 - **Database changes** — edit `prisma/schema.prisma`, then generate a migration with `npm run db:migrate`. **Commit the generated migration** in `prisma/migrations/`. Never edit an already-committed migration.
 - **Privacy** — analytics are intentionally IP/cookie/UA-free. Keep it that way; don't introduce tracking that identifies visitors.
 
+## Issue & branch workflow
+
+- **Backlog** — GitHub Issues and milestones are the source of truth for planned work; [`ROADMAP.md`](./ROADMAP.md) summarizes them. Pick an open issue from the current milestone, and open one before starting anything non-trivial.
+- **Ticket keys** — every issue gets a sequential `TAUTREE-XX` key (two digits, separate from the GitHub issue number), in the title as `[TAUTREE-XX] type: short description`, where `type` is the Conventional Commit type (e.g. `[TAUTREE-10] feat: vCard "Save contact" button`). The issue templates prefill `[TAUTREE-XX]`; the maintainer replaces `XX` with the next free key when triaging. To find the latest key:
+
+  ```bash
+  gh issue list --state all --search 'TAUTREE in:title' --limit 200 --json title --jq '.[].title' | grep -o 'TAUTREE-[0-9][0-9]*' | sort -t- -k2 -n | tail -1
+  ```
+
+- **Branches** — branch off `dev` (the integration branch) as `<type>/TAUTREE-XX-short-description`, e.g. `feat/TAUTREE-10-vcard-download` or `fix/TAUTREE-11-embed-height`. A small change without an issue can use `<type>/short-description`. Every development PR (features, fixes, chores, docs) targets `dev`.
+- **Where the key goes** — in the issue title, the branch name, and the linked issue on the PR. Commit subjects stay plain Conventional Commits without the key.
+
 ## Commit & PR conventions
 
-- **Commit messages** follow [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`. Write a clear, imperative subject.
-- **Branch** off `dev` (the integration branch); PRs target `main`.
+- **Commit messages** follow [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`, `ci:`, with an optional scope (`feat(analytics): …`). Write a clear, imperative subject.
+- **Releases** — when a milestone is complete, a maintainer opens a release PR `dev` → `main`. `main` only moves through these release PRs.
 - **Keep PRs focused** — one logical change per PR is easier to review.
-- Fill in the [PR template](./.github/pull_request_template.md) checklist. Link the issue it closes (`Closes #123`).
+- **Changelog** — add user-visible changes under `## [Unreleased]` in [`CHANGELOG.md`](./CHANGELOG.md) in the same PR. Internal refactors, CI, and tooling changes don't need an entry.
+- Fill in the [PR template](./.github/pull_request_template.md) checklist.
+- **Link the issue by hand** in the PR's **Development** sidebar. PRs target `dev`, not the default branch, so `Closes #123` in the description doesn't link or auto-close the issue — close it by hand once the PR is merged into `dev`.
 - For UI changes, include before/after screenshots.
 
 ## Reporting security issues
