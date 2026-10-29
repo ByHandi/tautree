@@ -1,5 +1,5 @@
 name: ✨ Feature request
-description: Suggest an idea or improvement
+description: Propose a new feature or improvement, written as a mini-PRD
 title: "[TAUTREE-XX] feat: "
 labels: ["enhancement"]
 body:
@@ -7,21 +7,55 @@ body:
     attributes:
       value: |
         Thanks for the idea! Check the [ROADMAP](../../ROADMAP.md) and existing issues first — it may already be planned.
+
+        This template is a mini-PRD: once it's filled in, the issue is ready to build from. Only the problem is required — if you're not sure about the technical design, leave those sections empty and a maintainer will fill them in.
   - type: textarea
     id: problem
     attributes:
-      label: What problem does this solve?
-      description: What are you trying to do that's hard or impossible today?
-      placeholder: As a creator, I want ... so that ...
+      label: Problem & user story
+      description: What problem does this solve, and for whom? What's hard or impossible today?
+      placeholder: As a creator, I want to ... so that ...
     validations:
       required: true
   - type: textarea
-    id: solution
+    id: backend
     attributes:
-      label: Proposed solution
-      description: What should it do? A rough sketch is fine.
+      label: Backend design
+      description: Data model, domain logic, and the server code that exposes it.
+      placeholder: |
+        - Prisma: new/changed models or fields in `prisma/schema.prisma`, and the migration (backfill?)
+        - Domain logic in `lib/`: new or changed functions (validation, gating, limits)
+        - Server actions (`actions.ts` next to the route) or route handlers under `app/api/`
+        - New environment variables, if any
     validations:
       required: false
+  - type: textarea
+    id: ui
+    attributes:
+      label: Dashboard & public page UI flow
+      description: How the user interacts with the feature, in the dashboard and/or on the public profile page.
+      placeholder: |
+        - Where it lives: dashboard page, dialog, settings section, public `/[username]` page
+        - Form inputs and validation (client and server)
+        - Mobile and desktop layout
+        - Loading, empty, and error states
+    validations:
+      required: false
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria & test plan
+      description: What must be true and verified before this is done? Add feature-specific criteria above the checklist.
+      value: |
+        - [ ] Vitest tests for new or changed `lib/` logic (happy path, validation, and rejected/unsafe cases)
+        - [ ] Prisma migration generated and committed (if the schema changed)
+        - [ ] CHANGELOG.md updated under `[Unreleased]`
+        - [ ] `.env.example` and README updated (if there are new environment variables or setup steps)
+        - [ ] ROADMAP.md and ROADMAP.id.md updated
+        - [ ] Checked in the browser on mobile and desktop widths
+        - [ ] CI checks pass (prettier, typecheck, lint, test, audit, build, Docker)
+    validations:
+      required: true
   - type: textarea
     id: alternatives
     attributes:

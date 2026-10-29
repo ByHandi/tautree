@@ -26,6 +26,14 @@ body:
         3. See error
     validations:
       required: true
+  - type: input
+    id: version
+    attributes:
+      label: Tautree version or commit
+      description: The release you're running, or the commit if you're on a branch (`git rev-parse --short HEAD`).
+      placeholder: v0.1.1 or 226c695
+    validations:
+      required: true
   - type: dropdown
     id: environment
     attributes:

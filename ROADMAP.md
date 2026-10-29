@@ -119,7 +119,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 - [x] Complexity limits in ESLint: cyclomatic 15 + `sonarjs/cognitive-complexity` 15 — [#14](https://github.com/ByHandi/tautree/issues/14)
 - [x] CI hardening: read-only permissions, `prettier --check`, `npm audit`, weekly schedule, Docker/compose validation — [#17](https://github.com/ByHandi/tautree/issues/17)
 - [x] Full `AGENTS.md` (task discovery, git policy, feature layer order, conventions, verification) + `CLAUDE.md` importing it — [#15](https://github.com/ByHandi/tautree/issues/15)
-- [ ] Feature request template as a mini-PRD (backend design, UI flow, acceptance criteria checklist) — [#16](https://github.com/ByHandi/tautree/issues/16)
+- [x] Feature request template as a mini-PRD (backend design, UI flow, acceptance criteria checklist) — [#16](https://github.com/ByHandi/tautree/issues/16)
 
 **[v0.3.0](https://github.com/ByHandi/tautree/milestone/2) — Release Automation & Maintenance**
 
