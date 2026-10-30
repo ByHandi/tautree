@@ -15,7 +15,7 @@ When a milestone is complete, release it:
 
 ## [Unreleased]
 
-## [0.2.0] - 2026-10-29
+## [0.2.0] - 2026-10-30
 
 No changes to the app itself. This release ships the development workflow: hardened CI
 (formatting, dependency audit, Docker build checks, weekly runs), guidelines for AI coding
