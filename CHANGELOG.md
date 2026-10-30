@@ -17,6 +17,24 @@ When a milestone is complete, release it (details in
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-10-30
+
+Security patch. Upgrading: rebuild the image and redeploy. There are no database migrations, new
+environment variables, or Docker Compose changes.
+
+### Changed
+
+- Updated runtime dependencies to their latest minor and patch versions, including React 19.3.1,
+  Radix UI 1.8, Base UI 1.9, and the lucide icon set.
+
+### Security
+
+- Upgraded `nodemailer` (magic-link sign-in emails) from 7 to 10.2.1, fixing its high-severity
+  advisories, which were also reported through Auth.js (`next-auth`, `@auth/core`,
+  `@auth/prisma-adapter`). Auth.js still lists nodemailer 7–8 as supported; magic-link sign-in
+  was tested with 10.2.1. The remaining known advisory is the PostCSS copy bundled with
+  Next.js 15 (build time only; fixed in Next.js 16).
+
 ## [0.3.0] - 2026-10-30
 
 No changes to the app itself. This release automates releases (a tag now publishes the GitHub
@@ -100,7 +118,8 @@ public page (`your-domain.com/username`) managed from a personal dashboard.
 - URL validation for links and hex-only validation for custom theme colors; thumbnails reject SVG
   and non-image data.
 
-[Unreleased]: https://github.com/ByHandi/tautree/compare/v0.3.0...dev
+[Unreleased]: https://github.com/ByHandi/tautree/compare/v0.3.1...dev
+[0.3.1]: https://github.com/ByHandi/tautree/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/ByHandi/tautree/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/ByHandi/tautree/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/ByHandi/tautree/compare/v0.1.0...v0.1.1

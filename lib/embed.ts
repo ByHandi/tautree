@@ -9,8 +9,7 @@
  */
 
 export type Embed =
-  | { provider: "youtube"; src: string }
-  | { provider: "spotify"; src: string; height: number };
+  { provider: "youtube"; src: string } | { provider: "spotify"; src: string; height: number };
 
 const YOUTUBE_ID = /^[A-Za-z0-9_-]{6,20}$/;
 const SPOTIFY_TYPES = new Set(["track", "album", "playlist", "episode", "show", "artist"]);
