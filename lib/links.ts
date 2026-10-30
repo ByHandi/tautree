@@ -90,8 +90,7 @@ export function normalizeUrl(raw: string): UrlCheck {
 }
 
 export type ScheduleCheck =
-  | { ok: true; startsAt: Date | null; endsAt: Date | null }
-  | { ok: false; reason: string };
+  { ok: true; startsAt: Date | null; endsAt: Date | null } | { ok: false; reason: string };
 
 /**
  * Parse the optional start/end timestamps from the link form. Empty strings
