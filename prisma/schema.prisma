@@ -38,6 +38,13 @@ model User {
   buttonShape   String    @default("rounded") @map("button_shape")
   buttonFill    String    @default("solid") @map("button_fill")
   font          String    @default("sans")
+  // Opt-in contact card (vCard). Never rendered into the public page HTML;
+  // served only by `/api/vcard/[username]`. See `lib/vcard.ts`.
+  contactEnabled Boolean   @default(false) @map("contact_enabled")
+  contactPhone   String?   @map("contact_phone")
+  contactEmail   String?   @map("contact_email")
+  contactOrg     String?   @map("contact_org")
+  contactTitle   String?   @map("contact_title")
   role          Role      @default(USER)
   suspended     Boolean   @default(false)
   links         Link[]

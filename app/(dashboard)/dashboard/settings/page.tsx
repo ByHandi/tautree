@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { ContactCardForm } from "./contact-card-form";
 import { SettingsForm } from "./settings-form";
 import { SocialLinksManager } from "./social-links-manager";
 
@@ -19,6 +20,11 @@ export default async function SettingsPage() {
       name: true,
       bio: true,
       avatarUrl: true,
+      contactEnabled: true,
+      contactPhone: true,
+      contactEmail: true,
+      contactOrg: true,
+      contactTitle: true,
       socials: { orderBy: { order: "asc" }, select: { id: true, url: true } },
     },
   });
@@ -54,6 +60,14 @@ export default async function SettingsPage() {
       />
 
       <SocialLinksManager socials={user.socials} />
+
+      <ContactCardForm
+        contactEnabled={user.contactEnabled}
+        contactPhone={user.contactPhone}
+        contactEmail={user.contactEmail}
+        contactOrg={user.contactOrg}
+        contactTitle={user.contactTitle}
+      />
     </div>
   );
 }

@@ -8,6 +8,7 @@ import { db } from "@/lib/db";
 import { normalizeUrl } from "@/lib/links";
 import { validateAvatarUrl, validateBio, validateName } from "@/lib/profile";
 import { SOCIAL_MAX } from "@/lib/social";
+import { validateContactEmail, validateContactPhone, validateContactText } from "@/lib/vcard";
 
 export type ProfileFormState = { error?: string; ok?: boolean } | undefined;
 
@@ -42,6 +43,66 @@ export async function updateProfile(
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/settings");
   // Refresh the public page so the new name/bio/avatar show up immediately.
+  if (username) revalidatePath(`/${username}`);
+
+  return { ok: true };
+}
+
+export type ContactFormState = { error?: string; ok?: boolean } | undefined;
+
+type ContactData = {
+  contactEnabled: boolean;
+  contactPhone: string | null;
+  contactEmail: string | null;
+  contactOrg: string | null;
+  contactTitle: string | null;
+};
+
+/** Validate the contact card form; returns the first error message, if any. */
+function parseContactForm(formData: FormData): { data: ContactData } | { error: string } {
+  const field = (key: string) => String(formData.get(key) ?? "");
+  const checks = {
+    contactPhone: validateContactPhone(field("contactPhone")),
+    contactEmail: validateContactEmail(field("contactEmail")),
+    contactOrg: validateContactText(field("contactOrg"), "Organization"),
+    contactTitle: validateContactText(field("contactTitle"), "Job title"),
+  };
+
+  const values: Partial<ContactData> = {};
+  for (const [key, check] of Object.entries(checks)) {
+    if (!check.ok) return { error: check.reason };
+    values[key as keyof typeof checks] = check.value;
+  }
+
+  return {
+    data: { ...(values as ContactData), contactEnabled: formData.get("contactEnabled") === "on" },
+  };
+}
+
+export async function updateContactCard(
+  _prev: ContactFormState,
+  formData: FormData,
+): Promise<ContactFormState> {
+  const session = await auth();
+  if (!session?.user?.id) redirect("/login");
+
+  const parsed = parseContactForm(formData);
+  if ("error" in parsed) return { error: parsed.error };
+
+  let username: string | null;
+  try {
+    const updated = await db.user.update({
+      where: { id: session.user.id },
+      data: parsed.data,
+      select: { username: true },
+    });
+    username = updated.username;
+  } catch {
+    return { error: "Couldn't save. Please try again." };
+  }
+
+  revalidatePath("/dashboard/settings");
+  // The public page shows or hides the "Save contact" button.
   if (username) revalidatePath(`/${username}`);
 
   return { ok: true };

@@ -24,7 +24,8 @@ Linktree-style app: every user gets one public page (`your-domain.com/username`)
 
 ```
 User        → id, email, username, name, bio, avatarUrl, theme, customTheme(Json),
-              buttonShape, buttonFill, font, role(USER|ADMIN), suspended
+              buttonShape, buttonFill, font, role(USER|ADMIN), suspended,
+              contactEnabled, contactPhone?, contactEmail?, contactOrg?, contactTitle?
 Link        → id, userId, type(LINK|HEADER|EMBED), title, url?, thumbnail?, featured,
               order, isActive, clicks, startsAt?, endsAt?
 SocialLink  → id, userId, url, order                     # social icon row in the header
@@ -97,7 +98,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 
 - [x] Social icon row — `SocialLink` model (url + order, cap `SOCIAL_MAX`=8), add/remove manager on the Profile page, icons derived via `detectPlatform`/`SocialIcon`, icon row rendered in the public header (opens a new tab, doesn't track clicks)
 - [x] Featured/pinned link — `featured` column on Link (LINK only), checkbox in the dialog + star in the dashboard, pinned to the top of the public page as a hero card (larger padding/text/icon), the rest stay ordered + grouped
-- [ ] vCard "Save contact" — `.vcf` download button to the phone; a personal-brand differentiator, zero infra. _(small–medium)_
+- [x] vCard "Save contact" — opt-in `contactEnabled` + phone/public email/organization/job title columns on User, `lib/vcard.ts` (validators + vCard 3.0 builder with RFC 6350 escaping and UTF-8-safe folding, injection tests), Contact card section on the Profile page, "Save contact" pill in the public header downloading from `GET /api/vcard/[username]` (rate limited, same 404 for unknown/suspended/opted-out, contact details never in the page HTML) — [#57](https://github.com/ByHandi/tautree/issues/57)
 
 **Growth / interaction**
 

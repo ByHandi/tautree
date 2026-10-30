@@ -54,6 +54,11 @@ async function seedDemo() {
       username: "handi",
       name: "Handi",
       bio: "Building Tautree 🌳",
+      contactEnabled: true,
+      contactPhone: "+62 812-0000-0000",
+      contactEmail: "hello@example.com",
+      contactOrg: "Tautree",
+      contactTitle: "Maker",
       links: {
         create: [
           { type: "HEADER", title: "Find me online", order: 0 },

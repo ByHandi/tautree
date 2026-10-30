@@ -32,7 +32,7 @@ Kebanyakan tool link-in-bio itu SaaS tertutup: halaman, analytics, dan audiens l
 - **Halaman publik** `/[username]` — mobile-first, hanya link aktif & terurut, OG image + SEO dinamis
 - **Link power-ups** — reorder drag-and-drop, header/divider, scheduling (live/expired), embed YouTube/Spotify, thumbnail kustom, featured/pinned link
 - **Tampilan** — 6 tema preset + custom color, font picker, button shape/fill
-- **Social** — auto-detect ikon 17 platform, social icon row di header, share + QR code
+- **Social** — auto-detect ikon 17 platform, social icon row di header, share + QR code, vCard "Save contact" (opt-in)
 - **Analytics** — total clicks, tren 30 hari, top sources, device breakdown, custom date range, export CSV
 - **Admin** — panel `/admin` (list/cari user, suspend, hapus link/user), seed admin dari `ADMIN_EMAIL`
 
@@ -141,12 +141,12 @@ app/
   onboarding/             # pilih username
   (dashboard)/dashboard/  # dashboard (links, analytics, profile, appearance)
   admin/                  # panel admin
-  api/                    # auth, r/[id] redirect+klik, v/[id] view, qr/[username], username
+  api/                    # auth, r/[id] redirect+klik, v/[id] view, qr/[username], vcard/[username], username
 components/
   ui/                     # komponen shadcn + Icon (DynamicIcon) + form wrapper (Input*)
   app-sidebar.tsx · logo.tsx · social-icon.tsx · qr-card.tsx · share-button.tsx
 lib/                      # logika domain + unit test (links, profile, analytics, social,
-                          # embed, fonts, button-style, themes, rate-limit, username, admin)
+                          # embed, fonts, button-style, themes, rate-limit, username, vcard, admin)
 prisma/                   # schema.prisma + migrations + seed.ts
 brand/                    # aset brand mark (SVG)
 ```
