@@ -7,11 +7,13 @@ All notable changes are recorded here. The format follows
 Add user-visible changes under `## [Unreleased]` in the same PR that makes them (PRs target `dev`).
 Leave out internal refactors, CI, and tooling changes.
 
-When a milestone is complete, release it:
+When a milestone is complete, release it (details in
+[CONTRIBUTING.md](./CONTRIBUTING.md#releasing)):
 
 1. On `dev`, rename `[Unreleased]` to `[X.Y.Z] - YYYY-MM-DD` and add a fresh `[Unreleased]` above it.
 2. Merge the release PR `dev` → `main`.
-3. Push the tag `vX.Y.Z` on `main`. The GitHub Release notes are that version's section.
+3. Push the tag `vX.Y.Z` on `main`. The Release workflow runs CI and publishes the GitHub Release
+   with that version's section as its notes.
 
 ## [Unreleased]
 
