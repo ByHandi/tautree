@@ -13,6 +13,7 @@
 
 ## Checklist
 
+- [ ] `npx prettier --check .` passes
 - [ ] `npm run lint` passes
 - [ ] `npm run typecheck` passes
 - [ ] `npm run test` passes
