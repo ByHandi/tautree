@@ -125,7 +125,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 
 - [x] Release workflow: release PR `dev` → `main` merged → tag `vX.Y.Z` on `main` → CI → GitHub Release with notes from CHANGELOG (GHCR image optional) — [#18](https://github.com/ByHandi/tautree/issues/18)
 - [x] Dependabot: monthly, one grouped PR per ecosystem (npm, Dockerfile Node image, actions) — [#19](https://github.com/ByHandi/tautree/issues/19)
-- [ ] Project Claude skills (`add-feature`, `cut-release`) + `.claude/launch.json` — [#20](https://github.com/ByHandi/tautree/issues/20)
+- [x] Project Claude skills (`add-feature`, `cut-release`) + `.claude/launch.json` — [#20](https://github.com/ByHandi/tautree/issues/20)
 
 ---
 
