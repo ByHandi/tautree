@@ -1,0 +1,47 @@
+# Dependency updates are kept as quiet as possible: once a month, one grouped PR per ecosystem,
+# plus one PR per npm major update. PRs target `dev`, like every
+# development PR (Dependabot reads this file from the default branch, `main`).
+#
+# Security vulnerabilities are still detected sooner through:
+#   - npm audit in CI (also run on a weekly schedule, see ci.yml)
+#   - "Dependabot security updates" in Settings → Advanced Security (does not need this
+#     file; those PRs always target the default branch, `main`)
+#
+# docker-compose.yml is not listed: it only builds the app image and pulls no images.
+version: 2
+
+updates:
+  # Minor and patch updates are grouped; each major update (Next.js, React, Prisma, ESLint, …)
+  # gets its own PR, so one breaking upgrade doesn't block the rest.
+  - package-ecosystem: npm
+    directory: /
+    target-branch: dev
+    schedule:
+      interval: monthly
+    groups:
+      npm:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
+  # The Dockerfile's node base image. Stay on the Node major in .nvmrc (which CI reads);
+  # move to a new major by hand, in .nvmrc, the Dockerfile, and the docs together.
+  - package-ecosystem: docker
+    directory: /
+    target-branch: dev
+    schedule:
+      interval: monthly
+    groups:
+      docker:
+        patterns: ["*"]
+    ignore:
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: dev
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
