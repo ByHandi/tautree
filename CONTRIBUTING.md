@@ -112,6 +112,7 @@ The pre-commit hook formats staged files; `npx prettier --write <file>` fixes an
 - **Commit messages** follow [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`, `ci:`, with an optional scope (`feat(analytics): …`). Write a clear, imperative subject.
 - **Releases** — when a milestone is complete, a maintainer opens a release PR `dev` → `main`. `main` only moves through these release PRs (see [Releasing](#releasing)).
 - **Keep PRs focused** — one logical change per PR is easier to review.
+- **Dependency updates** — [Dependabot](./.github/dependabot.yml) opens one grouped PR per ecosystem (npm, the Dockerfile's Node image, GitHub Actions) each month, targeting `dev`; each npm major update gets its own PR. Node major upgrades are done by hand, in `.nvmrc` and the `Dockerfile` together.
 - **Changelog** — add user-visible changes under `## [Unreleased]` in [`CHANGELOG.md`](./CHANGELOG.md) in the same PR. Internal refactors, CI, and tooling changes don't need an entry.
 - Fill in the [PR template](./.github/pull_request_template.md) checklist.
 - **Link the issue by hand** in the PR's **Development** sidebar. PRs target `dev`, not the default branch, so `Closes #123` in the description doesn't link or auto-close the issue — close it by hand once the PR is merged into `dev`.
