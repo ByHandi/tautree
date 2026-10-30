@@ -17,6 +17,15 @@ When a milestone is complete, release it (details in
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-30
+
+No changes to the app itself. This release automates releases (a tag now publishes the GitHub
+Release from this changelog) and adds monthly dependency updates.
+
+Upgrading: nothing to do. The Docker image now pins its Node base image to 24.22.2 (the same
+version `24-alpine` resolves to today) instead of following `24-alpine`, so a rebuild is optional.
+There are no database migrations or environment variable changes.
+
 ## [0.2.0] - 2026-10-30
 
 No changes to the app itself. This release ships the development workflow: hardened CI
@@ -91,7 +100,8 @@ public page (`your-domain.com/username`) managed from a personal dashboard.
 - URL validation for links and hex-only validation for custom theme colors; thumbnails reject SVG
   and non-image data.
 
-[Unreleased]: https://github.com/ByHandi/tautree/compare/v0.2.0...dev
+[Unreleased]: https://github.com/ByHandi/tautree/compare/v0.3.0...dev
+[0.3.0]: https://github.com/ByHandi/tautree/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/ByHandi/tautree/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/ByHandi/tautree/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/ByHandi/tautree/releases/tag/v0.1.0
