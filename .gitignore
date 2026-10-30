@@ -37,3 +37,7 @@ pnpm-debug.log*
 next-env.d.ts
 
 /lib/generated/prisma
+
+# Claude Code: personal settings and worktrees (project skills and launch.json are committed)
+/.claude/settings.local.json
+/.claude/worktrees/

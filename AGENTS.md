@@ -79,6 +79,13 @@ Features typically cross these layers, in this order:
 
 When a function grows past a limit, split it into well-named helpers (a pure function, a lookup table instead of a ternary chain, a module-level subcomponent for a block of JSX) instead of raising the limit or disabling the rule. `components/ui` is exempt from `complexity` only; `lib/generated/**` is ignored.
 
+**Project skills**: step-by-step workflows live in `.claude/skills/` (`.agents/skills/` symlinks to the same files). Use them when the task matches:
+
+- `add-feature`: a feature end to end, layer by layer, with the reference features to copy.
+- `cut-release`: release prep, the release PR, and the tag, with `scripts/preflight.sh` to check a release before tagging.
+
+`.claude/launch.json` starts the dev server (`npm run dev`, port 3000) for browser previews.
+
 ---
 
 ## 4. Language & Documentation Rules

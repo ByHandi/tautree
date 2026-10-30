@@ -133,6 +133,7 @@ Maintainers release when every issue in a milestone is done. Versions follow
 
    ```bash
    git switch main && git pull
+   .claude/skills/cut-release/scripts/preflight.sh X.Y.Z   # read-only checks, must end with READY
    git tag vX.Y.Z
    git push origin vX.Y.Z
    ```

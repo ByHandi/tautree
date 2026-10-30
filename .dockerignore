@@ -29,6 +29,8 @@ README.md
 ROADMAP.md
 AGENTS.md
 CLAUDE.md
+.claude
+.agents
 LICENSE.md
 *.log
 .DS_Store
