@@ -17,6 +17,14 @@ When a milestone is complete, release it (details in
 
 ## [Unreleased]
 
+### Security
+
+- Upgraded `nodemailer` (magic-link sign-in emails) from 7 to 10.2.1, fixing its high-severity
+  advisories, which were also reported through Auth.js (`next-auth`, `@auth/core`,
+  `@auth/prisma-adapter`). Auth.js still lists nodemailer 7–8 as supported; magic-link sign-in
+  was tested with 10.2.1. The remaining known advisory is the PostCSS copy bundled with
+  Next.js 15 (build time only; fixed in Next.js 16).
+
 ## [0.3.0] - 2026-10-30
 
 No changes to the app itself. This release automates releases (a tag now publishes the GitHub
