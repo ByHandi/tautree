@@ -15,6 +15,15 @@ When a milestone is complete, release it:
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-30
+
+No changes to the app itself. This release ships the development workflow: hardened CI
+(formatting, dependency audit, Docker build checks, weekly runs), guidelines for AI coding
+assistants (`AGENTS.md`, `CLAUDE.md`), and issue templates for feature proposals and bug reports.
+
+Upgrading: nothing to do. There are no app, database, environment variable, or Docker changes, so
+a running instance doesn't need a rebuild.
+
 ## [0.1.1] - 2026-10-29
 
 Security patch. Upgrading: rebuild the image and redeploy. There are no database migrations, new
@@ -80,6 +89,7 @@ public page (`your-domain.com/username`) managed from a personal dashboard.
 - URL validation for links and hex-only validation for custom theme colors; thumbnails reject SVG
   and non-image data.
 
-[Unreleased]: https://github.com/ByHandi/tautree/compare/v0.1.1...dev
+[Unreleased]: https://github.com/ByHandi/tautree/compare/v0.2.0...dev
+[0.2.0]: https://github.com/ByHandi/tautree/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/ByHandi/tautree/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/ByHandi/tautree/releases/tag/v0.1.0
