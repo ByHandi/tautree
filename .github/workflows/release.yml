@@ -1,0 +1,71 @@
+name: Release
+
+# Push a tag vX.Y.Z on `main` after the release PR `dev` → `main` is merged
+# (or vX.Y.Z-rc.N / vX.Y.Z-beta.N for a pre-release):
+#   1. run the full CI
+#   2. create a GitHub Release whose notes are that version's section in CHANGELOG.md
+# No image is published: deployments (Coolify) build from source.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  github-release:
+    name: GitHub Release
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      # `main` only moves through release PRs, so a stable tag anywhere else is a mistake.
+      # Pre-releases may be tagged on `dev`.
+      - name: Check a stable tag is on main
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          if [[ "$TAG" == *-* ]]; then exit 0; fi
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "::error::$TAG points to $GITHUB_SHA, which is not on main. Tag the release PR's merge commit on main."
+            exit 1
+          fi
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          # The release may already exist if it was created by hand (`gh release create` also
+          # creates the tag, which triggers this workflow).
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            echo "::notice::Release $TAG already exists; leaving it as is."
+            exit 0
+          fi
+
+          version="${TAG#v}"
+          # Extract the "## [<version>] - <date>" section from CHANGELOG.md, up to the next section
+          # or the compare links at the bottom.
+          awk -v v="$version" '
+            index($0, "## [" v "]") == 1 { found = 1; next }
+            found && (/^## \[/ || /^\[[^]]+\]: /) { exit }
+            found { print }
+          ' CHANGELOG.md > notes.md
+
+          args=(--verify-tag --title "$TAG")
+          if grep -q '[^[:space:]]' notes.md; then
+            args+=(--notes-file notes.md)
+          else
+            echo "::warning::No \"## [$version]\" section in CHANGELOG.md; using generated notes."
+            args+=(--generate-notes)
+          fi
+          if [[ "$version" == *-* ]]; then args+=(--prerelease); fi
+          gh release create "$TAG" "${args[@]}"

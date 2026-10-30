@@ -110,12 +110,40 @@ The pre-commit hook formats staged files; `npx prettier --write <file>` fixes an
 ## Commit & PR conventions
 
 - **Commit messages** follow [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`, `ci:`, with an optional scope (`feat(analytics): …`). Write a clear, imperative subject.
-- **Releases** — when a milestone is complete, a maintainer opens a release PR `dev` → `main`. `main` only moves through these release PRs.
+- **Releases** — when a milestone is complete, a maintainer opens a release PR `dev` → `main`. `main` only moves through these release PRs (see [Releasing](#releasing)).
 - **Keep PRs focused** — one logical change per PR is easier to review.
+- **Dependency updates** — [Dependabot](./.github/dependabot.yml) opens one grouped PR per ecosystem (npm, the Dockerfile's Node image, GitHub Actions) each month, targeting `dev`; each npm major update gets its own PR. Node major upgrades are done by hand, in `.nvmrc` and the `Dockerfile` together.
 - **Changelog** — add user-visible changes under `## [Unreleased]` in [`CHANGELOG.md`](./CHANGELOG.md) in the same PR. Internal refactors, CI, and tooling changes don't need an entry.
 - Fill in the [PR template](./.github/pull_request_template.md) checklist.
 - **Link the issue by hand** in the PR's **Development** sidebar. PRs target `dev`, not the default branch, so `Closes #123` in the description doesn't link or auto-close the issue — close it by hand once the PR is merged into `dev`.
 - For UI changes, include before/after screenshots.
+
+## Releasing
+
+Maintainers release when every issue in a milestone is done. Versions follow
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+1. **Prep PR into `dev`** (`chore/release-X.Y.Z`): in [`CHANGELOG.md`](./CHANGELOG.md), rename
+   `[Unreleased]` to `[X.Y.Z] - YYYY-MM-DD` (the day you'll tag), add a fresh `[Unreleased]` above
+   it, and update the compare links at the bottom. Bump the version with
+   `npm version X.Y.Z --no-git-tag-version`.
+2. **Release PR `dev` → `main`**, in the milestone, with `Closes #N` on its own line for every
+   issue it ships (they close when it merges into `main`).
+3. **Tag the merge commit on `main`**, once CI on `main` is green:
+
+   ```bash
+   git switch main && git pull
+   .claude/skills/cut-release/scripts/preflight.sh X.Y.Z   # read-only checks, must end with READY
+   git tag vX.Y.Z
+   git push origin vX.Y.Z
+   ```
+
+   The [Release workflow](./.github/workflows/release.yml) runs CI again and creates the GitHub
+   Release, with the `## [X.Y.Z]` section of the changelog as its notes. A stable tag must be on
+   `main`, or the workflow fails. Tags like `vX.Y.Z-rc.1` or `vX.Y.Z-beta.1` become pre-releases.
+
+4. **Sync `main` back into `dev`** (merge `main` into `dev`), so the next release PR isn't behind,
+   and close the milestone.
 
 ## Reporting security issues
 

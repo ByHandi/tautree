@@ -1,12 +1,13 @@
 # syntax=docker/dockerfile:1
 
-ARG NODE_VERSION=24-alpine
-
 # ---------------------------------------------------------------------------
 # base — shared foundation. `libc6-compat` + `openssl` are needed by Prisma
 # (and some Next.js native deps) on Alpine.
+# The Node version is pinned (same major as .nvmrc and CI) so builds are
+# reproducible; Dependabot bumps minor/patch releases monthly. Keep the tag
+# literal: Dependabot can't read a tag from an ARG.
 # ---------------------------------------------------------------------------
-FROM node:${NODE_VERSION} AS base
+FROM node:24.22.2-alpine AS base
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
