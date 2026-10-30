@@ -123,7 +123,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 
 **[v0.3.0](https://github.com/ByHandi/tautree/milestone/2) — Release Automation & Maintenance**
 
-- [ ] Release workflow: release PR `dev` → `main` di-merge → tag `vX.Y.Z` di `main` → CI → GitHub Release dengan notes dari CHANGELOG (image GHCR opsional) — [#18](https://github.com/ByHandi/tautree/issues/18)
+- [x] Release workflow: release PR `dev` → `main` di-merge → tag `vX.Y.Z` di `main` → CI → GitHub Release dengan notes dari CHANGELOG (image GHCR opsional) — [#18](https://github.com/ByHandi/tautree/issues/18)
 - [ ] Dependabot: bulanan, satu PR per ecosystem (npm, docker, compose, actions) — [#19](https://github.com/ByHandi/tautree/issues/19)
 - [ ] Project Claude skills (`add-feature`, `cut-release`) + `.claude/launch.json` — [#20](https://github.com/ByHandi/tautree/issues/20)
 
