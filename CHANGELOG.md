@@ -17,6 +17,14 @@ When a milestone is complete, release it (details in
 
 ## [Unreleased]
 
+### Added
+
+- "Save contact" button on the public page that downloads a vCard (`.vcf`) with the owner's name,
+  bio, profile link, and optional phone, public email, organization, and job title. It's opt-in
+  from the new Contact card section on the Profile page. The contact details are only served by
+  the download (`/api/vcard/<username>`), never included in the page itself. Adds a database
+  migration that runs automatically on startup.
+
 ## [0.3.1] - 2026-10-30
 
 Security patch. Upgrading: rebuild the image and redeploy. There are no database migrations, new

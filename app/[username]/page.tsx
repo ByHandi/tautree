@@ -15,7 +15,7 @@ import { fontStack, parseFont } from "@/lib/fonts";
 import { liveScheduleWhere } from "@/lib/links";
 import { isProfilePublic } from "@/lib/profile";
 import { APP_URL } from "@/lib/site";
-import { getTheme } from "@/lib/themes";
+import { type Theme, getTheme } from "@/lib/themes";
 import { normalizeUsername, validateUsername } from "@/lib/username";
 import { cn } from "@/lib/utils";
 
@@ -40,6 +40,9 @@ async function getProfile(rawUsername: string) {
       buttonFill: true,
       font: true,
       suspended: true,
+      // Only the flag: the contact details themselves are served by /api/vcard
+      // and must never end up in this page's HTML.
+      contactEnabled: true,
       socials: { orderBy: { order: "asc" }, select: { id: true, url: true } },
       links: {
         // Only links that are active AND inside their scheduling window. Mirrors
@@ -150,6 +153,21 @@ function LinkButton({
           hero ? "size-5" : "size-4",
         )}
       />
+    </a>
+  );
+}
+
+/** Downloads the owner's vCard from `/api/vcard/[username]` (opt-in). */
+function SaveContactButton({ username, theme }: { username: string; theme: Theme }) {
+  return (
+    <a
+      href={`/api/vcard/${username}`}
+      download={`${username}.vcf`}
+      className="flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-opacity hover:opacity-70"
+      style={{ color: theme.text, borderColor: theme.cardBorder }}
+    >
+      <Icon name="user-round-plus" className="size-3.5" />
+      Save contact
     </a>
   );
 }
@@ -273,6 +291,10 @@ export default async function PublicProfilePage({ params }: Params) {
               </a>
             ))}
           </div>
+        )}
+
+        {user.contactEnabled && user.username && (
+          <SaveContactButton username={user.username} theme={theme} />
         )}
       </header>
 

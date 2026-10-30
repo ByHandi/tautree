@@ -32,7 +32,7 @@ Most link-in-bio tools are closed SaaS: your page, your analytics, and your audi
 - **Public page** `/[username]` — mobile-first, active + ordered links only, dynamic OG image + SEO
 - **Link power-ups** — drag-and-drop reorder, header/divider grouping, scheduling (live/expired), YouTube/Spotify embeds, custom thumbnails, featured/pinned link
 - **Appearance** — 6 preset themes + custom color, font picker, button shape/fill variants
-- **Social** — auto-detected icons for 17 platforms, social icon row in the header, share + QR code
+- **Social** — auto-detected icons for 17 platforms, social icon row in the header, share + QR code, opt-in "Save contact" vCard
 - **Analytics** — total clicks, 30-day trend, top sources, device breakdown, custom date range, CSV export
 - **Admin** — `/admin` panel (list/search users, suspend, delete link/user), admin seeded from `ADMIN_EMAIL`
 
@@ -141,12 +141,12 @@ app/
   onboarding/             # pick a username
   (dashboard)/dashboard/  # dashboard (links, analytics, profile, appearance)
   admin/                  # admin panel
-  api/                    # auth, r/[id] redirect+click, v/[id] view, qr/[username], username
+  api/                    # auth, r/[id] redirect+click, v/[id] view, qr/[username], vcard/[username], username
 components/
   ui/                     # shadcn components + Icon (DynamicIcon) + form wrappers (Input*)
   app-sidebar.tsx · logo.tsx · social-icon.tsx · qr-card.tsx · share-button.tsx
 lib/                      # domain logic + unit tests (links, profile, analytics, social,
-                          # embed, fonts, button-style, themes, rate-limit, username, admin)
+                          # embed, fonts, button-style, themes, rate-limit, username, vcard, admin)
 prisma/                   # schema.prisma + migrations + seed.ts
 brand/                    # brand mark assets (SVG)
 ```

@@ -24,7 +24,8 @@ Alternatif Linktree yang self-hostable: tiap user punya satu halaman publik (`yo
 
 ```
 User        → id, email, username, name, bio, avatarUrl, theme, customTheme(Json),
-              buttonShape, buttonFill, font, role(USER|ADMIN), suspended
+              buttonShape, buttonFill, font, role(USER|ADMIN), suspended,
+              contactEnabled, contactPhone?, contactEmail?, contactOrg?, contactTitle?
 Link        → id, userId, type(LINK|HEADER|EMBED), title, url?, thumbnail?, featured,
               order, isActive, clicks, startsAt?, endsAt?
 SocialLink  → id, userId, url, order                     # social icon row di header
@@ -97,7 +98,7 @@ ProfileView → id, userId, device, referrer?, createdAt    # privacy-friendly v
 
 - [x] Social icon row — model `SocialLink` (url + order, cap `SOCIAL_MAX`=8), manager add/remove di halaman Profile, ikon di-derive via `detectPlatform`/`SocialIcon`, render deretan ikon di header publik (buka tab baru, gak nge-track klik)
 - [x] Featured/pinned link — kolom `featured` di Link (khusus LINK), checkbox di dialog + star di dashboard, di halaman publik di-pin ke atas sebagai hero card (padding/teks/ikon lebih besar), sisanya tetap urut + grouping
-- [ ] vCard "Save contact" — tombol download `.vcf` ke HP; diferensiator personal brand, zero infra. _(kecil–sedang)_
+- [x] vCard "Save contact" — kolom opt-in `contactEnabled` + telepon/email publik/organisasi/jabatan di User, `lib/vcard.ts` (validator + builder vCard 3.0 dengan escaping RFC 6350 dan folding aman UTF-8, test injeksi), section Contact card di halaman Profile, pill "Save contact" di header publik yang download dari `GET /api/vcard/[username]` (rate limit, 404 yang sama untuk username gak dikenal/suspended/belum opt-in, detail kontak gak pernah ada di HTML halaman) — [#57](https://github.com/ByHandi/tautree/issues/57)
 
 **Growth / interaksi**
 
