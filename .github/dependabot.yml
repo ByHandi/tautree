@@ -33,9 +33,12 @@ updates:
       # eslint-config-next 15 doesn't accept ESLint 10 (npm ci fails with ERESOLVE).
       - dependency-name: eslint
         update-types: ["version-update:semver-major"]
+      # @types/node follows the Node major in .nvmrc, not the latest Node release.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
 
   # The Dockerfile's node base image. Stay on the Node major in .nvmrc (which CI reads);
-  # move to a new major by hand, in .nvmrc, the Dockerfile, and the docs together.
+  # move to a new major by hand, in .nvmrc, the Dockerfile, @types/node, and the docs together.
   - package-ecosystem: docker
     directory: /
     target-branch: dev
