@@ -11,8 +11,8 @@
 version: 2
 
 updates:
-  # Minor and patch updates are grouped; each major update (Next.js, React, Prisma, ESLint, …)
-  # gets its own PR, so one breaking upgrade doesn't block the rest.
+  # Minor and patch updates are grouped; each major update (React, Prisma, …) gets its own PR,
+  # so one breaking upgrade doesn't block the rest.
   - package-ecosystem: npm
     directory: /
     target-branch: dev
@@ -22,9 +22,23 @@ updates:
       npm:
         patterns: ["*"]
         update-types: ["minor", "patch"]
+    # Majors that can't land on their own; upgrade them by hand.
+    ignore:
+      # eslint-config-next must match the Next.js version, so the two move together in one
+      # deliberate Next.js upgrade (eslint-config-next 16 crashes ESLint on Next.js 15).
+      - dependency-name: next
+        update-types: ["version-update:semver-major"]
+      - dependency-name: eslint-config-next
+        update-types: ["version-update:semver-major"]
+      # eslint-config-next 15 doesn't accept ESLint 10 (npm ci fails with ERESOLVE).
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+      # @types/node follows the Node major in .nvmrc, not the latest Node release.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
 
   # The Dockerfile's node base image. Stay on the Node major in .nvmrc (which CI reads);
-  # move to a new major by hand, in .nvmrc, the Dockerfile, and the docs together.
+  # move to a new major by hand, in .nvmrc, the Dockerfile, @types/node, and the docs together.
   - package-ecosystem: docker
     directory: /
     target-branch: dev
